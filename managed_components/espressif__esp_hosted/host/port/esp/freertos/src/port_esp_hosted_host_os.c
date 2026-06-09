@@ -878,7 +878,11 @@ int hosted_config_host_power_save(uint32_t power_save_type, void* gpio_port, uin
 		if (!esp_sleep_is_valid_wakeup_gpio(gpio_num)) {
 			return -1;
 		}
+#if H_HOST_USE_HP_PERIPH_POWERDOWN
+		return esp_sleep_enable_gpio_wakeup_on_hp_periph_powerdown(BIT(gpio_num), level);
+#else
 		return esp_deep_sleep_enable_gpio_wakeup(BIT(gpio_num), level);
+#endif
 	}
 #endif
 	return -1;

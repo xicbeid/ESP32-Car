@@ -70,6 +70,7 @@ F:/project_ESP32_p4/UART/build/esp-idf/esp_http_client/libesp_http_client.a
 F:/project_ESP32_p4/UART/build/esp-idf/esp_http_server/libesp_http_server.a
 F:/project_ESP32_p4/UART/build/esp-idf/esp_https_ota/libesp_https_ota.a
 F:/project_ESP32_p4/UART/build/esp-idf/esp_https_server/libesp_https_server.a
+F:/project_ESP32_p4/UART/build/esp-idf/esp_psram/libesp_psram.a
 F:/project_ESP32_p4/UART/build/esp-idf/esp_lcd/libesp_lcd.a
 F:/project_ESP32_p4/UART/build/esp-idf/protobuf-c/libprotobuf-c.a
 F:/project_ESP32_p4/UART/build/esp-idf/protocomm/libprotocomm.a
@@ -86,6 +87,13 @@ F:/project_ESP32_p4/UART/build/esp-idf/usb/libusb.a
 F:/project_ESP32_p4/UART/build/esp-idf/wifi_module/libwifi_module.a
 F:/project_ESP32_p4/UART/build/esp-idf/motor_module/libmotor_module.a
 F:/project_ESP32_p4/UART/build/esp-idf/uart_module/libuart_module.a
+F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_sccb_intf/libespressif__esp_sccb_intf.a
+F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_cam_sensor/libespressif__esp_cam_sensor.a
+F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_h264/libespressif__esp_h264.a
+F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_ipa/libespressif__esp_ipa.a
+F:/project_ESP32_p4/UART/build/esp-idf/espressif__usb_host_uvc/libespressif__usb_host_uvc.a
+F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_video/libespressif__esp_video.a
+F:/project_ESP32_p4/UART/build/esp-idf/camera_module/libcamera_module.a
 F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_hosted/libespressif__esp_hosted.a
 F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_serial_slave_link/libespressif__esp_serial_slave_link.a
 F:/project_ESP32_p4/UART/build/esp-idf/espressif__eppp_link/libespressif__eppp_link.a

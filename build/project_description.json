@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "UART",
-    "project_version":    "6828e3b-dirty",
+    "project_version":    "c5e4032-dirty",
     "project_path":       "F:/project_ESP32_p4/UART",
     "idf_path":           "F:/Espressif/frameworks/esp-idf-v5.4",
     "build_dir":          "F:/project_ESP32_p4/UART/build",
@@ -21,12 +21,12 @@
     "monitor_toolprefix": "riscv32-esp-elf-",
     "c_compiler":         "F:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20241119/riscv32-esp-elf/bin/riscv32-esp-elf-gcc.exe",
     "config_environment" : {
-        "COMPONENT_KCONFIGS" : "F:/Espressif/frameworks/esp-idf-v5.4/components/app_trace/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/bt/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/console/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/driver/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/efuse/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp-tls/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_adc/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_coex/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_common/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_ana_cmpr/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_cam/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_dac/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_gpio/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_gptimer/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_i2c/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_i2s/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_isp/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_jpeg/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_ledc/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_mcpwm/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_parlio/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_pcnt/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_rmt/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_sdm/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_spi/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_touch_sens/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_tsens/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_uart/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_usb_serial_jtag/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_eth/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_event/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_gdbstub/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_http_client/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_http_server/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_https_ota/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_https_server/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_hw_support/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_lcd/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_mm/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_netif/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_partition/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_phy/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_pm/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_psram/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_ringbuf/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_security/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_system/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_timer/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_wifi/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/fatfs/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/freertos/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/hal/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/heap/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/ieee802154/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/log/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/lwip/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/mbedtls/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/mqtt/esp-mqtt/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/newlib/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/nvs_flash/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/nvs_sec_provider/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/openthread/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/protocomm/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/pthread/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/soc/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/spi_flash/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/spiffs/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/tcp_transport/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/ulp/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/unity/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/usb/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/vfs/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/wear_levelling/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/wifi_provisioning/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__eppp_link/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote/Kconfig",
+        "COMPONENT_KCONFIGS" : "F:/Espressif/frameworks/esp-idf-v5.4/components/app_trace/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/bt/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/console/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/driver/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/efuse/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp-tls/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_adc/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_coex/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_common/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_ana_cmpr/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_cam/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_dac/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_gpio/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_gptimer/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_i2c/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_i2s/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_isp/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_jpeg/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_ledc/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_mcpwm/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_parlio/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_pcnt/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_rmt/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_sdm/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_spi/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_touch_sens/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_tsens/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_uart/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_usb_serial_jtag/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_eth/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_event/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_gdbstub/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_http_client/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_http_server/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_https_ota/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_https_server/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_hw_support/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_lcd/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_mm/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_netif/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_partition/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_phy/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_pm/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_psram/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_ringbuf/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_security/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_system/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_timer/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_wifi/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/fatfs/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/freertos/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/hal/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/heap/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/ieee802154/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/log/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/lwip/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/mbedtls/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/mqtt/esp-mqtt/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/newlib/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/nvs_flash/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/nvs_sec_provider/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/openthread/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/protocomm/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/pthread/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/soc/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/spi_flash/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/spiffs/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/tcp_transport/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/ulp/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/unity/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/usb/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/vfs/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/wear_levelling/Kconfig;F:/Espressif/frameworks/esp-idf-v5.4/components/wifi_provisioning/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__cmake_utilities/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__eppp_link/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__esp_ipa/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__esp_sccb_intf/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote/Kconfig;F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc/Kconfig",
         "COMPONENT_KCONFIGS_PROJBUILD" : "F:/Espressif/frameworks/esp-idf-v5.4/components/bootloader/Kconfig.projbuild;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_app_format/Kconfig.projbuild;F:/Espressif/frameworks/esp-idf-v5.4/components/esp_rom/Kconfig.projbuild;F:/Espressif/frameworks/esp-idf-v5.4/components/esptool_py/Kconfig.projbuild;F:/Espressif/frameworks/esp-idf-v5.4/components/partition_table/Kconfig.projbuild;F:/project_ESP32_p4/UART/main/Kconfig.projbuild"
     },
     "common_component_reqs": [ "cxx", "newlib", "freertos", "esp_hw_support", "heap", "log", "soc", "hal", "esp_rom", "esp_common", "esp_system", "riscv" ],
-    "build_components" : [ "app_trace", "app_update", "bootloader", "bootloader_support", "bt", "cmock", "console", "cxx", "driver", "efuse", "esp-tls", "esp_adc", "esp_app_format", "esp_bootloader_format", "esp_coex", "esp_common", "esp_driver_ana_cmpr", "esp_driver_cam", "esp_driver_dac", "esp_driver_gpio", "esp_driver_gptimer", "esp_driver_i2c", "esp_driver_i2s", "esp_driver_isp", "esp_driver_jpeg", "esp_driver_ledc", "esp_driver_mcpwm", "esp_driver_parlio", "esp_driver_pcnt", "esp_driver_ppa", "esp_driver_rmt", "esp_driver_sdio", "esp_driver_sdm", "esp_driver_sdmmc", "esp_driver_sdspi", "esp_driver_spi", "esp_driver_touch_sens", "esp_driver_tsens", "esp_driver_uart", "esp_driver_usb_serial_jtag", "esp_eth", "esp_event", "esp_gdbstub", "esp_hid", "esp_http_client", "esp_http_server", "esp_https_ota", "esp_https_server", "esp_hw_support", "esp_lcd", "esp_local_ctrl", "esp_mm", "esp_netif", "esp_netif_stack", "esp_partition", "esp_phy", "esp_pm", "esp_psram", "esp_ringbuf", "esp_rom", "esp_security", "esp_system", "esp_timer", "esp_vfs_console", "esp_wifi", "espcoredump", "espressif__eppp_link", "espressif__esp_hosted", "espressif__esp_serial_slave_link", "espressif__esp_wifi_remote", "esptool_py", "fatfs", "freertos", "hal", "heap", "http_parser", "idf_test", "ieee802154", "json", "log", "lwip", "main", "mbedtls", "motor_module", "mqtt", "newlib", "nvs_flash", "nvs_sec_provider", "openthread", "partition_table", "protobuf-c", "protocomm", "pthread", "riscv", "rt", "sdmmc", "soc", "spi_flash", "spiffs", "tcp_transport", "uart_module", "ulp", "unity", "usb", "vfs", "wear_levelling", "wifi_module", "wifi_provisioning", "wpa_supplicant", "" ],
-    "build_component_paths" : [ "F:/Espressif/frameworks/esp-idf-v5.4/components/app_trace", "F:/Espressif/frameworks/esp-idf-v5.4/components/app_update", "F:/Espressif/frameworks/esp-idf-v5.4/components/bootloader", "F:/Espressif/frameworks/esp-idf-v5.4/components/bootloader_support", "F:/Espressif/frameworks/esp-idf-v5.4/components/bt", "F:/Espressif/frameworks/esp-idf-v5.4/components/cmock", "F:/Espressif/frameworks/esp-idf-v5.4/components/console", "F:/Espressif/frameworks/esp-idf-v5.4/components/cxx", "F:/Espressif/frameworks/esp-idf-v5.4/components/driver", "F:/Espressif/frameworks/esp-idf-v5.4/components/efuse", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp-tls", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_adc", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_app_format", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_bootloader_format", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_coex", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_common", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_ana_cmpr", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_cam", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_dac", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_gpio", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_gptimer", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_i2c", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_i2s", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_isp", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_jpeg", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_ledc", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_mcpwm", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_parlio", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_pcnt", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_ppa", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_rmt", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_sdio", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_sdm", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_sdmmc", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_sdspi", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_spi", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_touch_sens", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_tsens", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_uart", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_usb_serial_jtag", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_eth", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_event", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_gdbstub", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_hid", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_http_client", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_http_server", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_https_ota", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_https_server", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_hw_support", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_lcd", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_local_ctrl", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_mm", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_netif", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_netif_stack", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_partition", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_phy", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_pm", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_psram", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_ringbuf", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_rom", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_security", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_system", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_timer", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_vfs_console", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_wifi", "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump", "F:/project_ESP32_p4/UART/managed_components/espressif__eppp_link", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_serial_slave_link", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote", "F:/Espressif/frameworks/esp-idf-v5.4/components/esptool_py", "F:/Espressif/frameworks/esp-idf-v5.4/components/fatfs", "F:/Espressif/frameworks/esp-idf-v5.4/components/freertos", "F:/Espressif/frameworks/esp-idf-v5.4/components/hal", "F:/Espressif/frameworks/esp-idf-v5.4/components/heap", "F:/Espressif/frameworks/esp-idf-v5.4/components/http_parser", "F:/Espressif/frameworks/esp-idf-v5.4/components/idf_test", "F:/Espressif/frameworks/esp-idf-v5.4/components/ieee802154", "F:/Espressif/frameworks/esp-idf-v5.4/components/json", "F:/Espressif/frameworks/esp-idf-v5.4/components/log", "F:/Espressif/frameworks/esp-idf-v5.4/components/lwip", "F:/project_ESP32_p4/UART/main", "F:/Espressif/frameworks/esp-idf-v5.4/components/mbedtls", "F:/project_ESP32_p4/UART/components/motor_module", "F:/Espressif/frameworks/esp-idf-v5.4/components/mqtt", "F:/Espressif/frameworks/esp-idf-v5.4/components/newlib", "F:/Espressif/frameworks/esp-idf-v5.4/components/nvs_flash", "F:/Espressif/frameworks/esp-idf-v5.4/components/nvs_sec_provider", "F:/Espressif/frameworks/esp-idf-v5.4/components/openthread", "F:/Espressif/frameworks/esp-idf-v5.4/components/partition_table", "F:/Espressif/frameworks/esp-idf-v5.4/components/protobuf-c", "F:/Espressif/frameworks/esp-idf-v5.4/components/protocomm", "F:/Espressif/frameworks/esp-idf-v5.4/components/pthread", "F:/Espressif/frameworks/esp-idf-v5.4/components/riscv", "F:/Espressif/frameworks/esp-idf-v5.4/components/rt", "F:/Espressif/frameworks/esp-idf-v5.4/components/sdmmc", "F:/Espressif/frameworks/esp-idf-v5.4/components/soc", "F:/Espressif/frameworks/esp-idf-v5.4/components/spi_flash", "F:/Espressif/frameworks/esp-idf-v5.4/components/spiffs", "F:/Espressif/frameworks/esp-idf-v5.4/components/tcp_transport", "F:/project_ESP32_p4/UART/components/uart_module", "F:/Espressif/frameworks/esp-idf-v5.4/components/ulp", "F:/Espressif/frameworks/esp-idf-v5.4/components/unity", "F:/Espressif/frameworks/esp-idf-v5.4/components/usb", "F:/Espressif/frameworks/esp-idf-v5.4/components/vfs", "F:/Espressif/frameworks/esp-idf-v5.4/components/wear_levelling", "F:/project_ESP32_p4/UART/components/wifi_module", "F:/Espressif/frameworks/esp-idf-v5.4/components/wifi_provisioning", "F:/Espressif/frameworks/esp-idf-v5.4/components/wpa_supplicant", "" ],
+    "build_components" : [ "app_trace", "app_update", "bootloader", "bootloader_support", "bt", "camera_module", "cmock", "console", "cxx", "driver", "efuse", "esp-tls", "esp_adc", "esp_app_format", "esp_bootloader_format", "esp_coex", "esp_common", "esp_driver_ana_cmpr", "esp_driver_cam", "esp_driver_dac", "esp_driver_gpio", "esp_driver_gptimer", "esp_driver_i2c", "esp_driver_i2s", "esp_driver_isp", "esp_driver_jpeg", "esp_driver_ledc", "esp_driver_mcpwm", "esp_driver_parlio", "esp_driver_pcnt", "esp_driver_ppa", "esp_driver_rmt", "esp_driver_sdio", "esp_driver_sdm", "esp_driver_sdmmc", "esp_driver_sdspi", "esp_driver_spi", "esp_driver_touch_sens", "esp_driver_tsens", "esp_driver_uart", "esp_driver_usb_serial_jtag", "esp_eth", "esp_event", "esp_gdbstub", "esp_hid", "esp_http_client", "esp_http_server", "esp_https_ota", "esp_https_server", "esp_hw_support", "esp_lcd", "esp_local_ctrl", "esp_mm", "esp_netif", "esp_netif_stack", "esp_partition", "esp_phy", "esp_pm", "esp_psram", "esp_ringbuf", "esp_rom", "esp_security", "esp_system", "esp_timer", "esp_vfs_console", "esp_wifi", "espcoredump", "espressif__cmake_utilities", "espressif__eppp_link", "espressif__esp_cam_sensor", "espressif__esp_h264", "espressif__esp_hosted", "espressif__esp_ipa", "espressif__esp_sccb_intf", "espressif__esp_serial_slave_link", "espressif__esp_video", "espressif__esp_wifi_remote", "espressif__usb_host_uvc", "esptool_py", "fatfs", "freertos", "hal", "heap", "http_parser", "idf_test", "ieee802154", "json", "log", "lwip", "main", "mbedtls", "motor_module", "mqtt", "newlib", "nvs_flash", "nvs_sec_provider", "openthread", "partition_table", "protobuf-c", "protocomm", "pthread", "riscv", "rt", "sdmmc", "soc", "spi_flash", "spiffs", "tcp_transport", "uart_module", "ulp", "unity", "usb", "vfs", "wear_levelling", "wifi_module", "wifi_provisioning", "wpa_supplicant", "" ],
+    "build_component_paths" : [ "F:/Espressif/frameworks/esp-idf-v5.4/components/app_trace", "F:/Espressif/frameworks/esp-idf-v5.4/components/app_update", "F:/Espressif/frameworks/esp-idf-v5.4/components/bootloader", "F:/Espressif/frameworks/esp-idf-v5.4/components/bootloader_support", "F:/Espressif/frameworks/esp-idf-v5.4/components/bt", "F:/project_ESP32_p4/UART/components/camera_module", "F:/Espressif/frameworks/esp-idf-v5.4/components/cmock", "F:/Espressif/frameworks/esp-idf-v5.4/components/console", "F:/Espressif/frameworks/esp-idf-v5.4/components/cxx", "F:/Espressif/frameworks/esp-idf-v5.4/components/driver", "F:/Espressif/frameworks/esp-idf-v5.4/components/efuse", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp-tls", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_adc", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_app_format", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_bootloader_format", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_coex", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_common", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_ana_cmpr", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_cam", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_dac", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_gpio", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_gptimer", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_i2c", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_i2s", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_isp", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_jpeg", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_ledc", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_mcpwm", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_parlio", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_pcnt", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_ppa", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_rmt", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_sdio", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_sdm", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_sdmmc", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_sdspi", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_spi", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_touch_sens", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_tsens", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_uart", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_driver_usb_serial_jtag", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_eth", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_event", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_gdbstub", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_hid", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_http_client", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_http_server", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_https_ota", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_https_server", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_hw_support", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_lcd", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_local_ctrl", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_mm", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_netif", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_netif_stack", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_partition", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_phy", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_pm", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_psram", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_ringbuf", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_rom", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_security", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_system", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_timer", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_vfs_console", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_wifi", "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump", "F:/project_ESP32_p4/UART/managed_components/espressif__cmake_utilities", "F:/project_ESP32_p4/UART/managed_components/espressif__eppp_link", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_ipa", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_sccb_intf", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_serial_slave_link", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote", "F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc", "F:/Espressif/frameworks/esp-idf-v5.4/components/esptool_py", "F:/Espressif/frameworks/esp-idf-v5.4/components/fatfs", "F:/Espressif/frameworks/esp-idf-v5.4/components/freertos", "F:/Espressif/frameworks/esp-idf-v5.4/components/hal", "F:/Espressif/frameworks/esp-idf-v5.4/components/heap", "F:/Espressif/frameworks/esp-idf-v5.4/components/http_parser", "F:/Espressif/frameworks/esp-idf-v5.4/components/idf_test", "F:/Espressif/frameworks/esp-idf-v5.4/components/ieee802154", "F:/Espressif/frameworks/esp-idf-v5.4/components/json", "F:/Espressif/frameworks/esp-idf-v5.4/components/log", "F:/Espressif/frameworks/esp-idf-v5.4/components/lwip", "F:/project_ESP32_p4/UART/main", "F:/Espressif/frameworks/esp-idf-v5.4/components/mbedtls", "F:/project_ESP32_p4/UART/components/motor_module", "F:/Espressif/frameworks/esp-idf-v5.4/components/mqtt", "F:/Espressif/frameworks/esp-idf-v5.4/components/newlib", "F:/Espressif/frameworks/esp-idf-v5.4/components/nvs_flash", "F:/Espressif/frameworks/esp-idf-v5.4/components/nvs_sec_provider", "F:/Espressif/frameworks/esp-idf-v5.4/components/openthread", "F:/Espressif/frameworks/esp-idf-v5.4/components/partition_table", "F:/Espressif/frameworks/esp-idf-v5.4/components/protobuf-c", "F:/Espressif/frameworks/esp-idf-v5.4/components/protocomm", "F:/Espressif/frameworks/esp-idf-v5.4/components/pthread", "F:/Espressif/frameworks/esp-idf-v5.4/components/riscv", "F:/Espressif/frameworks/esp-idf-v5.4/components/rt", "F:/Espressif/frameworks/esp-idf-v5.4/components/sdmmc", "F:/Espressif/frameworks/esp-idf-v5.4/components/soc", "F:/Espressif/frameworks/esp-idf-v5.4/components/spi_flash", "F:/Espressif/frameworks/esp-idf-v5.4/components/spiffs", "F:/Espressif/frameworks/esp-idf-v5.4/components/tcp_transport", "F:/project_ESP32_p4/UART/components/uart_module", "F:/Espressif/frameworks/esp-idf-v5.4/components/ulp", "F:/Espressif/frameworks/esp-idf-v5.4/components/unity", "F:/Espressif/frameworks/esp-idf-v5.4/components/usb", "F:/Espressif/frameworks/esp-idf-v5.4/components/vfs", "F:/Espressif/frameworks/esp-idf-v5.4/components/wear_levelling", "F:/project_ESP32_p4/UART/components/wifi_module", "F:/Espressif/frameworks/esp-idf-v5.4/components/wifi_provisioning", "F:/Espressif/frameworks/esp-idf-v5.4/components/wpa_supplicant", "" ],
     "build_component_info" : {
         "app_trace": {
             "alias": "idf::app_trace",
@@ -102,6 +102,21 @@
             "file": "",
             "sources": [],
             "include_dirs": []
+        },
+        "camera_module": {
+            "alias": "idf::camera_module",
+            "target": "___idf_camera_module",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/components/camera_module",
+            "type": "LIBRARY",
+            "lib": "__idf_camera_module",
+            "reqs": [ "espressif__esp_video", "esp_driver_jpeg", "driver" ],
+            "priv_reqs": [ "espressif__esp_video" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__esp_video" ],
+            "file": "F:/project_ESP32_p4/UART/build/esp-idf/camera_module/libcamera_module.a",
+            "sources": [ "F:/project_ESP32_p4/UART/components/camera_module/camera_module.c" ],
+            "include_dirs": [ "include" ]
         },
         "cmock": {
             "alias": "idf::cmock",
@@ -888,14 +903,14 @@
             "target": "___idf_esp_psram",
             "prefix": "idf",
             "dir": "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_psram",
-            "type": "CONFIG_ONLY",
+            "type": "LIBRARY",
             "lib": "__idf_esp_psram",
             "reqs": [],
             "priv_reqs": [ "heap", "spi_flash", "esp_mm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "",
-            "sources": [],
+            "file": "F:/project_ESP32_p4/UART/build/esp-idf/esp_psram/libesp_psram.a",
+            "sources": [ "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_psram/esp_psram.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_psram/device/esp_psram_impl_ap_hex.c" ],
             "include_dirs": [ "include" ]
         },
         "esp_ringbuf": {
@@ -1018,6 +1033,21 @@
             "sources": [ "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/src/core_dump_init.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/src/core_dump_common.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/src/core_dump_flash.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/src/core_dump_uart.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/src/core_dump_elf.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/src/core_dump_binary.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/src/core_dump_sha.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/src/core_dump_crc.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/espcoredump/src/port/riscv/core_dump_port.c" ],
             "include_dirs": [ "include", "include/port/riscv" ]
         },
+        "espressif__cmake_utilities": {
+            "alias": "idf::espressif__cmake_utilities",
+            "target": "___idf_espressif__cmake_utilities",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__cmake_utilities",
+            "type": "CONFIG_ONLY",
+            "lib": "__idf_espressif__cmake_utilities",
+            "reqs": [],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "",
+            "sources": [],
+            "include_dirs": []
+        },
         "espressif__eppp_link": {
             "alias": "idf::espressif__eppp_link",
             "target": "___idf_espressif__eppp_link",
@@ -1032,6 +1062,36 @@
             "file": "F:/project_ESP32_p4/UART/build/esp-idf/espressif__eppp_link/libespressif__eppp_link.a",
             "sources": [ "F:/project_ESP32_p4/UART/managed_components/espressif__eppp_link/eppp_link.c", "F:/project_ESP32_p4/UART/managed_components/espressif__eppp_link/eppp_link_netif.cpp", "F:/project_ESP32_p4/UART/managed_components/espressif__eppp_link/eppp_uart.c", "F:/project_ESP32_p4/UART/managed_components/espressif__eppp_link/eppp_netif_tun.c" ],
             "include_dirs": [ "include" ]
+        },
+        "espressif__esp_cam_sensor": {
+            "alias": "idf::espressif__esp_cam_sensor",
+            "target": "___idf_espressif__esp_cam_sensor",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor",
+            "type": "LIBRARY",
+            "lib": "__idf_espressif__esp_cam_sensor",
+            "reqs": [ "espressif__esp_sccb_intf", "esp_driver_cam", "esp_driver_gpio", "esp_driver_ledc", "esp_driver_spi", "esp_driver_parlio" ],
+            "priv_reqs": [ "esp_timer", "espressif__cmake_utilities", "espressif__esp_sccb_intf" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__cmake_utilities", "espressif__esp_sccb_intf" ],
+            "file": "F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_cam_sensor/libespressif__esp_cam_sensor.a",
+            "sources": [ "F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor/src/esp_cam_sensor.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor/src/esp_cam_sensor_xclk.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor/src/esp_cam_motor.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor/src/driver_cam/esp_cam_ctlr_spi_cam.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor/src/driver_spi/spi_slave.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor/sensors/ov5647/ov5647.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor/sensors/sc2336/sc2336.c" ],
+            "include_dirs": [ "include", "sensors/ov5647/include", "sensors/sc2336/include" ]
+        },
+        "espressif__esp_h264": {
+            "alias": "idf::espressif__esp_h264",
+            "target": "___idf_espressif__esp_h264",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264",
+            "type": "LIBRARY",
+            "lib": "__idf_espressif__esp_h264",
+            "reqs": [ "esp_mm" ],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_h264/libespressif__esp_h264.a",
+            "sources": [ "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/port/src/esp_h264_alloc.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/port/src/esp_h264_cache.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/interface/src/esp_h264_dec.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/interface/src/esp_h264_dec_param.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/interface/src/esp_h264_enc_dual.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/interface/src/esp_h264_enc_param.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/interface/src/esp_h264_enc_param_hw.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/interface/src/esp_h264_enc_single.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/interface/src/esp_h264_version.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/sw/src/esp_h264_dec_sw.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/sw/src/esp_h264_enc_single_sw.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/sw/src/esp_h264_enc_sw_param.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/sw/src/h264_color_convert.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/hw/src/esp_h264_enc_dual_hw.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/hw/src/esp_h264_enc_hw_param.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/hw/src/esp_h264_enc_single_hw.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/hw/src/h264_nal.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/hw/src/h264_rc.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/hw/hal/esp32p4/h264_dma_hal.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264/hw/hal/esp32p4/h264_hal.c" ],
+            "include_dirs": [ "./interface/include", "./sw/include", "./port/include/", "./hw/include" ]
         },
         "espressif__esp_hosted": {
             "alias": "idf::espressif__esp_hosted",
@@ -1048,6 +1108,36 @@
             "sources": [ "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/api/src/esp_wifi_weak.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/api/src/esp_hosted_api.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/api/src/esp_hosted_transport_config.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/api/src/esp_hosted_ota_api.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/transport/transport_drv.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/transport/transport_util.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/serial/serial_ll_if.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/utils/stats.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/serial/serial_drv.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/rpc/core/rpc_core.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/rpc/core/rpc_req.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/rpc/core/rpc_rsp.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/rpc/core/rpc_evt.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/rpc/core/rpc_utils.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/rpc/slaveif/rpc_slave_if.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/rpc/wrap/rpc_wrap.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/virtual_serial_if/serial_if.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/common/protobuf-c/protobuf-c/protobuf-c.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/common/proto/esp_hosted_rpc.pb-c.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/common/mempool/mempool_ll.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/common/mempool/mempool.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/common/utils/esp_hosted_cli.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/bt/hci_stub_drv.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/power_save/power_save_drv.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/drivers/transport/sdio/sdio_drv.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/port/esp/freertos/src/port_esp_hosted_host_init.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/port/esp/freertos/src/port_esp_hosted_host_os.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/port/esp/freertos/src/port_esp_hosted_host_transport_defaults.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_hosted/host/port/esp/freertos/src/port_esp_hosted_host_sdio.c" ],
             "include_dirs": [ "./host", "./host/api/include" ]
         },
+        "espressif__esp_ipa": {
+            "alias": "idf::espressif__esp_ipa",
+            "target": "___idf_espressif__esp_ipa",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__esp_ipa",
+            "type": "LIBRARY",
+            "lib": "__idf_espressif__esp_ipa",
+            "reqs": [ "esp_driver_isp" ],
+            "priv_reqs": [ "espressif__cmake_utilities" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__cmake_utilities" ],
+            "file": "F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_ipa/libespressif__esp_ipa.a",
+            "sources": [ "F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_ipa/esp_video_ipa_config.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_ipa/src/version.c" ],
+            "include_dirs": [ "include" ]
+        },
+        "espressif__esp_sccb_intf": {
+            "alias": "idf::espressif__esp_sccb_intf",
+            "target": "___idf_espressif__esp_sccb_intf",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__esp_sccb_intf",
+            "type": "LIBRARY",
+            "lib": "__idf_espressif__esp_sccb_intf",
+            "reqs": [ "esp_driver_i2c" ],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_sccb_intf/libespressif__esp_sccb_intf.a",
+            "sources": [ "F:/project_ESP32_p4/UART/managed_components/espressif__esp_sccb_intf/src/sccb.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_sccb_intf/sccb_i2c/src/sccb_i2c.c" ],
+            "include_dirs": [ "include", "interface", "sccb_i2c/include" ]
+        },
         "espressif__esp_serial_slave_link": {
             "alias": "idf::espressif__esp_serial_slave_link",
             "target": "___idf_espressif__esp_serial_slave_link",
@@ -1063,6 +1153,21 @@
             "sources": [ "F:/project_ESP32_p4/UART/managed_components/espressif__esp_serial_slave_link/essl.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_serial_slave_link/essl_sdio.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_serial_slave_link/essl_spi.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_serial_slave_link/essl_sdio_defs.c" ],
             "include_dirs": [ "include" ]
         },
+        "espressif__esp_video": {
+            "alias": "idf::espressif__esp_video",
+            "target": "___idf_espressif__esp_video",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video",
+            "type": "LIBRARY",
+            "lib": "__idf_espressif__esp_video",
+            "reqs": [ "esp_driver_cam", "espressif__esp_cam_sensor" ],
+            "priv_reqs": [ "vfs", "espressif__cmake_utilities", "espressif__esp_cam_sensor", "espressif__esp_h264", "espressif__esp_ipa", "espressif__usb_host_uvc" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__cmake_utilities", "espressif__esp_cam_sensor", "espressif__esp_h264", "espressif__esp_ipa", "espressif__usb_host_uvc" ],
+            "file": "F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_video/libespressif__esp_video.a",
+            "sources": [ "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/esp_video_buffer.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/esp_video_init.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/esp_video_ioctl.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/esp_video_mman.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/esp_video_vfs.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/esp_video.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/esp_video_cam.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/data_reprocessing/esp32p4/esp_video_swap_short.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/data_reprocessing/esp32p4/esp_video_swap_short.S", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/data_reprocessing/esp32p4/esp_video_swap_byte.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/data_reprocessing/esp32p4/esp_video_swap_byte.S", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/device/esp_video_csi_device.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/device/esp_video_dvp_device.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video/src/device/esp_video_isp_device.c" ],
+            "include_dirs": [ "include" ]
+        },
         "espressif__esp_wifi_remote": {
             "alias": "idf::espressif__esp_wifi_remote",
             "target": "___idf_espressif__esp_wifi_remote",
@@ -1076,6 +1181,21 @@
             "managed_priv_reqs": [ "espressif__eppp_link", "espressif__esp_hosted" ],
             "file": "F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_wifi_remote/libespressif__esp_wifi_remote.a",
             "sources": [ "F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote/esp_wifi_remote.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote/esp_wifi_remote_net.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote/dummy_src.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote/idf_tag_v5.4/esp_wifi_remote_weak.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote/idf_tag_v5.4/esp_eap_client_remote_weak.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote/idf_tag_v5.4/esp_wifi_with_remote.c", "F:/project_ESP32_p4/UART/managed_components/espressif__esp_wifi_remote/idf_tag_v5.4/esp_eap_client_with_remote.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_wifi/src/wifi_default.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_wifi/src/wifi_netif.c", "F:/Espressif/frameworks/esp-idf-v5.4/components/esp_wifi/src/wifi_default_ap.c" ],
+            "include_dirs": [ "include" ]
+        },
+        "espressif__usb_host_uvc": {
+            "alias": "idf::espressif__usb_host_uvc",
+            "target": "___idf_espressif__usb_host_uvc",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc",
+            "type": "LIBRARY",
+            "lib": "__idf_espressif__usb_host_uvc",
+            "reqs": [ "usb" ],
+            "priv_reqs": [ "heap" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "F:/project_ESP32_p4/UART/build/esp-idf/espressif__usb_host_uvc/libespressif__usb_host_uvc.a",
+            "sources": [ "F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc/uvc_host.c", "F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc/uvc_descriptor_parsing.c", "F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc/uvc_descriptor_printing.c", "F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc/uvc_frame.c", "F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc/uvc_control.c", "F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc/uvc_isoc.c", "F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc/uvc_bulk.c" ],
             "include_dirs": [ "include" ]
         },
         "esptool_py": {
@@ -1250,7 +1370,7 @@
             "dir": "F:/project_ESP32_p4/UART/main",
             "type": "LIBRARY",
             "lib": "__idf_main",
-            "reqs": [ "wifi_module", "esp_http_server", "uart_module", "motor_module", "nvs_flash" ],
+            "reqs": [ "wifi_module", "esp_http_server", "uart_module", "motor_module", "camera_module", "nvs_flash" ],
             "priv_reqs": [ "espressif__esp_hosted", "espressif__esp_wifi_remote" ],
             "managed_reqs": [],
             "managed_priv_reqs": [ "espressif__esp_hosted", "espressif__esp_wifi_remote" ],
@@ -2931,11 +3051,23 @@
             "prefix": "idf",
             "dir": "F:/project_ESP32_p4/UART/main",
             "lib": "__idf_main",
-            "reqs": [ "wifi_module", "esp_http_server", "uart_module", "motor_module", "nvs_flash" ],
+            "reqs": [ "wifi_module", "esp_http_server", "uart_module", "motor_module", "camera_module", "nvs_flash" ],
             "priv_reqs": [ "espressif__esp_hosted", "espressif__esp_wifi_remote" ],
             "managed_reqs": [],
             "managed_priv_reqs": [ "espressif__esp_hosted", "espressif__esp_wifi_remote" ],
             "include_dirs": [ "." ]
+        },
+        "camera_module": {
+            "alias": "idf::camera_module",
+            "target": "___idf_camera_module",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/components/camera_module",
+            "lib": "__idf_camera_module",
+            "reqs": [ "espressif__esp_video", "esp_driver_jpeg", "driver" ],
+            "priv_reqs": [ "espressif__esp_video" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__esp_video" ],
+            "include_dirs": [ "include" ]
         },
         "motor_module": {
             "alias": "idf::motor_module",
@@ -2973,6 +3105,18 @@
             "managed_priv_reqs": [],
             "include_dirs": [ "." ]
         },
+        "espressif__cmake_utilities": {
+            "alias": "idf::espressif__cmake_utilities",
+            "target": "___idf_espressif__cmake_utilities",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__cmake_utilities",
+            "lib": "__idf_espressif__cmake_utilities",
+            "reqs": [],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "include_dirs": []
+        },
         "espressif__eppp_link": {
             "alias": "idf::espressif__eppp_link",
             "target": "___idf_espressif__eppp_link",
@@ -2984,6 +3128,30 @@
             "managed_reqs": [],
             "managed_priv_reqs": [ "espressif__esp_serial_slave_link" ],
             "include_dirs": [ "include" ]
+        },
+        "espressif__esp_cam_sensor": {
+            "alias": "idf::espressif__esp_cam_sensor",
+            "target": "___idf_espressif__esp_cam_sensor",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__esp_cam_sensor",
+            "lib": "__idf_espressif__esp_cam_sensor",
+            "reqs": [ "espressif__esp_sccb_intf", "esp_driver_cam", "esp_driver_gpio", "esp_driver_ledc", "esp_driver_spi", "esp_driver_parlio" ],
+            "priv_reqs": [ "esp_timer", "espressif__cmake_utilities", "espressif__esp_sccb_intf" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__cmake_utilities", "espressif__esp_sccb_intf" ],
+            "include_dirs": [ "include", "sensors/ov5647/include", "sensors/sc2336/include" ]
+        },
+        "espressif__esp_h264": {
+            "alias": "idf::espressif__esp_h264",
+            "target": "___idf_espressif__esp_h264",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__esp_h264",
+            "lib": "__idf_espressif__esp_h264",
+            "reqs": [ "esp_mm" ],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "include_dirs": [ "./interface/include", "./sw/include", "./port/include/", "./hw/include" ]
         },
         "espressif__esp_hosted": {
             "alias": "idf::espressif__esp_hosted",
@@ -2997,6 +3165,30 @@
             "managed_priv_reqs": [],
             "include_dirs": [ "./host", "./host/api/include" ]
         },
+        "espressif__esp_ipa": {
+            "alias": "idf::espressif__esp_ipa",
+            "target": "___idf_espressif__esp_ipa",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__esp_ipa",
+            "lib": "__idf_espressif__esp_ipa",
+            "reqs": [ "esp_driver_isp" ],
+            "priv_reqs": [ "espressif__cmake_utilities" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__cmake_utilities" ],
+            "include_dirs": [ "include" ]
+        },
+        "espressif__esp_sccb_intf": {
+            "alias": "idf::espressif__esp_sccb_intf",
+            "target": "___idf_espressif__esp_sccb_intf",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__esp_sccb_intf",
+            "lib": "__idf_espressif__esp_sccb_intf",
+            "reqs": [ "esp_driver_i2c" ],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "include_dirs": [ "include", "interface", "sccb_i2c/include" ]
+        },
         "espressif__esp_serial_slave_link": {
             "alias": "idf::espressif__esp_serial_slave_link",
             "target": "___idf_espressif__esp_serial_slave_link",
@@ -3009,6 +3201,18 @@
             "managed_priv_reqs": [],
             "include_dirs": [ "include" ]
         },
+        "espressif__esp_video": {
+            "alias": "idf::espressif__esp_video",
+            "target": "___idf_espressif__esp_video",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__esp_video",
+            "lib": "__idf_espressif__esp_video",
+            "reqs": [ "esp_driver_cam", "espressif__esp_cam_sensor" ],
+            "priv_reqs": [ "vfs", "espressif__cmake_utilities", "espressif__esp_cam_sensor", "espressif__esp_h264", "espressif__esp_ipa", "espressif__usb_host_uvc" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__cmake_utilities", "espressif__esp_cam_sensor", "espressif__esp_h264", "espressif__esp_ipa", "espressif__usb_host_uvc" ],
+            "include_dirs": [ "include" ]
+        },
         "espressif__esp_wifi_remote": {
             "alias": "idf::espressif__esp_wifi_remote",
             "target": "___idf_espressif__esp_wifi_remote",
@@ -3019,6 +3223,18 @@
             "priv_reqs": [ "esp_wifi", "esp-tls", "vfs", "espressif__eppp_link", "espressif__esp_hosted" ],
             "managed_reqs": [],
             "managed_priv_reqs": [ "espressif__eppp_link", "espressif__esp_hosted" ],
+            "include_dirs": [ "include" ]
+        },
+        "espressif__usb_host_uvc": {
+            "alias": "idf::espressif__usb_host_uvc",
+            "target": "___idf_espressif__usb_host_uvc",
+            "prefix": "idf",
+            "dir": "F:/project_ESP32_p4/UART/managed_components/espressif__usb_host_uvc",
+            "lib": "__idf_espressif__usb_host_uvc",
+            "reqs": [ "usb" ],
+            "priv_reqs": [ "heap" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
             "include_dirs": [ "include" ]
         }
     },

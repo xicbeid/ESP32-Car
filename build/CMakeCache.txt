@@ -314,7 +314,7 @@ ESP_PLATFORM:UNINITIALIZED=1
 GEN_FILES:BOOL=
 
 //Git command line client
-GIT_EXECUTABLE:FILEPATH=F:/Espressif/tools/idf-git/2.44.0/cmd/git.exe
+GIT_EXECUTABLE:FILEPATH=F:/git/Git/cmd/git.exe
 
 //IDF Build Target
 IDF_TARGET:STRING=esp32p4
@@ -354,6 +354,9 @@ PYTHON:UNINITIALIZED=F:\Espressif\python_env\idf5.4_py3.11_env\Scripts\python.ex
 
 //No help, variable specified on the command line.
 PYTHON_DEPS_CHECKED:UNINITIALIZED=1
+
+//No help, variable specified on the command line.
+SDKCONFIG:UNINITIALIZED=f:\project_ESP32_p4\UART\sdkconfig
 
 //Value Computed by CMake
 UART_BINARY_DIR:STATIC=F:/project_ESP32_p4/UART/build
@@ -545,7 +548,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=123
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=131
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -591,7 +594,7 @@ CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS
 C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS:INTERNAL=1
 //Details about finding Git
-FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[F:/Espressif/tools/idf-git/2.44.0/cmd/git.exe][v2.44.0.windows.1()]
+FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[F:/git/Git/cmd/git.exe][v2.42.0.windows.1()]
 //Details about finding Python3
 FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[F:/Espressif/python_env/idf5.4_py3.11_env/Scripts/python.exe][cfound components: Interpreter ][v3.11.2()]
 //Details about finding Threads

@@ -124,7 +124,7 @@ if(CONFIG_ESP_HOSTED_ENABLED)
 	endif()
 
 	# OpenThread utility functions
-	if(CONFIG_ESP_HOSTED_OT_HOST_ENABLE)
+	if(CONFIG_ESP_HOSTED_HOST_OT_ENABLE)
 		list(APPEND srcs "${host_dir}/port/esp/freertos/src/port_esp_hosted_host_ot_util.c")
 	endif()
 endif()

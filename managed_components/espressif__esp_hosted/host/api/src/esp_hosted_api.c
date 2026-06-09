@@ -26,7 +26,7 @@ extern "C" {
 #include "esp_dpp.h"
 #endif
 
-#if H_OT_HOST_ENABLE
+#if H_HOST_OT_ENABLE
 #include "esp_hosted_openthread.h"
 #endif
 
@@ -905,7 +905,7 @@ esp_err_t esp_hosted_set_mem_monitor(esp_hosted_config_mem_monitor_t *config, es
 }
 #endif
 
-#if H_OT_HOST_ENABLE
+#if H_HOST_OT_ENABLE
 esp_err_t esp_hosted_openthread_rcp_init(void)
 {
 	check_transport_up();

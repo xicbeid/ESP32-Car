@@ -24,7 +24,7 @@
 #include "esp_dpp.h"
 #endif
 
-#if H_OT_HOST_ENABLE
+#if H_HOST_OT_ENABLE
 #include "esp_hosted_openthread.h"
 #endif
 
@@ -2844,7 +2844,7 @@ esp_err_t esp_hosted_cp_ext_coex_disable(void)
 
 #endif
 
-#if H_OT_HOST_ENABLE
+#if H_HOST_OT_ENABLE
 esp_err_t rpc_iface_openthread_rcp_init(void)
 {
 	rcp_feature_control_t feature_control;
@@ -2915,4 +2915,4 @@ esp_err_t rpc_iface_openthread_rcp_query(esp_hosted_openthread_query_t query)
 
 	return rpc_iface_feature_control(&feature_control);
 }
-#endif // H_OT_HOST_ENABLE
+#endif // H_HOST_OT_ENABLE

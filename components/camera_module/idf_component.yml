@@ -1,0 +1,5 @@
+dependencies:
+  espressif/esp_video:
+    version: "*"
+  idf:
+    version: ">=5.4.0"

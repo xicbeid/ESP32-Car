@@ -19,8 +19,10 @@
 #include "app_motor_uart.h"
 #include "wifi_module.h"
 #include "web_control.h"
+#include "camera_module.h"
 
 #define delay_ms(ms) vTaskDelay(pdMS_TO_TICKS(ms))
+
 
 #define MOTOR_TYPE 2     /* 1:520 2:310 3:TT-encoder 4:TT-DC 5:L-520 */
 #define UPLOAD_DATA 1    /* 0:none 1:total encoder 2:realtime encoder 3:speed mm/s */
@@ -192,28 +194,37 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
     ESP_LOGI(TAG, "NVS initialized");
 
-    /* 2. Motor init (UART0 + config) */
-    motor_init();
+    /* 2. Motor init — DISABLED for camera-only test */
+    // motor_init();
+    ESP_LOGI(TAG, "Motor disabled (camera-only test mode)");
 
-    /* 3. Encoder monitor task */
-    xTaskCreate(encoder_monitor_task, "Enc_Mon", 2048, NULL, 1, NULL);
+    /* 3. Encoder monitor task — DISABLED */
+    // xTaskCreate(encoder_monitor_task, "Enc_Mon", 2048, NULL, 1, NULL);
 
-    /* 4. Motor command queue + task */
-    g_motor_queue = xQueueCreate(3, sizeof(motor_msg_t));
-    if (!g_motor_queue) { ESP_LOGE(TAG, "Queue fail"); return; }
-    xTaskCreate(motor_task, "Motor_Task", 4096, NULL, 5, NULL);
+    /* 4. Motor command queue + task — DISABLED */
+    // g_motor_queue = xQueueCreate(3, sizeof(motor_msg_t));
+    // if (!g_motor_queue) { ESP_LOGE(TAG, "Queue fail"); return; }
+    // xTaskCreate(motor_task, "Motor_Task", 4096, NULL, 5, NULL);
 
     /* 5. WiFi AP */
     ESP_ERROR_CHECK(wifi_module_init_netstack());
     ESP_ERROR_CHECK(wifi_module_init_ap(WIFI_AP_SSID, WIFI_AP_PASSWORD, WIFI_AP_CHANNEL));
 
-    /* 6. Web control */
-    ESP_ERROR_CHECK(web_control_start(motor_control_callback));
+    /* 6. CSI Camera (SC2336 MIPI-CSI) */
+    ESP_LOGI(TAG, "Initializing CSI camera...");
+    esp_err_t cam_err = camera_module_init(NULL);
+    if (cam_err != ESP_OK) {
+        ESP_LOGW(TAG, "Camera init failed (%s) — running without camera", esp_err_to_name(cam_err));
+    }
+
+    /* 7. Web control (no motor callback for camera-only test) */
+    ESP_ERROR_CHECK(web_control_start(NULL));
 
     ESP_LOGI(TAG, "================================================");
     ESP_LOGI(TAG, " WiFi AP  : %s", WIFI_AP_SSID);
     ESP_LOGI(TAG, " Password : %s", WIFI_AP_PASSWORD);
     ESP_LOGI(TAG, " Control  : http://192.168.4.1/");
+    ESP_LOGI(TAG, " Camera   : http://192.168.4.1/stream");
     ESP_LOGI(TAG, " Motor    : UART0 (TX=37 RX=38) type=%d", MOTOR_TYPE);
     ESP_LOGI(TAG, "================================================");
 

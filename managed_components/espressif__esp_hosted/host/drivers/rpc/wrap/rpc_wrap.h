@@ -34,7 +34,7 @@ extern "C" {
 #if H_EXT_COEX_SUPPORT
 #include "esp_hosted_cp_ext_coex.h"
 #endif
-#if H_OT_HOST_ENABLE
+#if H_HOST_OT_ENABLE
 #include "esp_hosted_openthread.h"
 #endif
 /** Exported variables **/
@@ -114,7 +114,7 @@ esp_err_t rpc_iface_configure_heartbeat(bool enable, int duration_sec);
 esp_err_t rpc_iface_set_mem_monitor(esp_hosted_config_mem_monitor_t *config, esp_hosted_curr_mem_info_t *curr_mem_info);
 #endif
 
-#if H_OT_HOST_ENABLE
+#if H_HOST_OT_ENABLE
 esp_err_t rpc_iface_openthread_rcp_init(void);
 esp_err_t rpc_iface_openthread_rcp_deinit(void);
 esp_err_t rpc_iface_openthread_rcp_start(void);
