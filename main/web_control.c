@@ -56,7 +56,7 @@ static const char INDEX_HTML[] =
 "fetch(u).then(function(r){return r.text()}).then(function(t){document.getElementById('st').textContent=t})}"
 "DI.oninput=function(){document.getElementById('d2').textContent=DI.value+'cm'};"
 "SP.oninput=function(){document.getElementById('s2').textContent=SP.value};"
-"setInterval(function(){document.getElementById('camImg').src='/snapshot?t='+Date.now()},200);"
+"setInterval(function(){document.getElementById('camImg').src='/snapshot?t='+Date.now()},50);"
 "</script></body></html>";
 
 /* ==================== HTTP Handlers ==================== */
@@ -115,21 +115,16 @@ static esp_err_t stream_handler(httpd_req_t *req)
     httpd_resp_send_chunk(req, NULL, 0);
 
     while (1) {
-        int waited = 0;
-        while (waited < 20) {
-            if (camera_module_get_frame(&jpeg_buf, &jpeg_len) == ESP_OK && jpeg_len > 0)
-                break;
-            vTaskDelay(pdMS_TO_TICKS(10));
-            waited++;
-        }
-        if (jpeg_len == 0) continue;
+        if (camera_module_get_frame(&jpeg_buf, &jpeg_len) != ESP_OK || jpeg_len == 0)
+            continue;
 
         int hdr_len = snprintf(part_buf, sizeof(part_buf), MJPEG_HDR_FMT, (unsigned int)jpeg_len);
         if (httpd_resp_send_chunk(req, part_buf, hdr_len) != ESP_OK) break;
         if (httpd_resp_send_chunk(req, (const char *)jpeg_buf, (int)jpeg_len) != ESP_OK) break;
         if (httpd_resp_send_chunk(req, "\r\n", 2) != ESP_OK) break;
 
-        vTaskDelay(pdMS_TO_TICKS(30));
+        /* Short yield — get_frame already waited ~33ms for next frame */
+        vTaskDelay(pdMS_TO_TICKS(5));
     }
 
     ESP_LOGI(TAG, "Stream client disconnected");
@@ -142,11 +137,10 @@ static esp_err_t snapshot_handler(httpd_req_t *req)
     const uint8_t *jpeg_buf = NULL;
     size_t jpeg_len = 0;
 
-    for (int i = 0; i < 50; i++) {
-        if (camera_module_get_frame(&jpeg_buf, &jpeg_len) == ESP_OK && jpeg_len > 0) break;
-        vTaskDelay(pdMS_TO_TICKS(10));
+    if (camera_module_get_frame(&jpeg_buf, &jpeg_len) != ESP_OK || jpeg_len == 0) {
+        /* No fresh frame within 100ms — send last-known if any */
+        httpd_resp_send_500(req); return ESP_FAIL;
     }
-    if (jpeg_len == 0) { httpd_resp_send_500(req); return ESP_FAIL; }
 
     httpd_resp_set_type(req, "image/jpeg");
     httpd_resp_send(req, (const char *)jpeg_buf, (int)jpeg_len);

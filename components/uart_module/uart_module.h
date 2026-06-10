@@ -9,8 +9,8 @@
 #include "esp_log.h"
 
 // 引脚配置 (ESP32-P4 UART0) Pin Configuration
-#define UART0_TX_PIN    37
-#define UART0_RX_PIN    38
+#define UART0_TX_PIN    20
+#define UART0_RX_PIN    21
 #define UART_BAUD  115200
 
 extern QueueHandle_t uart_queue;

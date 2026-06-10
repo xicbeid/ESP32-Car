@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "UART",
-    "project_version":    "c5e4032-dirty",
+    "project_version":    "71d8e53-dirty",
     "project_path":       "F:/project_ESP32_p4/UART",
     "idf_path":           "F:/Espressif/frameworks/esp-idf-v5.4",
     "build_dir":          "F:/project_ESP32_p4/UART/build",

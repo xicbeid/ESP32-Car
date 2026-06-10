@@ -1,0 +1,216 @@
+uild:Jul 10 2024
+rst:0x1 (POWERON),boot:0x30f (SPI_FAST_FLASH_BOOT)
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x162c
+load:0x4ff�ESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0x1 (POWERON),boot:0x30f (SPI_FAST_FLASH_BOOT)
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x162c
+load:0x4ff2abd0,len:0xd70
+load:0x4ff2cbd0,len:0x32fc
+entry 0x4ff2abda
+[0;32mI (25) boot: ESP-IDF v5.4-dirty 2nd stage bootloader[0m
+[0;32mI (26) boot: compile time Jun 10 2026 00:28:22[0m
+[0;32mI (26) boot: Multicore bootloader[0m
+[0;32mI (27) boot: chip revision: v1.0[0m
+[0;32mI (29) boot: efuse block revision: v0.3[0m
+[0;32mI (33) boot.esp32p4: SPI Speed      : 80MHz[0m
+[0;32mI (36) boot.esp32p4: SPI Mode       : DIO[0m
+[0;32mI (40) boot.esp32p4: SPI Flash Size : 16MB[0m
+[0;32mI (44) boot: Enabling RNG early entropy source...[0m
+[0;32mI (49) boot: Partition Table:[0m
+[0;32mI (51) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (70) boot:  2 factory          factory app      00 00 00010000 00177000[0m
+[0;32mI (78) boot: End of partition table[0m
+[0;32mI (80) esp_image: segment 0: paddr=00010020 vaddr=400a0020 size=430a4h (274596) map[0m
+[0;32mI (134) esp_image: segment 1: paddr=000530cc vaddr=30100000 size=00068h (   104) load[0m
+[0;32mI (136) esp_image: segment 2: paddr=0005313c vaddr=4ff00000 size=0cedch ( 52956) load[0m
+[0;32mI (150) esp_image: segment 3: paddr=00060020 vaddr=40000020 size=94ca8h (609448) map[0m
+[0;32mI (252) esp_image: segment 4: paddr=000f4cd0 vaddr=4ff0cedc size=06e94h ( 28308) load[0m
+[0;32mI (260) esp_image: segment 5: paddr=000fbb6c vaddr=4ff13d80 size=02eb0h ( 11952) load[0m
+[0;32mI (267) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (268) boot: Disabling RNG early entropy source...[0m
+[0;32mI (278) hex_psram: vendor id    : 0x0d (AP)[0m
+[0;32mI (278) hex_psram: Latency      : 0x01 (Fixed)[0m
+[0;32mI (278) hex_psram: DriveStr.    : 0x00 (25 Ohm)[0m
+[0;32mI (279) hex_psram: dev id       : 0x03 (generation 4)[0m
+[0;32mI (284) hex_psram: density      : 0x07 (256 Mbit)[0m
+[0;32mI (288) hex_psram: good-die     : 0x06 (Pass)[0m
+[0;32mI (292) hex_psram: SRF          : 0x02 (Slow Refresh)[0m
+[0;32mI (297) hex_psram: BurstType    : 0x00 ( Wrap)[0m
+[0;32mI (301) hex_psram: BurstLen     : 0x03 (2048 Byte)[0m
+[0;32mI (306) hex_psram: BitMode      : 0x01 (X16 Mode)[0m
+[0;32mI (310) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)[0m
+[0;32mI (315) hex_psram: DriveStrength: 0x00 (1/1)[0m
+[0;32mI (319) MSPI DQS: tuning success, best phase id is 2[0m
+[0;32mI (502) MSPI DQS: tuning success, best delayline id is 11[0m
+[0;32mI (502) esp_psram: Found 32MB PSRAM device[0m
+[0;32mI (503) esp_psram: Speed: 200MHz[0m
+[0;32mI (503) hex_psram: psram CS IO is dedicated[0m
+[0;32mI (506) cpu_start: Multicore app[0m
+[0;32mI (1459) esp_psram: SPI SRAM memory test OK[0m
+[0;32mI (1468) cpu_start: Pro cpu start user code[0m
+[0;32mI (1468) cpu_start: cpu freq: 360000000 Hz[0m
+[0;32mI (1468) app_init: Application information:[0m
+[0;32mI (1468) app_init: Project name:     UART[0m
+[0;32mI (1472) app_init: App version:      71d8e53-dirty[0m
+[0;32mI (1476) app_init: Compile time:     Jun 10 2026 20:47:36[0m
+[0;32mI (1482) app_init: ELF file SHA256:  c583e8da3...[0m
+[0;32mI (1486) app_init: ESP-IDF:          v5.4-dirty[0m
+[0;32mI (1490) efuse_init: Min chip rev:     v0.1[0m
+[0;32mI (1494) efuse_init: Max chip rev:     v1.99 [0m
+[0;32mI (1498) efuse_init: Chip rev:         v1.0[0m
+[0;32mI (1502) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (1509) heap_init: At 4FF19540 len 00021A80 (134 KiB): RAM[0m
+[0;32mI (1514) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM[0m
+[0;32mI (1519) heap_init: At 4FF40000 len 00060000 (384 KiB): RAM[0m
+[0;32mI (1525) heap_init: At 50108080 len 00007F80 (31 KiB): RTCRAM[0m
+[0;32mI (1530) heap_init: At 30100068 len 00001F98 (7 KiB): TCM[0m
+[0;32mI (1535) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator[0m
+[0;32mI (1542) spi_flash: detected chip: generic[0m
+[0;32mI (1545) spi_flash: flash io: dio[0m
+[0;32mI (1549) host_init: ESP Hosted : Host chip_ip[18][0m
+[0;32mI (1585) H_API: ESP-Hosted starting. Hosted_Tasks: prio:23, stack: 5120 RPC_task_stack: 5120[0m
+[0;32mI (1585) H_API: ** add_esp_wifi_remote_channels **[0m
+[0;32mI (1588) gpio: GPIO[18]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[0;32mI (1595) gpio: GPIO[19]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[0;32mI (1604) gpio: GPIO[14]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[0;32mI (1612) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[0;32mI (1620) gpio: GPIO[16]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[0;32mI (1629) gpio: GPIO[17]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (1638) H_SDIO_DRV: sdio_data_to_rx_buf_task started[0m
+[0;32mI (1638) main_task: Started on CPU0[0m
+[0;32mI (1648) main_task: Calling app_main()[0m
+[0;32mI (1658) MAIN: NVS initialized[0m
+[0;32mI (1658) MAIN: Initializing CSI camera...[0m
+[0;32mI (1658) Camera:   [1/3] esp_video_init...[0m
+[1;31mE (1658) i2c.master: I2C transaction unexpected nack detected[0m
+[1;31mE (1668) i2c.master: s_i2c_synchronous_transaction(918): I2C transaction failed[0m
+[1;31mE (1668) i2c.master: i2c_master_transmit_receive(1214): I2C transaction failed[0m
+[1;31mE (1678) sccb_i2c: s_sccb_i2c_transmit_receive_reg_a16v8(128): faled to transmit receive[0m
+[1;31mE (1688) ov5647: ov5647_get_sensor_id(288): read pid_h failed[0m
+[1;31mE (1688) ov5647: Get sensor ID failed[0m
+[1;31mE (1698) esp_video_init: Failed to detect camera sensor with address=36[0m
+[0;32mI (1698) sc2336: Detected Camera sensor PID=0xcb3a[0m
+[0;32mI (1708) Camera:   [2/3] V4L2 setup...[0m
+[0;32mI (1778) Camera: Sensor: 1280x720 fmt=0x50424752 stride=1280 sizeimage=0[0m
+[0;32mI (1778) Camera:   [3/3] JPEG init...[0m
+[0;32mI (1788) Camera: JPEG: 1280x720 Q=55 fmt=0x50424752 (RGB565) stride=1280[0m
+[0;32mI (1788) Camera: Cam task running (1280x720 stride=1280)[0m
+[0;32mI (1788) Camera: Camera ready! 1280x720 stride=1280[0m
+[0;32mI (1798) MAIN: Motor disabled (camera-only test mode)[0m
+[0;32mI (1798) WiFi_Module: Networking stack initialized[0m
+[0;32mI (1808) transport: Attempt connection with slave: retry[0][0m
+[0;33mW (1808) H_SDIO_DRV: Reset slave using GPIO[54][0m
+[0;32mI (1808) os_wrapper_esp: GPIO [54] configured[0m
+[0;32mI (1818) gpio: GPIO[54]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (3348) sdio_wrapper: SDIO master: Slot 1, Data-Lines: 4-bit Freq(KHz)[40000 KHz][0m
+[0;32mI (3348) sdio_wrapper: GPIOs: CLK[18] CMD[19] D0[14] D1[15] D2[16] D3[17] Slave_Reset[54][0m
+[0;32mI (3348) sdio_wrapper: Queues: Tx[20] Rx[20] SDIO-Rx-Mode[1][0m
+[0;32mI (3388) gpio: GPIO[15]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[0;32mI (3388) gpio: GPIO[17]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0 [0m
+[0;32mI (3388) sdio_wrapper: Function 0 Blocksize: 512[0m
+[0;32mI (3398) sdio_wrapper: Function 1 Blocksize: 512[0m
+[0;32mI (3468) Camera: F#50: 20905B bytesused=1843200[0m
+[0;32mI (3498) H_SDIO_DRV: Card init success, TRANSPORT_RX_ACTIVE[0m
+[0;32mI (3498) transport: set_transport_state: 1[0m
+[0;32mI (3498) transport: Waiting for esp_hosted slave to be ready[0m
+[0;32mI (3538) H_SDIO_DRV: SDIO Host operating in STREAMING MODE[0m
+[0;32mI (3538) H_SDIO_DRV: Open data path at slave[0m
+[0;32mI (3538) H_SDIO_DRV: Starting SDIO process rx task[0m
+[0;32mI (3538) H_SDIO_DRV: Received ESP_PRIV_IF type message[0m
+[0;32mI (3538) transport: Received INIT event from ESP32 peripheral[0m
+[0;32mI (3548) transport: EVENT: 12[0m
+[0;32mI (3548) transport: Identified slave [esp32c6][0m
+[0;32mI (3548) transport: EVENT: 11[0m
+[0;32mI (3558) transport: capabilities: 0xd[0m
+[0;32mI (3558) transport: Features supported are:[0m
+[0;32mI (3558) transport: 	 * WLAN[0m
+[0;32mI (3568) transport: 	   - HCI over SDIO[0m
+[0;32mI (3568) transport: 	   - BLE only[0m
+[0;32mI (3568) transport: EVENT: 13[0m
+[0;33mW (3578) transport: Version mismatch: Host [2.12.0] > Co-proc [0.0.0] ==> Upgrade co-proc to avoid RPC timeouts[0m
+[0;32mI (3588) transport: ESP board type is : 13 [0m
+
+[0;32mI (3588) transport: Base transport is set-up, TRANSPORT_TX_ACTIVE[0m
+[0;32mI (3598) H_API: Transport active[0m
+[0;32mI (3598) transport: Slave chip Id[12][0m
+[0;32mI (3598) transport: raw_tp_dir[-], flow_ctrl: low[60] high[80][0m
+[0;32mI (3608) transport: transport_delayed_init[0m
+[0;32mI (3608) esp_cli: Registering command: crash[0m
+[0;32mI (3618) esp_cli: Registering command: reboot[0m
+[0;32mI (3618) esp_cli: Registering command: mem-dump[0m
+[0;32mI (3618) esp_cli: Registering command: task-dump[0m
+[0;32mI (3628) esp_cli: Registering command: cpu-dump[0m
+[0;32mI (3628) esp_cli: Registering command: heap-trace[0m
+[0;32mI (3638) esp_cli: Registering command: sock-dump[0m
+[0;32mI (3638) esp_cli: Registering command: host-power-save[0m
+[0;32mI (3648) hci_stub_drv: Host BT Support: Disabled[0m
+[0;32mI (3648) H_SDIO_DRV: Received INIT event[0m
+[0;32mI (3648) H_SDIO_DRV: Event type: 0x22[0m
+[0;32mI (3658) H_SDIO_DRV: Write thread started[0m
+[0;32mI (3658) RPC_WRAP: Coprocessor Boot-up[0m
+[0;32mI (3918) WiFi_Module: WiFi AP started. SSID: ESP32-Car channel: 1[0m
+[0;32mI (3928) WebCtrl: Web control + camera ready: http://192.168.4.1/[0m
+[0;32mI (3928) MAIN: ================================================[0m
+[0;32mI (3928) MAIN:  WiFi AP  : ESP32-Car[0m
+[0;32mI (3928) MAIN:  Password : 12345678[0m
+[0;32mI (3928) RPC_WRAP: ESP Event: softap started[0m
+[0;32mI (3938) MAIN:  Control  : http://192.168.4.1/[0m
+[0;32mI (3948) MAIN:  Camera   : http://192.168.4.1/stream[0m
+[0;32mI (3948) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1[0m
+[0;32mI (3958) WiFi_Module: WiFi AP started[0m
+[0;32mI (3958) MAIN:  Motor    : UART0 (TX=37 RX=38) type=2[0m
+[0;32mI (3968) MAIN: ================================================[0m
+[0;32mI (5138) Camera: F#100: 20930B bytesused=1843200[0m
+[0;32mI (6808) Camera: F#150: 20924B bytesused=1843200[0m
+[0;32mI (8468) Camera: F#200: 20950B bytesused=1843200[0m
+[0;32mI (10138) Camera: F#250: 20931B bytesused=1843200[0m
+[0;32mI (10708) RPC_WRAP: ESP Event: SoftAP mode: station connected with MAC Addr 22:94:34:6a:37:c9[0m
+[0;32mI (10708) WiFi_Module: Station 22:94:34:6a:37:c9 joined, AID=1[0m
+[0;32mI (10798) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2[0m
+[0;32mI (11808) Camera: F#300: 20910B bytesused=1843200[0m
+[0;32mI (13468) Camera: F#350: 20905B bytesused=1843200[0m
+[0;33mW (14168) httpd_uri: httpd_uri: URI '/favicon.ico' not found[0m
+[0;33mW (14168) httpd_txrx: httpd_resp_send_err: 404 Not Found - Nothing matches the given URI[0m
+[0;32mI (15138) Camera: F#400: 20918B bytesused=1843200[0m
+[0;32mI (16808) Camera: F#450: 20898B bytesused=1843200[0m
+[0;32mI (18468) Camera: F#500: 20813B bytesused=1843200[0m
+[0;32mI (20138) Camera: F#550: 20956B bytesused=1843200[0m
+[0;32mI (21808) Camera: F#600: 21395B bytesused=1843200[0m
+[0;32mI (23468) Camera: F#650: 20965B bytesused=1843200[0m
+[0;32mI (25138) Camera: F#700: 21468B bytesused=1843200[0m
+[0;32mI (26808) Camera: F#750: 21713B bytesused=1843200[0m
+[0;32mI (28468) Camera: F#800: 21768B bytesused=1843200[0m
+[0;32mI (30138) Camera: F#850: 21694B bytesused=1843200[0m
+[0;32mI (31808) Camera: F#900: 21725B bytesused=1843200[0m
+[0;32mI (33468) Camera: F#950: 21184B bytesused=1843200[0m
+[0;32mI (35138) Camera: F#1000: 21586B bytesused=1843200[0m
+[0;32mI (36808) Camera: F#1050: 20944B bytesused=1843200[0m
+[0;32mI (38468) Camera: F#1100: 21220B bytesused=1843200[0m
+[0;32mI (40138) Camera: F#1150: 20519B bytesused=1843200[0m
+[0;32mI (41808) Camera: F#1200: 21852B bytesused=1843200[0m
+[0;32mI (43468) Camera: F#1250: 20913B bytesused=1843200[0m
+[0;32mI (45138) Camera: F#1300: 21438B bytesused=1843200[0m
+[0;32mI (46808) Camera: F#1350: 21494B bytesused=1843200[0m
+[0;32mI (48468) Camera: F#1400: 21622B bytesused=1843200[0m
+[0;32mI (50138) Camera: F#1450: 21721B bytesused=1843200[0m
+[0;32mI (51808) Camera: F#1500: 21157B bytesused=1843200[0m
+[0;32mI (53468) Camera: F#1550: 21431B bytesused=1843200[0m
+[0;32mI (55138) Camera: F#1600: 21597B bytesused=1843200[0m
+[0;32mI (56808) Camera: F#1650: 21432B bytesused=1843200[0m
+[0;32mI (58468) Camera: F#1700: 21724B bytesused=1843200[0m
+[0;32mI (60138) Camera: F#1750: 21314B bytesused=1843200[0m
+[0;32mI (61808) Camera: F#1800: 21277B bytesused=1843200[0m
+[0;32mI (63468) Camera: F#1850: 21241B bytesused=1843200[0m
+[0;32mI (65138) Camera: F#1900: 20870B bytesused=1843200[0m
+[0;32mI (66808) Camera: F#1950: 20863B bytesused=1843200[0m
+[0;32mI (68468) Camera: F#2000: 20908B bytesused=1843200[0m
+[0;32mI (69558) RPC_WRAP: ESP Event: SoftAP mode: disconnected station[0m
+[0;32mI (69558) WiFi_Module: Station 22:94:34:6a:37:c9 left, AID=1[0m
+[0;32mI (70138) Camera: F#2050: 20947B bytesused=1843200[0m
+[0;32mI (71808) Camera: F#2100: 20942B bytesused=1843200[0m
+[0;32mI (73468) Camera: F#2150: 20953B bytesused=1843200[0m
