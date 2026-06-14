@@ -38,7 +38,7 @@ static const char INDEX_HTML[] =
 ".v{color:#e94560;font-weight:bold}.x{width:260px;padding:10px;border:none;border-radius:12px;font-size:17px;font-weight:bold;color:#fff;background:#c0392b;margin-top:4px;cursor:pointer}"
 ".footer{font-size:9px;color:#555;margin-top:6px}</style></head>"
 "<body><h1>ESP32-P4 Camera Car</h1>"
-"<div class='cam-box'><img src='/snapshot' alt='Camera' id='camImg'><span class='cam-label'>&#128247; Live</span></div>"
+"<div class='cam-box'><img src='/stream' alt='Camera' id='camImg'><span class='cam-label'>&#128247; Live</span></div>"
 "<div class='s' id='st'>就绪</div>"
 "<div class='dp'><button class='b u' onmousedown='go(\"fwd\")' ontouchstart='go(\"fwd\")'>&#9650;</button>"
 "<button class='b l' onmousedown='go(\"left\")' ontouchstart='go(\"left\")'>&#9664;</button>"
@@ -56,7 +56,6 @@ static const char INDEX_HTML[] =
 "fetch(u).then(function(r){return r.text()}).then(function(t){document.getElementById('st').textContent=t})}"
 "DI.oninput=function(){document.getElementById('d2').textContent=DI.value+'cm'};"
 "SP.oninput=function(){document.getElementById('s2').textContent=SP.value};"
-"setInterval(function(){document.getElementById('camImg').src='/snapshot?t='+Date.now()},50);"
 "</script></body></html>";
 
 /* ==================== HTTP Handlers ==================== */
@@ -97,10 +96,8 @@ static esp_err_t ctrl_handler(httpd_req_t *req)
 
 /* ==================== MJPEG Stream Handler ==================== */
 #define MJPEG_BOUNDARY "frame"
-#define MJPEG_HDR_FMT \
-    "--" MJPEG_BOUNDARY "\r\n" \
-    "Content-Type: image/jpeg\r\n" \
-    "Content-Length: %u\r\n\r\n"
+#define MJPEG_STREAM_BOUNDARY  "\r\n--" MJPEG_BOUNDARY "\r\n"
+#define MJPEG_STREAM_PART      "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n"
 
 static esp_err_t stream_handler(httpd_req_t *req)
 {
@@ -112,19 +109,16 @@ static esp_err_t stream_handler(httpd_req_t *req)
     httpd_resp_set_hdr(req, "Cache-Control", "no-store, must-revalidate");
     httpd_resp_set_hdr(req, "Connection", "close");
     httpd_resp_set_hdr(req, "Pragma", "no-cache");
-    httpd_resp_send_chunk(req, NULL, 0);
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
 
     while (1) {
         if (camera_module_get_frame(&jpeg_buf, &jpeg_len) != ESP_OK || jpeg_len == 0)
             continue;
 
-        int hdr_len = snprintf(part_buf, sizeof(part_buf), MJPEG_HDR_FMT, (unsigned int)jpeg_len);
+        int hdr_len = snprintf(part_buf, sizeof(part_buf), MJPEG_STREAM_PART, (unsigned int)jpeg_len);
+        if (httpd_resp_send_chunk(req, MJPEG_STREAM_BOUNDARY, strlen(MJPEG_STREAM_BOUNDARY)) != ESP_OK) break;
         if (httpd_resp_send_chunk(req, part_buf, hdr_len) != ESP_OK) break;
         if (httpd_resp_send_chunk(req, (const char *)jpeg_buf, (int)jpeg_len) != ESP_OK) break;
-        if (httpd_resp_send_chunk(req, "\r\n", 2) != ESP_OK) break;
-
-        /* Short yield — get_frame already waited ~33ms for next frame */
-        vTaskDelay(pdMS_TO_TICKS(5));
     }
 
     ESP_LOGI(TAG, "Stream client disconnected");

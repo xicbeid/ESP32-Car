@@ -1,9 +1,11 @@
 /*
  * Camera Module — V4L2 MIPI-CSI camera + HW JPEG encode
  *
- * Pipeline: SC2336 → MIPI-CSI → /dev/video0 (RAW Bayer)
- * ISP pipeline controller disabled due to IPA AWB crash.
- * Fallback: encode RAW Bayer as grayscale JPEG (monochrome preview).
+ * Pipeline: SC2336 → MIPI-CSI → ISP (/dev/video0 RGB565) → HW JPEG
+ * ISP converts RAW Bayer → RGB565 automatically.
+ * ISP pipeline controller (3A) disabled to avoid IPA AWB crash.
+ *
+ * We run software AE over the ISP RGB565 output using V4L2 controls.
  *
  * Fixes (2026-06-10):
  *   - Double-buffer output to prevent HTTP/camera race (flickering)
@@ -13,8 +15,7 @@
  *
  * Fixes (2026-06-14):
  *   - Software AE: brightness sampling + V4L2 exposure/gain control
- *     Compensates for missing ISP auto-exposure (overexposed in bright light)
- *   - RAW10 support: 16bit/px V4L2 → 8bit/px extract for grayscale JPEG
+ *   - RGB565 support: ISP output path (multi-byte stride fix, green-channel AE)
  *   - Switched to 640×480 RAW10 @ 50fps (from 1280×720 RAW8 @ 30fps)
  */
 
@@ -148,7 +149,22 @@ static float ae_measure_brightness(const uint8_t *raw, uint32_t stride)
 {
     uint64_t sum = 0;
     uint32_t count = 0;
-    if (s_is_raw10) {
+    bool is_rgb565 = (s_pixelformat == V4L2_PIX_FMT_RGB565);
+
+    if (is_rgb565) {
+        /* RGB565: 2 bytes/pixel. Extract green channel (6 bits → 8-bit scale) */
+        for (uint32_t y = 0; y < s_fb_height; y += AE_SAMPLE_SKIP) {
+            const uint8_t *line = raw + y * stride;
+            for (uint32_t x = 0; x < s_fb_width; x += AE_SAMPLE_SKIP) {
+                uint8_t lo = line[x * 2];
+                uint8_t hi = line[x * 2 + 1];
+                /* Green: bits[10:5] of RGB565 = (hi[2:0] << 3) | (lo[7:5]) */
+                uint8_t g6 = ((hi & 0x07) << 3) | (lo >> 5);
+                sum += (g6 << 2); /* 6-bit → 8-bit */
+                count++;
+            }
+        }
+    } else if (s_is_raw10) {
         /* RAW10: 16bit/px LE, sample byte[1] = bits[9:2] */
         for (uint32_t y = 0; y < s_fb_height; y += AE_SAMPLE_SKIP) {
             for (uint32_t x = 0; x < s_fb_width; x += AE_SAMPLE_SKIP) {
@@ -157,6 +173,7 @@ static float ae_measure_brightness(const uint8_t *raw, uint32_t stride)
             }
         }
     } else {
+        /* RAW8 / grayscale: 1 byte/pixel */
         for (uint32_t y = 0; y < s_fb_height; y += AE_SAMPLE_SKIP) {
             for (uint32_t x = 0; x < s_fb_width; x += AE_SAMPLE_SKIP) {
                 sum += raw[y * stride + x];
@@ -265,6 +282,13 @@ static void ae_run(const uint8_t *raw, uint32_t stride)
                  (int)s_ae.exp_100us,
                  (int)s_ae.gain_idx);
     }
+    /* Periodic status (every ~10s) even when stable */
+    if (s_ae.frame_count % (AE_FRAME_INTERVAL * 100) == 0) {
+        ESP_LOGI(TAG, "AE status: bright=%.0f exp=%d/%d gain=%d/%d",
+                 (double)s_ae.smooth_brightness,
+                 (int)s_ae.exp_100us, (int)s_ae.exp_max_100us,
+                 (int)s_ae.gain_idx, (int)s_ae.gain_max);
+    }
 }
 
 /* ==================== JPEG Init ==================== */
@@ -347,14 +371,15 @@ static void camera_task(void *arg)
         /* ── Pixel format handling ──
          * RAW10: V4L2 → 16bit/px (LE) → extract byte[1] → 8bit/px for JPEG
          * RAW8:  bytesperline may be > width (padding) → strip to w*h
+         * RGB565: pass through directly (ISP already processed)
          */
         uint8_t *enc_src = src;
         uint32_t enc_src_size = vbuf.bytesused;
 
+        bool is_rgb565 = (s_pixelformat == V4L2_PIX_FMT_RGB565);
+
         if (s_is_raw10 && s_row_buf) {
-            /* RAW10: extract 8-bit from 16-bit samples.
-             * Left-aligned in LE:  byte[0]=P[0:7]lo, byte[1]=P[9:2]hi.
-             * Taking byte[1] gives usable 8-bit brightness. */
+            /* RAW10→8bit: extract high byte from 16-bit samples */
             uint8_t *dst = s_row_buf;
             for (uint32_t row = 0; row < s_fb_height; row++) {
                 const uint8_t *line = src + row * s_fb_stride;
@@ -364,8 +389,8 @@ static void camera_task(void *arg)
             }
             enc_src = s_row_buf;
             enc_src_size = s_fb_width * s_fb_height;
-        } else if (s_fb_stride > s_fb_width && s_row_buf) {
-            /* Strip padding: copy each row without gaps */
+        } else if (!is_rgb565 && s_fb_stride > s_fb_width && s_row_buf) {
+            /* Strip padding for RAW8: copy each row without gaps */
             for (uint32_t row = 0; row < s_fb_height; row++) {
                 memcpy(s_row_buf + row * s_fb_width,
                        src + row * s_fb_stride,
@@ -448,37 +473,43 @@ esp_err_t camera_module_init(const camera_config_t *cfg)
     s_pixelformat  = fmt.fmt.pix.pixelformat;
     s_fb_stride    = fmt.fmt.pix.bytesperline ? (uint32_t)fmt.fmt.pix.bytesperline
                                                : s_fb_width;
+    /* Fix: multi-byte formats (RGB565=2B/px) — V4L2 driver may leave bytesperline=0 */
+    if (s_pixelformat == V4L2_PIX_FMT_RGB565) {
+        if (s_fb_stride < s_fb_width * 2) s_fb_stride = s_fb_width * 2;
+    }
     ESP_LOGI(TAG, "Sensor: %" PRIu32 "x%" PRIu32 " fmt=0x%08lx stride=%" PRIu32 " sizeimage=%lu",
              s_fb_width, s_fb_height,
              (unsigned long)s_pixelformat,
              s_fb_stride,
              (unsigned long)fmt.fmt.pix.sizeimage);
 
-    /* Allocate stride-stripping / RAW10→8 conversion buffer */
+    /* Detect pixel format type early */
+    bool is_rgb565  = (s_pixelformat == V4L2_PIX_FMT_RGB565);
     bool is_raw10 = (s_pixelformat == V4L2_PIX_FMT_SBGGR10 ||
                      s_pixelformat == V4L2_PIX_FMT_SGBRG10 ||
                      s_pixelformat == V4L2_PIX_FMT_SGRBG10 ||
                      s_pixelformat == V4L2_PIX_FMT_SRGGB10);
 
+    /* Allocate conversion/stripping buffer */
     if (is_raw10) {
-        /* RAW10: 16bit/px V4L2 → 8bit/px for grayscale JPEG */
+        /* RAW10: 16bit/px V4L2 → need 8bit/px buffer for grayscale JPEG */
         s_row_buf = cam_alloc(s_fb_width * s_fb_height);
         if (s_row_buf) {
             ESP_LOGI(TAG, "RAW10→8 conv buf: %" PRIu32 " bytes", (uint32_t)(s_fb_width * s_fb_height));
         } else {
-            ESP_LOGE(TAG, "Failed alloc RAW10 conv buf (%" PRIu32 " bytes)",
-                     (uint32_t)(s_fb_width * s_fb_height));
+            ESP_LOGE(TAG, "Failed alloc RAW10 conv buf");
         }
-    } else if (s_fb_stride > s_fb_width) {
+    } else if (!is_rgb565 && s_fb_stride > s_fb_width) {
+        /* RAW8 with padding: strip each row */
         s_row_buf = cam_alloc(s_fb_width * s_fb_height);
         if (s_row_buf) {
-            ESP_LOGW(TAG, "Stride padding detected (%" PRIu32 " > %" PRIu32 ") — stripping each row",
+            ESP_LOGW(TAG, "Stride padding (%" PRIu32 " > %" PRIu32 ") — stripping",
                      s_fb_stride, s_fb_width);
         } else {
-            ESP_LOGE(TAG, "Failed to alloc stride-strip buffer (%" PRIu32 " bytes)",
-                     (uint32_t)(s_fb_width * s_fb_height));
+            ESP_LOGE(TAG, "Failed alloc stride-strip buf");
         }
     }
+    /* RGB565: no conversion needed — ISP output feeds JPEG encoder directly */
 
     /* Request buffers */
     struct v4l2_requestbuffers req = {
@@ -536,22 +567,16 @@ esp_err_t camera_module_get_frame(const uint8_t **jpeg_buf, size_t *jpeg_len)
 {
     if (!jpeg_buf || !jpeg_len) return ESP_ERR_INVALID_ARG;
 
-    /* Wait for a new frame (short timeout, then fallback to last-known) */
-    xSemaphoreTake(s_frame_ready, pdMS_TO_TICKS(50)); /* ignore result — try last-known on timeout */
+    /* Block until a new frame arrives (camera_task posts once per frame) */
+    if (xSemaphoreTake(s_frame_ready, pdMS_TO_TICKS(200)) != pdTRUE)
+        return ESP_ERR_TIMEOUT;
 
-    if (xSemaphoreTake(s_frame_mutex, pdMS_TO_TICKS(100)) != pdTRUE) {
-        /* Mutex held too long by camera task — last resort */
-        if (!s_has_frame || !s_jpeg_out[s_published_idx]) return ESP_ERR_TIMEOUT;
-        *jpeg_buf = s_jpeg_out[s_published_idx];
-        *jpeg_len = s_jpeg_out_len[s_published_idx];
-        return ESP_OK;
-    }
+    if (xSemaphoreTake(s_frame_mutex, pdMS_TO_TICKS(100)) != pdTRUE)
+        return ESP_ERR_TIMEOUT;
 
     int idx = s_published_idx;
     *jpeg_buf = s_jpeg_out[idx];
     *jpeg_len = s_jpeg_out_len[idx];
-    /* Safe: camera task writes to 1-idx, this buffer won't be touched
-     * until the NEXT frame is fully encoded. */
 
     xSemaphoreGive(s_frame_mutex);
     return (*jpeg_buf && *jpeg_len) ? ESP_OK : ESP_ERR_NOT_FOUND;

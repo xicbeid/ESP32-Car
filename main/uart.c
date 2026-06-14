@@ -293,6 +293,12 @@ void app_main(void)
     /* Suppress httpd socket noise (ECONNRESET=104 from mobile polling/disconnect) */
     esp_log_level_set("httpd_txrx", ESP_LOG_ERROR);
     esp_log_level_set("httpd", ESP_LOG_WARN);
+    /* Suppress harmless sensor auto-detect failures (OV5647 etc.) — NONE silences all */
+    esp_log_level_set("ov5647", ESP_LOG_NONE);
+    esp_log_level_set("sccb_i2c", ESP_LOG_ERROR);
+    esp_log_level_set("i2c.master", ESP_LOG_ERROR);
+    /* SDIO idle-state events are harmless ESP-Hosted transport noise */
+    esp_log_level_set("sdmmc_req", ESP_LOG_NONE);
 
     /* 1. NVS */
     ret = nvs_flash_init();
