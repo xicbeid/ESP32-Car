@@ -290,6 +290,10 @@ void app_main(void)
 {
     esp_err_t ret;
 
+    /* Suppress httpd socket noise (ECONNRESET=104 from mobile polling/disconnect) */
+    esp_log_level_set("httpd_txrx", ESP_LOG_ERROR);
+    esp_log_level_set("httpd", ESP_LOG_WARN);
+
     /* 1. NVS */
     ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
