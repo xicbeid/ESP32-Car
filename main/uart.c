@@ -1,9 +1,13 @@
 /*
  * ESP32-P4 UART Motor + WiFi AP + Web Control
  *
- * UART0 GPIO37/38 -> Motor driver board (text protocol)
+ * UART0 GPIO20/21 → Motor driver board (text protocol)
  * WiFi AP via ESP-Hosted (C6 SDIO)
  * HTTP server port 80: web remote control
+ *
+ * Dual control modes:
+ *   Velocity (D-Pad)  — press=slow go, release=stop (direct speed, no encoder)
+ *   Position (GO btn) — encoder closed-loop to target distance at preset speed
  */
 
 #include <stdio.h>
@@ -42,6 +46,7 @@ typedef struct {
 
 static QueueHandle_t g_motor_queue = NULL;
 static volatile bool g_motor_stop_flag = false;
+static volatile bool g_velocity_active = false;  /* true when D-pad is in direct-speed mode */
 
 /* ==================== Encoder Closed-Loop Constants ==================== */
 #if MOTOR_TYPE == 1   /* 520 motor */
@@ -93,7 +98,9 @@ static inline void encoder_refresh(void)
 }
 
 /* Wait until all 4 motors reach their target encoder deltas.
- * Returns true on success, false on stop-flag or timeout. */
+ * Returns true on success, false on stop-flag/timeout.
+ * When g_velocity_active is true, returns early WITHOUT sending zero-speed
+ * (velocity mode owns the motors). */
 static bool motor_encoder_wait(const int32_t target[4], int timeout_ms)
 {
     int elapsed = 0;
@@ -101,8 +108,12 @@ static bool motor_encoder_wait(const int32_t target[4], int timeout_ms)
         encoder_refresh();
 
         if (g_motor_stop_flag) {
-            Contrl_Speed(0, 0, 0, 0);
-            ESP_LOGI(TAG, "Enc: stopped by flag at %dms", elapsed);
+            if (!g_velocity_active) {
+                Contrl_Speed(0, 0, 0, 0);
+                ESP_LOGI(TAG, "Enc: stopped by flag at %dms", elapsed);
+            } else {
+                ESP_LOGI(TAG, "Enc: cancelled by velocity mode at %dms", elapsed);
+            }
             return false;
         }
 
@@ -150,6 +161,12 @@ static void motor_task(void *arg)
         if (xQueueReceive(g_motor_queue, &msg, portMAX_DELAY) != pdTRUE)
             continue;
 
+        /* If velocity mode is active, discard queued position commands */
+        if (g_velocity_active) {
+            ESP_LOGI(TAG, "Motor: queue msg dropped (velocity active)");
+            continue;
+        }
+
         int ms = msg.speed * 10;
         if (ms < 100) ms = 100;
         if (ms > 1000) ms = 1000;
@@ -161,36 +178,17 @@ static void motor_task(void *arg)
         ESP_LOGI(TAG, "Motor: cmd=%d dist=%dcm(%ldp) speed=%d timeout=%dms",
                  msg.cmd, msg.distance_cm, (long)dist_pulses, msg.speed, timeout);
 
-        switch (msg.cmd) {
-        case MOTOR_CMD_STOP:
-            break;
+        g_motor_stop_flag = false;
 
-        case MOTOR_CMD_FORWARD:
-        case MOTOR_CMD_BACKWARD: {
-            g_motor_stop_flag = false;
+        switch (msg.cmd) {
+        case MOTOR_CMD_GO: {
             encoder_snapshot();
             t[0] = t[1] = t[2] = t[3] = dist_pulses;
-            int16_t s = (msg.cmd == MOTOR_CMD_FORWARD) ? ms : -ms;
-            Contrl_Speed(s, s, s, s);
+            Contrl_Speed(ms, ms, ms, ms);
             motor_encoder_wait(t, timeout);
             break;
         }
-        case MOTOR_CMD_LEFT:
-            g_motor_stop_flag = false;
-            encoder_snapshot();
-            t[0] = t[1] = dist_pulses;
-            t[2] = t[3] = dist_pulses;
-            Contrl_Speed(-ms, -ms, ms, ms);
-            motor_encoder_wait(t, timeout);
-            break;
-
-        case MOTOR_CMD_RIGHT:
-            g_motor_stop_flag = false;
-            encoder_snapshot();
-            t[0] = t[1] = dist_pulses;
-            t[2] = t[3] = dist_pulses;
-            Contrl_Speed(ms, ms, -ms, -ms);
-            motor_encoder_wait(t, timeout);
+        default:
             break;
         }
     }
@@ -200,8 +198,9 @@ static void motor_task(void *arg)
 static void motor_control_callback(motor_cmd_t cmd, int distance_cm, int speed)
 {
     if (cmd == MOTOR_CMD_STOP) {
-        /* Immediate stop via flag + UART */
+        /* Immediate stop — cancel both velocity and position modes */
         g_motor_stop_flag = true;
+        g_velocity_active = false;
         Contrl_Speed(0, 0, 0, 0);
         motor_msg_t junk;
         while (xQueueReceive(g_motor_queue, &junk, 0) == pdTRUE) { }
@@ -209,6 +208,58 @@ static void motor_control_callback(motor_cmd_t cmd, int distance_cm, int speed)
         return;
     }
 
+    /* ── Velocity mode (D-Pad): direct speed, no encoder ── */
+    if (cmd == MOTOR_CMD_VEL_FWD || cmd == MOTOR_CMD_VEL_BACK ||
+        cmd == MOTOR_CMD_VEL_LEFT || cmd == MOTOR_CMD_VEL_RIGHT) {
+
+        /* Cancel any pending position move */
+        g_motor_stop_flag = true;
+        g_velocity_active = true;
+        motor_msg_t junk;
+        while (xQueueReceive(g_motor_queue, &junk, 0) == pdTRUE) { }
+
+        /* Small delay to let motor_task exit encoder_wait */
+        delay_ms(20);
+
+        int16_t ms = (int16_t)(speed * 10);
+        if (ms < 100) ms = 100;
+        if (ms > 600) ms = 600;  /* cap velocity-mode speed for safe control */
+
+        switch (cmd) {
+        case MOTOR_CMD_VEL_FWD:
+            Contrl_Speed(ms, ms, ms, ms);
+            ESP_LOGI(TAG, "Motor: VEL_FWD speed=%d", ms);
+            break;
+        case MOTOR_CMD_VEL_BACK:
+            Contrl_Speed(-ms, -ms, -ms, -ms);
+            ESP_LOGI(TAG, "Motor: VEL_BACK speed=%d", ms);
+            break;
+        case MOTOR_CMD_VEL_LEFT:
+            Contrl_Speed(-ms, -ms, ms, ms);
+            ESP_LOGI(TAG, "Motor: VEL_LEFT speed=%d", ms);
+            break;
+        case MOTOR_CMD_VEL_RIGHT:
+            Contrl_Speed(ms, ms, -ms, -ms);
+            ESP_LOGI(TAG, "Motor: VEL_RIGHT speed=%d", ms);
+            break;
+        default: break;
+        }
+        return;
+    }
+
+    /* ── Position mode (GO button): encoder closed-loop ── */
+    if (cmd == MOTOR_CMD_GO) {
+        g_velocity_active = false;
+        motor_msg_t msg = { .cmd = cmd, .distance_cm = distance_cm, .speed = speed };
+        if (xQueueSend(g_motor_queue, &msg, 0) != pdTRUE) {
+            Contrl_Speed(0, 0, 0, 0);
+            ESP_LOGW(TAG, "Motor queue full, forced stop");
+        }
+        return;
+    }
+
+    /* Legacy commands (MOTOR_CMD_FORWARD etc.) — treat as GO */
+    g_velocity_active = false;
     motor_msg_t msg = { .cmd = cmd, .distance_cm = distance_cm, .speed = speed };
     if (xQueueSend(g_motor_queue, &msg, 0) != pdTRUE) {
         Contrl_Speed(0, 0, 0, 0);
@@ -338,8 +389,9 @@ void app_main(void)
     ESP_LOGI(TAG, " WiFi AP  : %s", WIFI_AP_SSID);
     ESP_LOGI(TAG, " Password : %s", WIFI_AP_PASSWORD);
     ESP_LOGI(TAG, " Control  : http://192.168.4.1/");
-    ESP_LOGI(TAG, " Camera   : http://192.168.4.1/stream");
+    ESP_LOGI(TAG, " Camera   : http://192.168.4.1:81/");
     ESP_LOGI(TAG, " Motor    : UART0 (TX=%d RX=%d) type=%d", UART0_TX_PIN, UART0_RX_PIN, MOTOR_TYPE);
+    ESP_LOGI(TAG, " Modes    : D-Pad=velocity | GO=position");
     ESP_LOGI(TAG, "================================================");
 
     while (1) { delay_ms(1000); }
