@@ -38,7 +38,7 @@ static const char INDEX_HTML[] =
 ".v{color:#e94560;font-weight:bold}.x{width:260px;padding:10px;border:none;border-radius:12px;font-size:17px;font-weight:bold;color:#fff;background:#c0392b;margin-top:4px;cursor:pointer}"
 ".footer{font-size:9px;color:#555;margin-top:6px}</style></head>"
 "<body><h1>ESP32-P4 Camera Car</h1>"
-"<div class='cam-box'><img src='/stream' alt='Camera' id='camImg'><span class='cam-label'>&#128247; Live</span></div>"
+"<div class='cam-box'><img src='http://192.168.4.1:8000/stream' alt='Camera' id='camImg'><span class='cam-label'>&#128247; Live</span></div>"
 "<div class='s' id='st'>就绪</div>"
 "<div class='dp'><button class='b u' onmousedown='go(\"fwd\")' ontouchstart='go(\"fwd\")'>&#9650;</button>"
 "<button class='b l' onmousedown='go(\"left\")' ontouchstart='go(\"left\")'>&#9664;</button>"
@@ -51,9 +51,9 @@ static const char INDEX_HTML[] =
 "<input type='range' id='sp' min='10' max='100' value='50' step='5'><br>"
 "<button class='x' onclick='go(\"stop\")'>&#9632; STOP &#9632;</button>"
 "<div class='footer'>ESP32-P4 &bull; SC2336 CSI &bull; ESP-Hosted WiFi</div>"
-"<script>var DI=document.getElementById('di'),SP=document.getElementById('sp');"
-"function go(c){var u='/ctrl?cmd='+c+'&dist='+DI.value+'&speed='+SP.value;"
-"fetch(u).then(function(r){return r.text()}).then(function(t){document.getElementById('st').textContent=t})}"
+"<script>var DI=document.getElementById('di'),SP=document.getElementById('sp'),bt=0;"
+"function go(c){var n=Date.now();if(c!='stop'&&n-bt<200)return;bt=n;if(c=='stop')bt=0;"
+"fetch('/ctrl?cmd='+c+'&dist='+DI.value+'&speed='+SP.value).then(function(r){return r.text()}).then(function(t){document.getElementById('st').textContent=t})}"
 "DI.oninput=function(){document.getElementById('d2').textContent=DI.value+'cm'};"
 "SP.oninput=function(){document.getElementById('s2').textContent=SP.value};"
 "</script></body></html>";
@@ -82,6 +82,7 @@ static esp_err_t ctrl_handler(httpd_req_t *req)
     int speed = speed_str[0] ? atoi(speed_str) : 50;
     if (dist <= 0) dist = 50;
     if (speed <= 0) speed = 50;
+    ESP_LOGI(TAG, "CTRL: cmd=%s dist=%d speed=%d", cmd_str, dist, speed);
 
     if (g_motor_callback) {
         if (strcmp(cmd_str, "fwd") == 0)      { g_motor_callback(MOTOR_CMD_FORWARD, dist, speed); httpd_resp_sendstr(req, "FWD OK"); }
@@ -145,20 +146,36 @@ static esp_err_t snapshot_handler(httpd_req_t *req)
 esp_err_t web_control_start(motor_control_cb_t callback)
 {
     g_motor_callback = callback;
-    httpd_handle_t server = NULL;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-    config.server_port = 80;
     config.stack_size = 12288;
     config.lru_purge_enable = true;
 
-    if (httpd_start(&server, &config) != ESP_OK) { ESP_LOGE(TAG, "HTTP start fail"); return ESP_FAIL; }
+    /* --- Main server :80 — page, motor control, snapshot --- */
+    httpd_handle_t srv80 = NULL;
+    config.server_port = 80;
+    if (httpd_start(&srv80, &config) != ESP_OK) {
+        ESP_LOGE(TAG, "HTTP :80 fail"); return ESP_FAIL;
+    }
+    httpd_uri_t u = { .method = HTTP_GET, .user_ctx = NULL };
+    u.handler = index_handler;    u.uri = "/";        httpd_register_uri_handler(srv80, &u);
+    u.handler = ctrl_handler;     u.uri = "/ctrl";    httpd_register_uri_handler(srv80, &u);
+    u.handler = snapshot_handler; u.uri = "/snapshot";httpd_register_uri_handler(srv80, &u);
 
-    httpd_uri_t u = { .method = HTTP_GET, .handler = index_handler, .user_ctx = NULL };
-    u.uri = "/";   httpd_register_uri_handler(server, &u);
-    u.uri = "/ctrl"; u.handler = ctrl_handler; httpd_register_uri_handler(server, &u);
-    u.uri = "/stream"; u.handler = stream_handler; httpd_register_uri_handler(server, &u);
-    u.uri = "/snapshot"; u.handler = snapshot_handler; httpd_register_uri_handler(server, &u);
+    /* --- Stream server :8000 — MJPEG only, separate task —--- */
+    httpd_handle_t srvStream = NULL;
+    config.server_port = 8000;
+    config.lru_purge_enable = false;
+    if (httpd_start(&srvStream, &config) == ESP_OK) {
+        httpd_uri_t su = { .uri = "/stream", .method = HTTP_GET,
+                           .handler = stream_handler, .user_ctx = NULL };
+        httpd_register_uri_handler(srvStream, &su);
+        ESP_LOGI(TAG, "Stream: http://192.168.4.1:8000/stream");
+    } else {
+        ESP_LOGW(TAG, "HTTP :8000 fail — stream on :80");
+        u.handler = stream_handler; u.uri = "/stream";
+        httpd_register_uri_handler(srv80, &u);
+    }
 
-    ESP_LOGI(TAG, "Web control + camera ready: http://192.168.4.1/");
+    ESP_LOGI(TAG, "Control: http://192.168.4.1/");
     return ESP_OK;
 }

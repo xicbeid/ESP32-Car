@@ -323,7 +323,7 @@ void app_main(void)
     xTaskCreate(encoder_monitor_task, "Enc_Mon", 2048, NULL, 1, NULL);
 
     /* 5. Motor command queue + task — must exist before web_control_start */
-    g_motor_queue = xQueueCreate(3, sizeof(motor_msg_t));
+    g_motor_queue = xQueueCreate(5, sizeof(motor_msg_t));
     if (!g_motor_queue) { ESP_LOGE(TAG, "Motor queue create fail"); }
     xTaskCreate(motor_task, "Motor_Task", 4096, NULL, 5, NULL);
 
