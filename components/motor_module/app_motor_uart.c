@@ -13,7 +13,7 @@ uint8_t g_recv_buff[RXBUFF_LEN];
 uint8_t g_recv_buff_deal[RXBUFF_LEN];
 
 //////////********************���Ͳ���********************///////////
-//////////******************发送部分*****************///////////
+//////////******************Sending part*****************///////////
 
 //���͵������	Transmitter motor type
 void send_motor_type(motor_type_t data)
@@ -140,27 +140,27 @@ void Deal_Control_Rxtemp(uint8_t rxtemp)
 	
 }
 
-//屣浽ݽиʽȻ׼ӡ
-//将从驱动板保存的数据进行格式化，并准备打印
+//���������屣�浽�����ݽ��и�ʽ������Ȼ��׼����ӡ
+//Format the data saved from the driver board and prepare it for printing
 void Deal_data_real(void)
 {
 	 static uint8_t data[RXBUFF_LEN];
    uint8_t  length = 0;
 	
 	//����ı�����	Overall encoder
-	 如果 ((strncmp("MAll",(字符*)g_recv_buff_deal,4)==0))
+	 if ((strncmp("MAll",(char*)g_recv_buff_deal,4)==0))
     {
-        长度 = strlen((char*)g_recv_buff_deal)-5;
+        length = strlen((char*)g_recv_buff_deal)-5;
         for (uint8_t i = 0; i < length; i++)
         {
-i] = g_recv_buff_deal[i+5]; //删除冒号
+            data[i] = g_recv_buff_deal[i+5]; //ȥ��ð��	Remove the colon
         }  
-				数据[长度] = '';	
+				data[length] = '\0';	
 
 					
-				char* strArray[10];;//ָ ȸݷָŶ  char 1ֽ   char* 4ֽ	 指针数组 长度由分割数量决定 char 1字节 char* 4字节
+				char* strArray[10];//ָ������ ���ȸ��ݷָ�Ŷ���  char 1�ֽ�   char* 4�ֽ�	 Pointer array The length is defined by the split number char 1 byte char* 4 bytes
 				char mystr_temp[4][10] = {'\0'}; 
-				splitString(strArray,(char*)data, ", ");//Զи	按逗号分割
+				splitString(strArray,(char*)data, ", ");//�Զ����и�	Split by comma
 				for (int i = 0; i < 4; i++)
 				{
 						strcpy(mystr_temp[i],strArray[i]);
@@ -168,38 +168,38 @@ i] = g_recv_buff_deal[i+5]; //删除冒号
 				}
 				
 		}
-		//10msʵʱ	10ms实时编码器数据
-		否则 如果	((strncmp("MTEP",(字符指针)g_recv_buff_deal,4)==0))
+		//10ms��ʵʱ����������	10ms real-time encoder data
+		else if	((strncmp("MTEP",(char*)g_recv_buff_deal,4)==0))
     {
-        长度 = strlen((char*)g_recv_buff_deal)-5;
+        length = strlen((char*)g_recv_buff_deal)-5;
         for (uint8_t i = 0; i < length; i++)
         {
-            数据[i] = g_recv_buff_deal[i+5]; //删除冒号
+            data[i] = g_recv_buff_deal[i+5]; //ȥ��ð��	Remove the colon
         }  
-				数据[长度] = '\0';		
+				data[length] = '\0';		
 
-				char* strArray[10];;//ָ ȸݷָŶ  char 1ֽ   char* 4ֽ		指针数组 长度由分割数量决定 char 1字节 char* 4字节
+				char* strArray[10];//ָ������ ���ȸ��ݷָ�Ŷ���  char 1�ֽ�   char* 4�ֽ�		Pointer array The length is defined by the split number char 1 byte char* 4 bytes
 				char mystr_temp[4][10] = {'\0'}; 
-				splitString(strArray,(char*)data, ", ");//Զи	按逗号分割
+				splitString(strArray,(char*)data, ", ");//�Զ����и�	Split by comma
 				for (int i = 0; i < 4; i++)
 				{
 						strcpy(mystr_temp[i],strArray[i]);
-						编码器偏移量[i] = atoi(我的字符串临时变量[i]);
+						Encoder_Offset[i] = atoi(mystr_temp[i]);
 				}
 		}
-		//ٶ	速度
+		//�ٶ�	Speed
 		else if	((strncmp("MSPD",(char*)g_recv_buff_deal,4)==0))
     {
-        长度 = strlen((char*)g_recv_buff_deal)-5;
+        length = strlen((char*)g_recv_buff_deal)-5;
         for (uint8_t i = 0; i < length; i++)
         {
-            数据[i] = g_recv_buff_deal[i+5]; //删除冒号
+            data[i] = g_recv_buff_deal[i+5]; //ȥ��ð��	Remove the colon
         }  
-				数据[长度] = '\0';	
+				data[length] = '\0';	
 				
-				char* strArray[10];;//ָ ȸݷָŶ  char 1ֽ   char* 4ֽ		指针数组 长度由分隔数决定 char 1字节 char* 4字节
+				char* strArray[10];//ָ������ ���ȸ��ݷָ�Ŷ���  char 1�ֽ�   char* 4�ֽ�		Pointer array The length is defined by the split number char 1 byte char* 4 bytes
 				char mystr_temp[4][10] = {'\0'}; 
-(strArray,(char*)数据, ", ");//Զи	按逗号分割
+				splitString(strArray,(char*)data, ", ");//�Զ����и�	Split by comma
 				for (int i = 0; i < 4; i++)
 				{
 						strcpy(mystr_temp[i],strArray[i]);
