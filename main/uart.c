@@ -24,6 +24,7 @@
 #include "wifi_module.h"
 #include "web_control.h"
 #include "camera_module.h"
+#include "imu_usb.h"
 
 #define delay_ms(ms) vTaskDelay(pdMS_TO_TICKS(ms))
 
@@ -45,8 +46,8 @@ typedef struct {
 } motor_msg_t;
 
 static QueueHandle_t g_motor_queue = NULL;
-static volatile bool g_motor_stop_flag = false;
-static volatile bool g_velocity_active = false;  /* true when D-pad is in direct-speed mode */
+volatile bool g_motor_stop_flag = false;
+volatile bool g_velocity_active = false;  /* true when D-pad is in direct-speed mode */
 
 /* ==================== Encoder Closed-Loop Constants ==================== */
 #if MOTOR_TYPE == 1   /* 520 motor */
@@ -382,7 +383,14 @@ void app_main(void)
     ESP_ERROR_CHECK(wifi_module_init_netstack());
     ESP_ERROR_CHECK(wifi_module_init_ap(WIFI_AP_SSID, WIFI_AP_PASSWORD, WIFI_AP_CHANNEL));
 
-    /* 7. Web control (with motor callback) */
+    /* 7. IMU USB CDC Host — non-blocking, background connect task */
+    ESP_LOGI(TAG, "Initializing IMU USB ...");
+    esp_err_t imu_err = imu_usb_init();
+    if (imu_err != ESP_OK) {
+        ESP_LOGW(TAG, "IMU init failed (%s) — running without IMU", esp_err_to_name(imu_err));
+    }
+
+    /* 8. Web control (with motor callback) */
     ESP_ERROR_CHECK(web_control_start(motor_control_callback));
 
     ESP_LOGI(TAG, "================================================");

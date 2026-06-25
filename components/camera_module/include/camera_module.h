@@ -78,6 +78,20 @@ esp_err_t camera_module_start(void);
  */
 esp_err_t camera_module_stop(void);
 
+/**
+ * @brief Get the current camera frame rate (smoothed over ~1s window).
+ * @return Frames per second.
+ */
+uint32_t camera_module_get_fps(void);
+
+/**
+ * @brief Export the current auto-exposure state.
+ * @param[out] brightness  Smoothed brightness value (0.0 - 255.0).
+ * @param[out] exp_100us   Exposure time in 100-microsecond units.
+ * @param[out] gain_idx    Sensor gain register index.
+ */
+void camera_module_get_ae_status(float *brightness, int32_t *exp_100us, int32_t *gain_idx);
+
 #ifdef __cplusplus
 }
 #endif

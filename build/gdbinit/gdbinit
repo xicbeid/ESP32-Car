@@ -1,0 +1,2 @@
+source F:/project_ESP32_p4/UART/build/gdbinit/symbols
+source F:/project_ESP32_p4/UART/build/gdbinit/connect
