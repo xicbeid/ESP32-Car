@@ -1,7 +1,6 @@
 # ESP32-P4 UART WiFi 遥控小车 (带摄像头 + 10轴IMU)
 
 基于 ESP32-P4 Function EV Board v1.6 的 WiFi AP 网页遥控小车，具备 UART 电机控制、CSI 摄像头 MJPEG 实时推流、10轴 IMU 惯导姿态显示、编码器闭环位置控制与速度模式。
-[README.md](https://github.com/user-attachments/files/29142725/README.md)
 
 ```
 ESP32-P4 WiFi AP "ESP32-Car" (192.168.4.1)
@@ -13,7 +12,6 @@ ESP32-P4 WiFi AP "ESP32-Car" (192.168.4.1)
   ├── USB 2.0 Type-A → CP2102 → Wit-Motion 10轴IMU
   │     └── USB CDC Host → 协议解析 → EMA 滤波 → 网页倾角面板
   └── HTTP :80 → 网页遥控 (D-Pad 速度模式 + GO 位置模式 + MJPEG 实时画面 + IMU 姿态)
-  └── HTTP :80 → 网页遥控 (D-Pad 速度模式 + GO 位置模式 + MJPEG 实时画面)
         HTTP :81 → MJPEG stream (独立 TCP task, 不阻塞 httpd)
 ```
 
@@ -31,9 +29,6 @@ ESP32-P4 WiFi AP "ESP32-Car" (192.168.4.1)
 | GND | 电机驱动板 GND | 共地 |
 
 > **注意**: 电机驱动板独立 5V 供电，不从 P4 取电。IMU 通过 USB 口供电。
-| GND | 电机驱动板 GND | 共地 |
-
-> **注意**: 电机驱动板独立 5V 供电，不从 P4 取电。
 
 ## 双模式操控
 
@@ -63,19 +58,6 @@ ESP32-P4 WiFi AP "ESP32-Car" (192.168.4.1)
 ├──────────┴──────────┴──────────┴──────────┴────────────────┤
 │ camera_module: CSI → ISP → HW JPEG + 软件 AE               │
 └─────────────────────────────────────────────────────────────┘
-┌─────────────────────────────────────────────────────┐
-│                    app_main()                        │
-│  uart.c: NVS → Camera → Motor → WiFi → Web          │
-├─────────────┬──────────┬──────────┬─────────────────┤
-│ uart_module │  motor   │  wifi    │   web_control   │
-│ UART0 驱动  │ _module  │ _module  │                 │
-│ GPIO20/21   │ 电机协议 │ ESP-     │ Port 80: httpd   │
-│ 115200      │ $spd/... │ Hosted   │   /ctrl/snapshot │
-│             │          │ AP       │ Port 81: MJPEG   │
-│             │          │          │   raw TCP task   │
-├─────────────┴──────────┴──────────┴─────────────────┤
-│ camera_module: CSI → ISP → HW JPEG + 软件 AE        │
-└─────────────────────────────────────────────────────┘
 ```
 
 ### 组件说明
@@ -104,7 +86,6 @@ ESP32-P4 WiFi AP "ESP32-Car" (192.168.4.1)
 - **Roll / Pitch**: ±45° 条形图 + 数值，超 ±30° 变红警告
 - **Yaw**: 地磁航向角数值
 - 断开时面板半透明不可用
-| `web_control` | `main/web_control.c` | HTTP :80 (httpd) + MJPEG :81 (raw TCP) + 双模式操控 HTML |
 
 ## WiFi AP
 
@@ -125,9 +106,6 @@ ESP32-P4 WiFi AP "ESP32-Car" (192.168.4.1)
 | `/ctrl?cmd=...&dist=...&speed=...` | 80 | 电机控制 API |
 | `/snapshot` | 80 | 单帧 JPEG 快照 |
 | `/status` | 80 | 实时遥测 JSON (编码器/速度/FPS/AE/模式/IMU) |
-| `/` | 80 | 网页遥控界面 (D-Pad + GO/STOP + 实时画面) |
-| `/ctrl?cmd=...&dist=...&speed=...` | 80 | 电机控制 API |
-| `/snapshot` | 80 | 单帧 JPEG 快照 |
 | `/favicon.ico` | 80 | 204 No Content (静默) |
 | `/` | 81 | MJPEG 流 (独立 FreeRTOS task) |
 
@@ -182,10 +160,6 @@ ESP32-P4 WiFi AP "ESP32-Car" (192.168.4.1)
 | `imu.ax/ay/az` | 加速度 (g) |
 | `imu.gx/gy/gz` | 角速度 (°/s) |
 | `imu.ok` | IMU 连接状态 (1=在线, 0=离线) |
-- **分辨率**: 640×480 @ 50fps (RAW10)
-- **处理管线**: CSI Ctrl → ISP (RAW8→RGB565) → HW JPEG Encoder
-- **自动曝光**: RGB565 绿通道每 10 帧采样 → V4L2 CID 调节曝光/增益
-- **MJPEG 推流**: ~20fps，独立 TCP task (port 81)，不阻塞 httpd
 
 ### 数据流
 
@@ -220,8 +194,6 @@ IMU → CP2102 → USB 2.0 Type-A → DWC OTG PHY
 - ESP-IDF **v5.5.4** (P4 Function Board v1.6 要求 >5.4)
 - ESP32-C6 从机已烧录 ESP-Hosted slave 固件
 - Wit-Motion 10轴 IMU 模块 (通过 USB 连接)
-- ESP-IDF v5.3.1+ (带 PSRAM + esp_video 支持)
-- ESP32-C6 从机已烧录 ESP-Hosted slave 固件
 
 ### 构建
 
@@ -256,23 +228,6 @@ build_esp.bat    # Windows CMD (MSYSTEM 自动清除)
 2. **分区表扩容**: 增加 IMU 和 USB 组件后固件 >1MB，使用自定义 `partitions_16MiB.csv` (factory 分区 ~2MB)
 3. **MSYS2 构建**: `build.py` 自动清除 `MSYSTEM` 环境变量规避 IDF 中 MSYS 检查拦截
 
-idf.py set-target esp32p4
-idf.py build
-```
-
-### 烧录与监控
-
-```bash
-idf.py -p COMx flash monitor
-```
-
-### 一键构建脚本
-
-```bash
-./build_esp.sh   # Linux/Mac
-build_esp.bat    # Windows
-```
-
 ## 关键配置项 (sdkconfig)
 
 | 配置 | 值 | 说明 |
@@ -281,7 +236,6 @@ build_esp.bat    # Windows
 | `SPIRAM_MODE` | HEX | PSRAM Quad HEX |
 | `SPIRAM_SPEED` | 200MHz | PSRAM 频率 |
 | `SPIRAM_USE_CAPS_ALLOC` | y | 使用 caps 分配器 |
-| `SPIRAM_USE_CAPS_ALLOC` | y | 使用 caps 分配器 (与 brookesia 一致) |
 | `ESP_HOSTED_SDIO_HOST_INTERFACE` | y | SDIO 主机模式 |
 | `ESP_HOSTED_CP_TARGET` | ESP32C6 | 从机为 C6 |
 | `ESP_HOSTED_SDIO_4_BIT_BUS` | y | 4-bit SDIO |
@@ -332,7 +286,6 @@ UART/
 ├── main/
 │   ├── uart.c           # 主程序入口 + 电机控制逻辑
 │   ├── web_control.c    # HTTP 服务器 + MJPEG 流 + 网页 + IMU JSON
-│   ├── web_control.c    # HTTP 服务器 + MJPEG 流 + 网页
 │   └── web_control.h    # 电机命令枚举 + 回调接口
 ├── components/
 │   ├── uart_module/     # UART0 驱动 (GPIO20/21)
@@ -358,17 +311,6 @@ UART/
 |------|------|
 | 2026-06-25 | ✅ 集成 Wit-Motion 10轴 IMU (USB CDC Host + 协议解析 + EMA 滤波 + Web 面板) + IDF v5.4→v5.5.4 升级 + 自定义分区表 |
 | 2026-06-21 | ✅ 实时遥测仪表盘：/status JSON API + Web 编码器柱状图 + 速度 + FPS + 模式徽章 |
-│   └── camera_module/   # CSI 摄像头 + ISP + HW JPEG
-├── CMakeLists.txt       # 顶层 CMake (引入 components/)
-├── sdkconfig.defaults   # 默认 Kconfig 配置
-├── build_esp.bat        # Windows 构建脚本
-└── build_esp.cmd        # 备选构建脚本
-```
-
-## 版本历史
-
-| 日期 | 变更 |
-|------|------|
 | 2026-06-16 | ✅ 双模式操控 (D-Pad 速度 + GO 位置) + MJPEG 分离到 port 81 独立 task |
 | 2026-06-14 | ✅ ISP 管线修复，RGB565 彩色画面，软件 AE |
 | 2026-06-09 | ✅ 项目创建，基础 UART + WiFi + 摄像头架构 |
