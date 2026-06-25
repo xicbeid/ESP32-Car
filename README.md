@@ -2,9 +2,6 @@
 
 基于 ESP32-P4 Function EV Board v1.6 的 WiFi AP 网页遥控小车，具备 UART 电机控制、CSI 摄像头 MJPEG 实时推流、10轴 IMU 惯导姿态显示、编码器闭环位置控制与速度模式。
 [README.md](https://github.com/user-attachments/files/29142725/README.md)
-# ESP32-P4 UART WiFi 遥控小车 (带摄像头)
-
-基于 ESP32-P4 Function EV Board 的 WiFi AP 网页遥控小车，具备 UART 电机控制、CSI 摄像头 MJPEG 实时推流、编码器闭环位置控制与速度模式。
 
 ```
 ESP32-P4 WiFi AP "ESP32-Car" (192.168.4.1)
