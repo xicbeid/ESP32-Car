@@ -31,6 +31,7 @@
 #include "esp_err.h"
 #include "esp_heap_caps.h"
 #include "esp_check.h"
+#include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/semphr.h"
@@ -113,6 +114,11 @@ static ae_state_t s_ae = {
     .smooth_brightness = AE_TARGET_BRIGHTNESS,
     .frame_count = 0,
 };
+
+/* FPS metering */
+static volatile uint32_t s_fps_counter = 0;
+static int64_t            s_fps_last_us = 0;
+static volatile uint32_t s_cached_fps = 0;
 
 /* ==================== Alloc helpers ==================== */
 static uint8_t *cam_alloc(size_t size)
@@ -408,6 +414,9 @@ static void camera_task(void *arg)
             s_jpeg_enc_buf, (uint32_t)s_jpeg_enc_buf_size, &out_len);
 
         if (ret == ESP_OK && out_len > 0 && out_len <= JPEG_BUF_SIZE) {
+            /* Increment FPS counter early (before double-buffer copy) */
+            s_fps_counter++;
+
             /* Allocate/lazy-init the write-target double-buffer */
             if (!s_jpeg_out[write_idx]) {
                 s_jpeg_out[write_idx] = cam_alloc(JPEG_BUF_SIZE);
@@ -583,6 +592,31 @@ esp_err_t camera_module_get_frame(const uint8_t **jpeg_buf, size_t *jpeg_len)
 }
 
 esp_err_t camera_module_start(void) { return ESP_OK; }
+
+/* ==================== Public API: FPS + AE status ==================== */
+uint32_t camera_module_get_fps(void)
+{
+    int64_t now_us = esp_timer_get_time();
+    int64_t elapsed_us = now_us - s_fps_last_us;
+
+    /* Recompute roughly every 500 ms so the value is fresh */
+    if (elapsed_us > 500000) {
+        uint32_t count = s_fps_counter;
+        s_fps_counter = 0;
+        if (elapsed_us > 0) {
+            s_cached_fps = (uint32_t)((count * 1000000ULL) / (uint64_t)elapsed_us);
+        }
+        s_fps_last_us = now_us;
+    }
+    return s_cached_fps;
+}
+
+void camera_module_get_ae_status(float *brightness, int32_t *exp_100us, int32_t *gain_idx)
+{
+    if (brightness)  *brightness  = s_ae.smooth_brightness;
+    if (exp_100us)   *exp_100us   = (int32_t)s_ae.exp_100us;
+    if (gain_idx)    *gain_idx    = (int32_t)s_ae.gain_idx;
+}
 
 esp_err_t camera_module_stop(void)
 {

@@ -1,0 +1,16 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=F:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe -DESP_PLATFORM=1 -DIDF_TARGET=esp32p4 -DCCACHE_ENABLE=0 F:\project_ESP32_p4\UART
+Traceback (most recent call last):
+  File "F:\Espressif\frameworks\v5.5.4\esp-idf\components\esp_rom\gen_gdbinit.py", line 72, in <module>
+    gdbinit_lines = generate_gdbinit_rom_add_symbols(target)
+  File "F:\Espressif\frameworks\v5.5.4\esp-idf\components\esp_rom\gen_gdbinit.py", line 32, in generate_gdbinit_rom_add_symbols
+    raise EnvironmentError(
+        'ESP_ROM_ELF_DIR environment variable is not defined. Please try to run IDF "install" and "export" scripts.')
+OSError: ESP_ROM_ELF_DIR environment variable is not defined. Please try to run IDF "install" and "export" scripts.
+CMake Warning at F:/Espressif/frameworks/v5.5.4/esp-idf/tools/cmake/gdbinit.cmake:52 (message):
+  Error while generating esp_rom gdbinit
+Call Stack (most recent call first):
+  F:/Espressif/frameworks/v5.5.4/esp-idf/tools/cmake/project.cmake:356 (__generate_gdbinit)
+  F:/Espressif/frameworks/v5.5.4/esp-idf/tools/cmake/project.cmake:979 (__project_info)
+  CMakeLists.txt:8 (project)
+
+

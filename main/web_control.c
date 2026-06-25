@@ -19,10 +19,19 @@
 #include "esp_log.h"
 #include "esp_http_server.h"
 #include "lwip/sockets.h"
+#include "esp_timer.h"
 #include "web_control.h"
 #include "camera_module.h"
+#include "imu_usb.h"
 
 #define TAG "WebCtrl"
+
+/* Motor globals from uart.c and motor_module */
+extern int        Encoder_Now[4];
+extern float      g_Speed[4];
+extern uint8_t    g_recv_flag;
+extern volatile bool g_velocity_active;
+extern volatile bool g_motor_stop_flag;
 
 /* ==================== MJPEG constants ==================== */
 #define MJPEG_BOUNDARY        "frame"
@@ -73,12 +82,73 @@ static const char INDEX_HTML[] =
 "color:#fff;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}"
 ".go{background:#27ae60}.go:active{background:#1e8449}"
 ".stop2{background:#c0392b}.stop2:active{background:#922b21}"
-".footer{font-size:9px;color:#555;margin-top:4px}</style></head>"
+".footer{font-size:9px;color:#555;margin-top:4px}"
+"/* === Telemetry Dashboard === */"
+"#tlm{width:100%;max-width:320px;margin:4px 0;padding:6px 8px;background:rgba(0,0,0,.7);"
+"border-radius:8px;color:#fff;font-family:'Courier New',monospace;font-size:12px}"
+".tl-row{display:flex;align-items:center;justify-content:space-between;margin:2px 0;gap:6px}"
+".tl-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-weight:bold;font-size:11px}"
+".bg-fps{background:#1a73e8}.bg-vel{background:#0d904f}.bg-pos{background:#e37400}"
+".bg-idle{background:#555;color:#ccc}.bg-rx{background:#c5221f;display:none}"
+".enc-row{display:flex;gap:4px;margin:3px 0}"
+".enc-col{flex:1;display:flex;flex-direction:column;align-items:center}"
+".enc-lbl{font-size:9px;color:#aaa;margin-bottom:1px}"
+".enc-bg{width:100%;height:8px;background:#333;border-radius:3px;overflow:hidden}"
+".enc-fill{height:100%;width:0;border-radius:3px;transition:width .15s ease}"
+".enc-fill.m0{background:#4285f4}.enc-fill.m1{background:#ea4335}"
+".enc-fill.m2{background:#fbbc04}.enc-fill.m3{background:#34a853}"
+".enc-val{font-size:10px;margin-top:1px;color:#ddd}"
+".spd-row{display:flex;gap:4px}"
+".spd-cell{flex:1;text-align:center;font-size:10px;padding:2px 0;background:rgba(255,255,255,.06);border-radius:3px}"
+".spd-cell .sv{font-weight:bold;font-size:12px;color:#8ab4f8}"
+".spd-cell .su{font-size:8px;color:#888}"
+/* === IMU tilt display === */
+".imu-row{display:flex;align-items:center;gap:6px;margin:3px 0;padding:2px 6px;"
+"background:rgba(255,255,255,.04);border-radius:6px;font-size:10px}"
+".imu-tag{font-size:9px;color:#888;min-width:24px;text-align:center}"
+".imu-bar-box{flex:1;height:14px;background:#222;border-radius:4px;overflow:hidden;position:relative}"
+".imu-bar-fill{height:100%;border-radius:4px;transition:width .2s ease;position:absolute;left:50%}"
+".imu-bar-fill.roll{background:linear-gradient(to right,#e94560,#34a853)}"
+".imu-bar-fill.pitch{background:linear-gradient(to right,#e94560,#4285f4)}"
+".imu-val{min-width:30px;text-align:right;font-weight:bold;font-size:10px;color:#ddd}"
+".imu-yaw{color:#fbbc04;font-weight:bold;font-size:11px}"
+".imu-off{color:#555}"
+"</style></head>"
 
 "<body><h1>ESP32-P4 Camera Car</h1>"
 "<div class='cam-box'><img id='camImg' alt='Camera'><span class='cam-label'>&#128247; Live</span></div>"
 "<div class='st' id='st'>就绪</div>"
-
+/* === Telemetry Dashboard === */
+"<div id='tlm'>"
+"<div class='tl-row'>"
+"<span class='tl-badge bg-fps' id='bfps'>FPS:--</span>"
+"<span class='tl-badge bg-idle' id='bmode'>idle</span>"
+"<span class='tl-badge bg-rx' id='brx'>RX</span>"
+"</div>"
+/* IMU tilt row */
+"<div class='imu-row' id='imuBox'>"
+"<span class='imu-tag'>&#9969;</span>"
+"<span style='font-size:9px;min-width:20px;color:#aaa'>R</span>"
+"<div class='imu-bar-box'><div class='imu-bar-fill roll' id='barR'></div></div>"
+"<span class='imu-val' id='valR'>--</span>"
+"<span style='font-size:9px;min-width:20px;color:#aaa'>P</span>"
+"<div class='imu-bar-box'><div class='imu-bar-fill pitch' id='barP'></div></div>"
+"<span class='imu-val' id='valP'>--</span>"
+"<span class='imu-yaw' id='valY'>---&deg;</span>"
+"</div>"
+"<div class='enc-row'>"
+"<div class='enc-col'><span class='enc-lbl'>M1</span><div class='enc-bg'><div class='enc-fill m0' id='bar0'></div></div><span class='enc-val' id='enc0'>0</span></div>"
+"<div class='enc-col'><span class='enc-lbl'>M2</span><div class='enc-bg'><div class='enc-fill m1' id='bar1'></div></div><span class='enc-val' id='enc1'>0</span></div>"
+"<div class='enc-col'><span class='enc-lbl'>M3</span><div class='enc-bg'><div class='enc-fill m2' id='bar2'></div></div><span class='enc-val' id='enc2'>0</span></div>"
+"<div class='enc-col'><span class='enc-lbl'>M4</span><div class='enc-bg'><div class='enc-fill m3' id='bar3'></div></div><span class='enc-val' id='enc3'>0</span></div>"
+"</div>"
+"<div class='spd-row'>"
+"<div class='spd-cell'><span class='sv' id='spd0'>0.0</span> <span class='su'>mm/s</span></div>"
+"<div class='spd-cell'><span class='sv' id='spd1'>0.0</span> <span class='su'>mm/s</span></div>"
+"<div class='spd-cell'><span class='sv' id='spd2'>0.0</span> <span class='su'>mm/s</span></div>"
+"<div class='spd-cell'><span class='sv' id='spd3'>0.0</span> <span class='su'>mm/s</span></div>"
+"</div>"
+"</div>"
 /* D-Pad: velocity mode — press=go slow, release=stop */
 "<div class='pad'>"
 "<button class='pb pu' id='bu'>&#9650;</button>"
@@ -179,6 +249,54 @@ static const char INDEX_HTML[] =
 "/* Slider labels */"
 "DI.oninput=function(){document.getElementById('d2').textContent=DI.value+'cm'};"
 "SP.oninput=function(){document.getElementById('s2').textContent=SP.value};"
+/* === Dashboard polling === */
+"(function(){"
+"var elFps=document.getElementById('bfps'),elMode=document.getElementById('bmode');"
+"var elRx=document.getElementById('brx');"
+"var elBar=[0,1,2,3].map(function(i){return document.getElementById('bar'+i);});"
+"var elEnc=[0,1,2,3].map(function(i){return document.getElementById('enc'+i);});"
+"var elSpd=[0,1,2,3].map(function(i){return document.getElementById('spd'+i);});"
+"var HALF=5000;"
+"var elImuBox=document.getElementById('imuBox');"
+"var elBarR=document.getElementById('barR'),elBarP=document.getElementById('barP');"
+"var elValR=document.getElementById('valR'),elValP=document.getElementById('valP'),elValY=document.getElementById('valY');"
+"var ANGLE_RANGE=45;"
+"function angBar(v){"
+"var x=50+(v/ANGLE_RANGE)*50;"
+"return (x<0?0:x>100?100:x).toFixed(1)+'%';"
+"}"
+"function upd(d){"
+"elFps.textContent='FPS:'+d.fps;"
+"elMode.textContent=d.mode;elMode.className='tl-badge bg-'+d.mode;"
+"elRx.style.display=d.recv?'inline-block':'none';"
+"var m=d.m;"
+"for(var i=0;i<4;i++){"
+"var e=m[i].e,s=m[i].s;"
+"elEnc[i].textContent=e;elSpd[i].textContent=s.toFixed(1);"
+"var p=50+(e/HALF)*50;"
+"elBar[i].style.width=(p<0?0:p>100?100:p).toFixed(1)+'%';"
+"elSpd[i].style.color=Math.abs(s)<.5?'#ccc':s>0?'#8ab4f8':'#f28b82';"
+"}"
+"/* IMU update */"
+"var z=d.imu,ok=z.ok;"
+"elImuBox.style.opacity=ok?'1':'.3';"
+"elBarR.style.width=ok?angBar(z.r):'50%';"
+"elBarP.style.width=ok?angBar(z.p):'50%';"
+"elValR.textContent=ok?z.r.toFixed(1)+'°':'--';"
+"elValP.textContent=ok?z.p.toFixed(1)+'°':'--';"
+"elValY.textContent=ok?z.y.toFixed(0)+'°':'---°';"
+"elValR.style.color=Math.abs(z.r)>30?'#e94560':'#ddd';"
+"elValP.style.color=Math.abs(z.p)>30?'#e94560':'#ddd';"
+"}"
+"function poll(){"
+"var x=new XMLHttpRequest();"
+"x.open('GET','/status',true);x.timeout=400;"
+"x.onload=function(){if(x.status===200){try{upd(JSON.parse(x.responseText));}catch(e){}}};"
+"x.onerror=function(){};x.ontimeout=function(){};"
+"x.send();"
+"}"
+"setInterval(poll,200);poll();"
+"})();"
 "</script></body></html>";
 
 /* ==================== HTTP Handlers ==================== */
@@ -317,6 +435,67 @@ static void mjpeg_server_task(void *arg)
     }
 }
 
+/* ==================== Status JSON Handler ==================== */
+static const char *motor_mode_str(void)
+{
+    if (g_velocity_active)     return "velocity";
+    if (g_motor_stop_flag)     return "idle";
+    return "position";
+}
+
+static esp_err_t status_handler(httpd_req_t *req)
+{
+    float    brightness = 0.0f;
+    int32_t  exp_100us  = 0;
+    int32_t  gain_idx   = 0;
+    uint32_t fps        = camera_module_get_fps();
+    int64_t  uptime_ms  = esp_timer_get_time() / 1000;
+    imu_data_t imu;
+
+    camera_module_get_ae_status(&brightness, &exp_100us, &gain_idx);
+    imu_usb_get_data(&imu);
+
+    char buf[768];
+    int len = snprintf(buf, sizeof(buf),
+        "{"
+        "\"t\":%lld,"
+        "\"fps\":%lu,"
+        "\"ae\":{\"b\":%.1f,\"e\":%ld,\"g\":%ld},"
+        "\"m\":["
+          "{\"e\":%d,\"s\":%.1f},"
+          "{\"e\":%d,\"s\":%.1f},"
+          "{\"e\":%d,\"s\":%.1f},"
+          "{\"e\":%d,\"s\":%.1f}"
+        "],"
+        "\"mode\":\"%s\","
+        "\"recv\":%u,"
+        "\"imu\":{"
+          "\"r\":%.2f,\"p\":%.2f,\"y\":%.2f,"
+          "\"ax\":%.3f,\"ay\":%.3f,\"az\":%.3f,"
+          "\"gx\":%.2f,\"gy\":%.2f,\"gz\":%.2f,"
+          "\"ok\":%d"
+        "}"
+        "}",
+        uptime_ms, (unsigned long)fps,
+        (double)brightness, (long)exp_100us, (long)gain_idx,
+        Encoder_Now[0], (double)g_Speed[0],
+        Encoder_Now[1], (double)g_Speed[1],
+        Encoder_Now[2], (double)g_Speed[2],
+        Encoder_Now[3], (double)g_Speed[3],
+        motor_mode_str(),
+        (unsigned)g_recv_flag,
+        (double)imu.roll, (double)imu.pitch, (double)imu.yaw,
+        (double)imu.acc_x, (double)imu.acc_y, (double)imu.acc_z,
+        (double)imu.gyro_x, (double)imu.gyro_y, (double)imu.gyro_z,
+        imu_usb_is_connected() ? 1 : 0
+    );
+
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_set_hdr(req, "Cache-Control", "no-cache");
+    httpd_resp_send(req, buf, (len > 0 && len < (int)sizeof(buf)) ? len : 0);
+    return ESP_OK;
+}
+
 /* ==================== Public API ==================== */
 esp_err_t web_control_start(motor_control_cb_t callback)
 {
@@ -338,6 +517,7 @@ esp_err_t web_control_start(motor_control_cb_t callback)
     u.handler = index_handler;    u.uri = "/";            httpd_register_uri_handler(srv80, &u);
     u.handler = ctrl_handler;     u.uri = "/ctrl";        httpd_register_uri_handler(srv80, &u);
     u.handler = snapshot_handler; u.uri = "/snapshot";    httpd_register_uri_handler(srv80, &u);
+    u.handler = status_handler;   u.uri = "/status";      httpd_register_uri_handler(srv80, &u);
 
     /* Port 81: dedicated MJPEG stream task */
     xTaskCreate(mjpeg_server_task, "mjpeg_srv", 4096, NULL, 5, NULL);

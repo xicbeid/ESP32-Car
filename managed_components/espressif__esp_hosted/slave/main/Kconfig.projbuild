@@ -536,7 +536,7 @@ menu "Example Configuration"
 					bool "2 data lines"
 
 				config ESP_SPI_HD_PRIV_INTERFACE_1_DATA_LINE
-					depends on $(ESP_IDF_VERSION) >= "6.1"
+					# depends on $(ESP_IDF_VERSION) >= "6.1"  -- patched for IDF 5.x
 					bool "1 data line"
 			endchoice
 

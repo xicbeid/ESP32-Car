@@ -24,7 +24,7 @@
 
  * Automatically generated file. DO NOT EDIT.
 
- * Espressif IoT Development Framework (ESP-IDF) 5.4.0 Configuration Header
+ * Espressif IoT Development Framework (ESP-IDF) 5.5.4 Configuration Header
 
  */
        
@@ -39,6 +39,7 @@
 
  */
 /* CPU instruction prefetch padding size for flash mmap scenario */
+/* Copy from esp_secure_boot.h */
 /*
 
  * PMP region granularity size
@@ -53,11 +54,6 @@
 /* CPU instruction prefetch padding size for memory protection scenario */
 /* Memory alignment size for PMS */
     /* rtc timer data (s_rtc_timer_retain_mem, see esp_clk.c files). For rtc_timer_data_in_rtc_mem section. */
-/* If the cache size is less than 512KB, then there is a region of RAM
-
- * above the ROM-reserved region and below the start of the cache.
-
- */
 MEMORY
 {
   /**
@@ -93,17 +89,18 @@ MEMORY
    * Enabling Bluetooth & Trace Memory features in menuconfig will decrease the amount of RAM available.
 
    */
-  sram_low (RWX) : org = 0x4FF00000, len = 0x4FF2CBD0 - 0x4FF00000
-  sram_high (RW) : org = 0x4FF40000, len = 0x80000 - 0x20000
+  sram_seg (RWX) : org = 0x4FF00000 + 0x20000, len = 0x4FFAEFC0 - 0x4FF00000 + 0x20000
   /* Flash mapped constant data */
   drom_seg (R) : org = 0x40000020, len = (0x10000 << 10) - 0x20
   /* (See irom_seg for meaning of 0x20 offset in the above.) */
+  /* Used to store the deep sleep workaround code of P4 rev3.0. The reset vector will be set here before the chip enters sleep. */
+  rev3_mspi_workaround_seg(RWX) : org = 0x50108000, len = 0x0
   /**
 
    * lp ram memory (RWX). Persists over deep sleep. // TODO: IDF-5667
 
    */
-  lp_ram_seg(RW) : org = 0x50108000 + (0 + (24)), len = 0x8000 - (0 + (24))
+  lp_ram_seg(RW) : org = 0x50108000 + 0x0 + (0 + (24)), len = 0x8000 - (0 + (24)) - 0x0
   /* We reduced the size of lp_ram_seg by RESERVE_RTC_MEM value.
 
      It reserves the amount of LP memory that we use for this memory segment.
@@ -119,7 +116,7 @@ MEMORY
      This segment is placed at the beginning of LP RAM, as the end of LP RAM is occupied by LP ROM stack/data
 
   */
-  lp_reserved_seg(RW) : org = 0x50108000, len = (0 + (24))
+  lp_reserved_seg(RW) : org = 0x50108000 + 0x0, len = (0 + (24))
   /* PSRAM seg */
   extern_ram_seg(RWX) : org = 0x48000000, len = (0x10000 << 10)
 }

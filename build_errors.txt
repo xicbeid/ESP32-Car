@@ -1,0 +1,1 @@
+ninja failed with exit code 1, output of the command is in the F:\project_ESP32_p4\UART\build\log\idf_py_stderr_output_9532 and F:\project_ESP32_p4\UART\build\log\idf_py_stdout_output_9532

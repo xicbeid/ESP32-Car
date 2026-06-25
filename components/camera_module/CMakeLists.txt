@@ -5,4 +5,5 @@ idf_component_register(
         esp_video
         esp_driver_jpeg
         driver
+        esp_timer
 )

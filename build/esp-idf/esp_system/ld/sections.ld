@@ -15,7 +15,7 @@
 
  * Automatically generated file. DO NOT EDIT.
 
- * Espressif IoT Development Framework (ESP-IDF) 5.4.0 Configuration Header
+ * Espressif IoT Development Framework (ESP-IDF) 5.5.4 Configuration Header
 
  */
        
@@ -30,6 +30,7 @@
 
  */
 /* CPU instruction prefetch padding size for flash mmap scenario */
+/* Copy from esp_secure_boot.h */
 /*
 
  * PMP region granularity size
@@ -236,9 +237,6 @@ SECTIONS
     ASSERT(ABSOLUTE(.) % 0x40 == 0, "vector address must be 64 byte aligned");
     KEEP(*(.exception_vectors_table.text));
     KEEP(*(.exception_vectors.text));
-    
- . = ALIGN(4); 
- _invalid_pc_placeholder = ABSOLUTE(.);
     /* Code marked as running out of IRAM */
     _iram_text_start = ABSOLUTE(.);
     *(.iram1 .iram1.*)
@@ -248,9 +246,40 @@ SECTIONS
     *libclang_rt.builtins.a:_divsf3.*(.literal .literal.* .text .text.*)
     *libclang_rt.builtins.a:restore.*(.literal .literal.* .text .text.*)
     *libclang_rt.builtins.a:save.*(.literal .literal.* .text .text.*)
+    *libesp_driver_ana_cmpr.a:ana_cmpr.*(.literal.ana_cmpr_default_intr_handler .text.ana_cmpr_default_intr_handler)
     *libesp_driver_gptimer.a:gptimer.*(.literal.gptimer_default_isr .text.gptimer_default_isr)
+    *libesp_driver_i2c.a:i2c_master.*(.literal.i2c_master_isr_handler_default .text.i2c_master_isr_handler_default)
+    *libesp_driver_mcpwm.a:mcpwm_cap.*(.literal.mcpwm_capture_default_isr .text.mcpwm_capture_default_isr)
+    *libesp_driver_mcpwm.a:mcpwm_cmpr.*(.literal.mcpwm_comparator_default_isr .text.mcpwm_comparator_default_isr)
+    *libesp_driver_mcpwm.a:mcpwm_fault.*(.literal.mcpwm_gpio_fault_default_isr .text.mcpwm_gpio_fault_default_isr)
+    *libesp_driver_mcpwm.a:mcpwm_oper.*(.literal.mcpwm_operator_default_isr .text.mcpwm_operator_default_isr)
+    *libesp_driver_mcpwm.a:mcpwm_timer.*(.literal.mcpwm_timer_default_isr .text.mcpwm_timer_default_isr)
+    *libesp_driver_parlio.a:parlio_rx.*(.literal.parlio_rx_default_desc_done_callback .text.parlio_rx_default_desc_done_callback)
+    *libesp_driver_parlio.a:parlio_rx.*(.literal.parlio_rx_default_eof_callback .text.parlio_rx_default_eof_callback)
+    *libesp_driver_parlio.a:parlio_rx.*(.literal.parlio_rx_mount_transaction_buffer .text.parlio_rx_mount_transaction_buffer)
+    *libesp_driver_parlio.a:parlio_rx.*(.literal.parlio_rx_set_delimiter_config .text.parlio_rx_set_delimiter_config)
+    *libesp_driver_parlio.a:parlio_tx.*(.literal.parlio_mount_buffer .text.parlio_mount_buffer)
+    *libesp_driver_parlio.a:parlio_tx.*(.literal.parlio_tx_default_isr .text.parlio_tx_default_isr)
+    *libesp_driver_parlio.a:parlio_tx.*(.literal.parlio_tx_do_transaction .text.parlio_tx_do_transaction)
+    *libesp_driver_parlio.a:parlio_tx.*(.literal.parlio_tx_gdma_eof_callback .text.parlio_tx_gdma_eof_callback)
+    *libesp_driver_rmt.a:rmt_encoder.*(.literal.rmt_encoder_reset .text.rmt_encoder_reset)
+    *libesp_driver_rmt.a:rmt_rx.*(.literal.rmt_dma_rx_one_block_cb .text.rmt_dma_rx_one_block_cb)
+    *libesp_driver_rmt.a:rmt_rx.*(.literal.rmt_isr_handle_rx_done .text.rmt_isr_handle_rx_done)
+    *libesp_driver_rmt.a:rmt_rx.*(.literal.rmt_isr_handle_rx_threshold .text.rmt_isr_handle_rx_threshold)
+    *libesp_driver_rmt.a:rmt_rx.*(.literal.rmt_rx_default_isr .text.rmt_rx_default_isr)
+    *libesp_driver_rmt.a:rmt_tx.*(.literal.rmt_dma_tx_eof_cb .text.rmt_dma_tx_eof_cb)
+    *libesp_driver_rmt.a:rmt_tx.*(.literal.rmt_encode_check_result .text.rmt_encode_check_result)
+    *libesp_driver_rmt.a:rmt_tx.*(.literal.rmt_isr_handle_tx_done .text.rmt_isr_handle_tx_done)
+    *libesp_driver_rmt.a:rmt_tx.*(.literal.rmt_isr_handle_tx_loop_end .text.rmt_isr_handle_tx_loop_end)
+    *libesp_driver_rmt.a:rmt_tx.*(.literal.rmt_isr_handle_tx_threshold .text.rmt_isr_handle_tx_threshold)
+    *libesp_driver_rmt.a:rmt_tx.*(.literal.rmt_tx_default_isr .text.rmt_tx_default_isr)
+    *libesp_driver_rmt.a:rmt_tx.*(.literal.rmt_tx_do_transaction .text.rmt_tx_do_transaction)
+    *libesp_driver_rmt.a:rmt_tx.*(.literal.rmt_tx_mark_eof .text.rmt_tx_mark_eof)
     *libesp_event.a:default_event_loop.*(.literal.esp_event_isr_post .text.esp_event_isr_post)
     *libesp_event.a:esp_event.*(.literal.esp_event_isr_post_to .text.esp_event_isr_post_to)
+    *libesp_hw_support.a:adc_share_hw_ctrl.*(.literal.adc_apb_periph_claim .text.adc_apb_periph_claim)
+    *libesp_hw_support.a:adc_share_hw_ctrl.*(.literal.adc_apb_periph_free .text.adc_apb_periph_free)
+    *libesp_hw_support.a:clk_utils.*(.literal .literal.* .text .text.*)
     *libesp_hw_support.a:cpu.*(.literal.esp_cpu_compare_and_set .text.esp_cpu_compare_and_set)
     *libesp_hw_support.a:cpu.*(.literal.esp_cpu_reset .text.esp_cpu_reset)
     *libesp_hw_support.a:cpu.*(.literal.esp_cpu_stall .text.esp_cpu_stall)
@@ -262,6 +291,18 @@ SECTIONS
     *libesp_hw_support.a:dma2d.*(.literal.dma2d_default_isr .text.dma2d_default_isr)
     *libesp_hw_support.a:dma2d.*(.literal.free_up_channels .text.free_up_channels)
     *libesp_hw_support.a:dw_gdma.*(.literal.dw_gdma_channel_default_isr .text.dw_gdma_channel_default_isr)
+    *libesp_hw_support.a:dw_gdma.*(.literal.dw_gdma_channel_enable_ctrl .text.dw_gdma_channel_enable_ctrl)
+    *libesp_hw_support.a:dw_gdma.*(.literal.dw_gdma_channel_use_link_list .text.dw_gdma_channel_use_link_list)
+    *libesp_hw_support.a:dw_gdma.*(.literal.dw_gdma_link_list_get_item .text.dw_gdma_link_list_get_item)
+    *libesp_hw_support.a:dw_gdma.*(.literal.dw_gdma_lli_set_block_markers .text.dw_gdma_lli_set_block_markers)
+    *libesp_hw_support.a:esp_clk.*(.literal.esp_clk_private_lock .text.esp_clk_private_lock)
+    *libesp_hw_support.a:esp_clk.*(.literal.esp_clk_private_unlock .text.esp_clk_private_unlock)
+    *libesp_hw_support.a:esp_clk.*(.literal.esp_clk_slowclk_cal_get .text.esp_clk_slowclk_cal_get)
+    *libesp_hw_support.a:esp_clk.*(.literal.esp_clk_slowclk_cal_set .text.esp_clk_slowclk_cal_set)
+    *libesp_hw_support.a:esp_clk.*(.literal.esp_rtc_get_time_us .text.esp_rtc_get_time_us)
+    *libesp_hw_support.a:esp_clk_tree.*(.literal.esp_clk_tree_enable_src .text.esp_clk_tree_enable_src)
+    *libesp_hw_support.a:esp_dma_utils.*(.literal.esp_dma_merge_aligned_rx_buffers .text.esp_dma_merge_aligned_rx_buffers)
+    *libesp_hw_support.a:esp_dma_utils.*(.literal.esp_dma_split_rx_buffer_to_cache_aligned .text.esp_dma_split_rx_buffer_to_cache_aligned)
     *libesp_hw_support.a:esp_memory_utils.*(.literal .literal.* .text .text.*)
     *libesp_hw_support.a:gdma.*(.literal.gdma_append .text.gdma_append)
     *libesp_hw_support.a:gdma.*(.literal.gdma_default_rx_isr .text.gdma_default_rx_isr)
@@ -269,17 +310,56 @@ SECTIONS
     *libesp_hw_support.a:gdma.*(.literal.gdma_reset .text.gdma_reset)
     *libesp_hw_support.a:gdma.*(.literal.gdma_start .text.gdma_start)
     *libesp_hw_support.a:gdma.*(.literal.gdma_stop .text.gdma_stop)
+    *libesp_hw_support.a:gdma_link.*(.literal.gdma_link_concat .text.gdma_link_concat)
+    *libesp_hw_support.a:gdma_link.*(.literal.gdma_link_get_buffer .text.gdma_link_get_buffer)
+    *libesp_hw_support.a:gdma_link.*(.literal.gdma_link_get_head_addr .text.gdma_link_get_head_addr)
+    *libesp_hw_support.a:gdma_link.*(.literal.gdma_link_get_length .text.gdma_link_get_length)
+    *libesp_hw_support.a:gdma_link.*(.literal.gdma_link_mount_buffers .text.gdma_link_mount_buffers)
     *libesp_hw_support.a:mspi_timing_by_dqs.*(.literal .literal.* .text .text.*)
+    *libesp_hw_support.a:mspi_timing_by_flash_delay.*(.literal .literal.* .text .text.*)
     *libesp_hw_support.a:mspi_timing_config.*(.literal .literal.* .text .text.*)
     *libesp_hw_support.a:mspi_timing_tuning.*(.literal .literal.* .text .text.*)
     *libesp_hw_support.a:periph_ctrl.*(.literal.periph_module_reset .text.periph_module_reset)
+    *libesp_hw_support.a:periph_ctrl.*(.literal.periph_rcc_acquire_enter .text.periph_rcc_acquire_enter)
+    *libesp_hw_support.a:periph_ctrl.*(.literal.periph_rcc_acquire_exit .text.periph_rcc_acquire_exit)
+    *libesp_hw_support.a:periph_ctrl.*(.literal.periph_rcc_enter .text.periph_rcc_enter)
+    *libesp_hw_support.a:periph_ctrl.*(.literal.periph_rcc_exit .text.periph_rcc_exit)
+    *libesp_hw_support.a:periph_ctrl.*(.literal.periph_rcc_release_enter .text.periph_rcc_release_enter)
+    *libesp_hw_support.a:periph_ctrl.*(.literal.periph_rcc_release_exit .text.periph_rcc_release_exit)
+    *libesp_hw_support.a:pmu_pvt.*(.literal .literal.* .text .text.*)
     *libesp_hw_support.a:pmu_sleep.*(.literal .literal.* .text .text.*)
+    *libesp_hw_support.a:regi2c_ctrl.*(.literal.regi2c_ctrl_read_reg .text.regi2c_ctrl_read_reg)
+    *libesp_hw_support.a:regi2c_ctrl.*(.literal.regi2c_ctrl_read_reg_mask .text.regi2c_ctrl_read_reg_mask)
+    *libesp_hw_support.a:regi2c_ctrl.*(.literal.regi2c_ctrl_write_reg .text.regi2c_ctrl_write_reg)
+    *libesp_hw_support.a:regi2c_ctrl.*(.literal.regi2c_ctrl_write_reg_mask .text.regi2c_ctrl_write_reg_mask)
+    *libesp_hw_support.a:regi2c_ctrl.*(.literal.regi2c_enter_critical .text.regi2c_enter_critical)
+    *libesp_hw_support.a:regi2c_ctrl.*(.literal.regi2c_exit_critical .text.regi2c_exit_critical)
+    *libesp_hw_support.a:regi2c_ctrl.*(.literal.regi2c_saradc_disable .text.regi2c_saradc_disable)
+    *libesp_hw_support.a:regi2c_ctrl.*(.literal.regi2c_saradc_enable .text.regi2c_saradc_enable)
     *libesp_hw_support.a:rtc_clk.*(.literal .literal.* .text .text.*)
     *libesp_hw_support.a:rtc_time.*(.literal .literal.* .text .text.*)
+    *libesp_hw_support.a:sar_periph_ctrl.*(.literal.sar_periph_ctrl_power_disable .text.sar_periph_ctrl_power_disable)
     *libesp_hw_support.a:sar_periph_ctrl.*(.literal.sar_periph_ctrl_power_enable .text.sar_periph_ctrl_power_enable)
+    *libesp_hw_support.a:sar_periph_ctrl_common.*(.literal.temp_sensor_get_raw_value .text.temp_sensor_get_raw_value)
+    *libesp_hw_support.a:sar_periph_ctrl_common.*(.literal.temperature_sensor_power_acquire .text.temperature_sensor_power_acquire)
+    *libesp_hw_support.a:sar_periph_ctrl_common.*(.literal.temperature_sensor_power_release .text.temperature_sensor_power_release)
+    *libesp_hw_support.a:sleep_clock.*(.literal.clock_domain_pd_allowed .text.clock_domain_pd_allowed)
     *libesp_hw_support.a:sleep_console.*(.literal .literal.* .text .text.*)
+    *libesp_hw_support.a:sleep_cpu.*(.literal.cpu_domain_pd_allowed .text.cpu_domain_pd_allowed)
+    *libesp_hw_support.a:sleep_modem.*(.literal.modem_domain_pd_allowed .text.modem_domain_pd_allowed)
+    *libesp_hw_support.a:sleep_modem.*(.literal.periph_inform_out_light_sleep_overhead .text.periph_inform_out_light_sleep_overhead)
+    *libesp_hw_support.a:sleep_modem.*(.literal.sleep_modem_reject_triggers .text.sleep_modem_reject_triggers)
+    *libesp_hw_support.a:sleep_modes.*(.literal.esp_light_sleep_start .text.esp_light_sleep_start)
+    *libesp_hw_support.a:sleep_modes.*(.literal.esp_sleep_enable_timer_wakeup .text.esp_sleep_enable_timer_wakeup)
+    *libesp_hw_support.a:sleep_mspi.*(.literal .literal.* .text .text.*)
+    *libesp_hw_support.a:sleep_system_peripheral.*(.literal.peripheral_domain_pd_allowed .text.peripheral_domain_pd_allowed)
+    *libesp_hw_support.a:sleep_usb.*(.literal .literal.* .text .text.*)
     *libesp_hw_support.a:systimer.*(.literal .literal.* .text .text.*)
-    *libesp_mm.a:esp_cache.*(.literal .literal.* .text .text.*)
+    *libesp_lcd.a:esp_lcd_panel_dpi.*(.literal.mipi_dsi_bridge_isr_handler .text.mipi_dsi_bridge_isr_handler)
+    *libesp_lcd.a:esp_lcd_panel_dpi.*(.literal.mipi_dsi_dma_trans_done_cb .text.mipi_dsi_dma_trans_done_cb)
+    *libesp_mm.a:esp_cache_msync.*(.literal .literal.* .text .text.*)
+    *libesp_mm.a:esp_cache_utils.*(.literal .literal.* .text .text.*)
+    *libesp_pm.a:pm_impl.*(.literal.esp_pm_impl_get_cpu_freq .text.esp_pm_impl_get_cpu_freq)
     *libesp_psram.a:esp_psram_impl_ap_hex.*(.literal .literal.* .text .text.*)
     *libesp_ringbuf.a:(.literal .literal.* .text .text.*)
     *libesp_rom.a:esp_rom_print.*(.literal .literal.* .text .text.*)
@@ -289,9 +369,20 @@ SECTIONS
     *libesp_rom.a:esp_rom_wdt.*(.literal .literal.* .text .text.*)
     *libesp_system.a:esp_err.*(.literal .literal.* .text .text.*)
     *libesp_system.a:esp_system_chip.*(.literal.esp_system_abort .text.esp_system_abort)
+    *libesp_system.a:freertos_hooks.*(.literal.esp_vApplicationTickHook .text.esp_vApplicationTickHook)
     *libesp_system.a:image_process.*(.literal .literal.* .text .text.*)
+    *libesp_system.a:panic.*(.literal.panic_abort .text.panic_abort)
+    *libesp_system.a:reset_reason.*(.literal.esp_reset_reason_set_hint .text.esp_reset_reason_set_hint)
+    *libesp_system.a:system_internal.*(.literal.esp_restart_noos .text.esp_restart_noos)
+    *libesp_system.a:system_internal.*(.literal.esp_system_reset_modules_on_exit .text.esp_system_reset_modules_on_exit)
+    *libesp_system.a:system_time.*(.literal.esp_system_get_time .text.esp_system_get_time)
+    *libesp_system.a:system_time.*(.literal.esp_system_get_time_resolution .text.esp_system_get_time_resolution)
     *libesp_system.a:ubsan.*(.literal .literal.* .text .text.*)
-    *libfreertos.a:(EXCLUDE_FILE(*libfreertos.a:app_startup.* *libfreertos.a:freertos_compatibility.* *libfreertos.a:idf_additions.* *libfreertos.a:tasks.*) .literal EXCLUDE_FILE(*libfreertos.a:app_startup.* *libfreertos.a:freertos_compatibility.* *libfreertos.a:idf_additions.* *libfreertos.a:tasks.*) .literal.* EXCLUDE_FILE(*libfreertos.a:app_startup.* *libfreertos.a:freertos_compatibility.* *libfreertos.a:idf_additions.* *libfreertos.a:tasks.*) .text EXCLUDE_FILE(*libfreertos.a:app_startup.* *libfreertos.a:freertos_compatibility.* *libfreertos.a:idf_additions.* *libfreertos.a:tasks.*) .text.*)
+    *libesp_timer.a:esp_timer_impl_common.*(.literal.esp_timer_impl_lock .text.esp_timer_impl_lock)
+    *libesp_timer.a:esp_timer_impl_common.*(.literal.esp_timer_impl_unlock .text.esp_timer_impl_unlock)
+    *libesp_timer.a:esp_timer_impl_systimer.*(.literal.esp_timer_impl_advance .text.esp_timer_impl_advance)
+    *libesp_timer.a:esp_timer_impl_systimer.*(.literal.esp_timer_impl_set .text.esp_timer_impl_set)
+    *libfreertos.a:(EXCLUDE_FILE(*libfreertos.a:app_startup.* *libfreertos.a:freertos_compatibility.* *libfreertos.a:idf_additions.* *libfreertos.a:idf_additions_event_groups.* *libfreertos.a:tasks.*) .literal EXCLUDE_FILE(*libfreertos.a:app_startup.* *libfreertos.a:freertos_compatibility.* *libfreertos.a:idf_additions.* *libfreertos.a:idf_additions_event_groups.* *libfreertos.a:tasks.*) .literal.* EXCLUDE_FILE(*libfreertos.a:app_startup.* *libfreertos.a:freertos_compatibility.* *libfreertos.a:idf_additions.* *libfreertos.a:idf_additions_event_groups.* *libfreertos.a:tasks.*) .text EXCLUDE_FILE(*libfreertos.a:app_startup.* *libfreertos.a:freertos_compatibility.* *libfreertos.a:idf_additions.* *libfreertos.a:idf_additions_event_groups.* *libfreertos.a:tasks.*) .text.*)
     *libfreertos.a:tasks.*(.text .text.__getreent .text.eTaskGetState .text.pcTaskGetName .text.prvAddCurrentTaskToDelayedList .text.prvAddNewTaskToReadyList .text.prvCheckTaskCanBeScheduledSMP .text.prvCheckTasksWaitingTermination .text.prvCreateIdleTasks .text.prvDeleteTCB .text.prvIdleTask .text.prvInitialiseNewTask .text.prvInitialiseTaskLists .text.prvIsYieldRequiredSMP .text.prvReleaseKernelLock .text.prvResetNextTaskUnblockTime .text.prvSearchForNameWithinSingleList .text.prvSelectHighestPriorityTaskSMP .text.prvTakeKernelLock .text.prvTaskCheckFreeStackSpace .text.prvTaskCreateDynamicPinnedToCoreWithCaps .text.prvTaskIsTaskSuspended .text.prvTaskPriorityRaise .text.prvTaskPriorityRestore .text.pvTaskGetCurrentTCBForCore .text.pvTaskGetThreadLocalStoragePointer .text.pvTaskIncrementMutexHeldCount .text.pxTaskGetStackStart .text.ulTaskGenericNotifyTake .text.ulTaskGenericNotifyValueClear .text.uxTaskGetNumberOfTasks .text.uxTaskGetStackHighWaterMark .text.uxTaskGetStackHighWaterMark2 .text.uxTaskPriorityGet .text.uxTaskPriorityGetFromISR .text.uxTaskResetEventItemValue .text.vTaskDelay .text.vTaskDelete .text.vTaskEndScheduler .text.vTaskGenericNotifyGiveFromISR .text.vTaskGetSnapshot .text.vTaskInternalSetTimeOutState .text.vTaskMissedYield .text.vTaskPlaceOnEventList .text.vTaskPlaceOnEventListRestricted .text.vTaskPlaceOnUnorderedEventList .text.vTaskPriorityDisinheritAfterTimeout .text.vTaskPrioritySet .text.vTaskRemoveFromUnorderedEventList .text.vTaskResume .text.vTaskSetThreadLocalStoragePointer .text.vTaskSetThreadLocalStoragePointerAndDelCallback .text.vTaskSetTimeOutState .text.vTaskStartScheduler .text.vTaskSuspend .text.vTaskSuspendAll .text.vTaskSwitchContext .text.xTaskAbortDelay .text.xTaskCatchUpTicks .text.xTaskCheckForTimeOut .text.xTaskCreatePinnedToCore .text.xTaskCreateStaticPinnedToCore .text.xTaskDelayUntil .text.xTaskGenericNotify .text.xTaskGenericNotifyFromISR .text.xTaskGenericNotifyStateClear .text.xTaskGenericNotifyWait .text.xTaskGetCoreID .text.xTaskGetCurrentTaskHandle .text.xTaskGetCurrentTaskHandleForCore .text.xTaskGetHandle .text.xTaskGetIdleTaskHandle .text.xTaskGetIdleTaskHandleForCore .text.xTaskGetSchedulerState .text.xTaskGetStaticBuffers .text.xTaskGetTickCount .text.xTaskGetTickCountFromISR .text.xTaskIncrementTick .text.xTaskIncrementTickOtherCores .text.xTaskPriorityDisinherit .text.xTaskPriorityInherit .text.xTaskRemoveFromEventList .text.xTaskResumeAll .text.xTaskResumeFromISR .text.xTimerCreateTimerTask)
     *libgcc.a:_divsf3.*(.literal .literal.* .text .text.*)
     *libgcc.a:lib2funcs.*(.literal .literal.* .text .text.*)
@@ -319,6 +410,7 @@ SECTIONS
     *libhal.a:gdma_hal_top.*(.literal.gdma_hal_reset .text.gdma_hal_reset)
     *libhal.a:gdma_hal_top.*(.literal.gdma_hal_start_with_desc .text.gdma_hal_start_with_desc)
     *libhal.a:gdma_hal_top.*(.literal.gdma_hal_stop .text.gdma_hal_stop)
+    *libhal.a:gpio_hal.*(.literal.gpio_hal_isolate_in_sleep .text.gpio_hal_isolate_in_sleep)
     *libhal.a:i2c_hal_iram.*(.literal .literal.* .text .text.*)
     *libhal.a:ledc_hal_iram.*(.literal .literal.* .text .text.*)
     *libhal.a:mmu_hal.*(.literal .literal.* .text .text.*)
@@ -337,6 +429,7 @@ SECTIONS
     *libheap.a:multi_heap.*(.literal.multi_heap_get_allocated_size_impl .text.multi_heap_get_allocated_size_impl)
     *libheap.a:multi_heap.*(.literal.multi_heap_get_block_address_impl .text.multi_heap_get_block_address_impl)
     *libheap.a:multi_heap.*(.literal.multi_heap_get_first_block .text.multi_heap_get_first_block)
+    *libheap.a:multi_heap.*(.literal.multi_heap_get_full_block_size .text.multi_heap_get_full_block_size)
     *libheap.a:multi_heap.*(.literal.multi_heap_get_next_block .text.multi_heap_get_next_block)
     *libheap.a:multi_heap.*(.literal.multi_heap_internal_lock .text.multi_heap_internal_lock)
     *libheap.a:multi_heap.*(.literal.multi_heap_internal_unlock .text.multi_heap_internal_unlock)
@@ -353,17 +446,59 @@ SECTIONS
     *libheap.a:tlsf.*(.literal.tlsf_memalign_offs .text.tlsf_memalign_offs)
     *libheap.a:tlsf.*(.literal.tlsf_realloc .text.tlsf_realloc)
     *libheap.a:tlsf.*(.literal.tlsf_size .text.tlsf_size)
+    *liblog.a:log.*(.literal .literal.* .text .text.*)
+    *liblog.a:log_format_text.*(.literal .literal.* .text .text.*)
     *liblog.a:log_lock.*(.literal .literal.* .text .text.*)
+    *liblog.a:log_print.*(.literal .literal.* .text .text.*)
     *liblog.a:log_timestamp.*(.literal.esp_log_early_timestamp .text.esp_log_early_timestamp)
     *liblog.a:log_timestamp.*(.literal.esp_log_timestamp .text.esp_log_timestamp)
+    *liblog.a:log_timestamp_common.*(.literal .literal.* .text .text.*)
     *liblog.a:log_write.*(.literal.esp_log_write .text.esp_log_write)
+    *liblog.a:log_write.*(.literal.esp_log_writev .text.esp_log_writev)
+    *liblog.a:tag_log_level.*(.literal.esp_log_level_get_timeout .text.esp_log_level_get_timeout)
+    *liblog.a:util.*(.literal .literal.* .text .text.*)
     *libnewlib.a:abort.*(.literal .literal.* .text .text.*)
     *libnewlib.a:assert.*(.literal .literal.* .text .text.*)
+    *libnewlib.a:esp_time_impl.*(.literal.esp_set_time_from_rtc .text.esp_set_time_from_rtc)
+    *libnewlib.a:esp_time_impl.*(.literal.esp_time_impl_get_boot_time .text.esp_time_impl_get_boot_time)
+    *libnewlib.a:esp_time_impl.*(.literal.esp_time_impl_set_boot_time .text.esp_time_impl_set_boot_time)
     *libnewlib.a:heap.*(.literal .literal.* .text .text.*)
+    *libnewlib.a:memcmp.*(.literal .literal.* .text .text.*)
+    *libnewlib.a:memcpy.*(.literal .literal.* .text .text.*)
+    *libnewlib.a:memmove.*(.literal .literal.* .text .text.*)
     *libnewlib.a:stdatomic.*(.literal .literal.* .text .text.*)
+    *libnewlib.a:strcmp.*(.literal .literal.* .text .text.*)
+    *libnewlib.a:strcpy.*(.literal .literal.* .text .text.*)
+    *libnewlib.a:strncmp.*(.literal .literal.* .text .text.*)
+    *libnewlib.a:strncpy.*(.literal .literal.* .text .text.*)
     *libriscv.a:interrupt.*(.text .text._global_interrupt_handler .text.intr_get_item .text.intr_handler_get_arg)
+    *libriscv.a:rv_utils.*(.literal .literal.* .text .text.*)
     *libriscv.a:vectors.*(.literal .literal.* .text .text.*)
     *libsoc.a:lldesc.*(.literal .literal.* .text .text.*)
+    *libspi_flash.a:esp_flash_api.*(.literal.check_chip_pointer_default .text.check_chip_pointer_default)
+    *libspi_flash.a:esp_flash_api.*(.literal.detect_spi_flash_chip .text.detect_spi_flash_chip)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_chip_driver_initialized .text.esp_flash_chip_driver_initialized)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_erase_chip .text.esp_flash_erase_chip)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_erase_region .text.esp_flash_erase_region)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_get_chip_write_protect .text.esp_flash_get_chip_write_protect)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_get_io_mode .text.esp_flash_get_io_mode)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_get_physical_size .text.esp_flash_get_physical_size)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_get_protected_region .text.esp_flash_get_protected_region)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_get_size .text.esp_flash_get_size)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_init .text.esp_flash_init)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_init_main .text.esp_flash_init_main)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_read .text.esp_flash_read)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_read_encrypted .text.esp_flash_read_encrypted)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_set_chip_write_protect .text.esp_flash_set_chip_write_protect)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_set_io_mode .text.esp_flash_set_io_mode)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_set_protected_region .text.esp_flash_set_protected_region)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_write .text.esp_flash_write)
+    *libspi_flash.a:esp_flash_api.*(.literal.esp_flash_write_encrypted .text.esp_flash_write_encrypted)
+    *libspi_flash.a:esp_flash_api.*(.literal.flash_end_flush_cache .text.flash_end_flush_cache)
+    *libspi_flash.a:esp_flash_api.*(.literal.read_unique_id .text.read_unique_id)
+    *libspi_flash.a:esp_flash_api.*(.literal.spiflash_end_default .text.spiflash_end_default)
+    *libspi_flash.a:esp_flash_api.*(.literal.spiflash_start_core .text.spiflash_start_core)
+    *libspi_flash.a:esp_flash_api.*(.literal.spiflash_start_default .text.spiflash_start_default)
     *libspi_flash.a:flash_brownout_hook.*(.literal .literal.* .text .text.*)
     *libspi_flash.a:memspi_host_driver.*(.literal .literal.* .text .text.*)
     *libspi_flash.a:spi_flash_chip_boya.*(.literal .literal.* .text .text.*)
@@ -373,6 +508,19 @@ SECTIONS
     *libspi_flash.a:spi_flash_chip_mxic.*(.literal .literal.* .text .text.*)
     *libspi_flash.a:spi_flash_chip_th.*(.literal .literal.* .text .text.*)
     *libspi_flash.a:spi_flash_chip_winbond.*(.literal .literal.* .text .text.*)
+    *libspi_flash.a:spi_flash_hpm_enable.*(.literal .literal.* .text .text.*)
+    *libspi_flash.a:spi_flash_os_func_app.*(.literal.delay_us .text.delay_us)
+    *libspi_flash.a:spi_flash_os_func_app.*(.literal.get_buffer_malloc .text.get_buffer_malloc)
+    *libspi_flash.a:spi_flash_os_func_app.*(.literal.main_flash_op_status .text.main_flash_op_status)
+    *libspi_flash.a:spi_flash_os_func_app.*(.literal.main_flash_region_protected .text.main_flash_region_protected)
+    *libspi_flash.a:spi_flash_os_func_app.*(.literal.release_buffer_malloc .text.release_buffer_malloc)
+    *libspi_flash.a:spi_flash_os_func_app.*(.literal.spi23_end .text.spi23_end)
+    *libspi_flash.a:spi_flash_os_func_app.*(.literal.spi23_start .text.spi23_start)
+    *libspi_flash.a:spi_flash_os_func_app.*(.literal.spi_flash_os_check_yield .text.spi_flash_os_check_yield)
+    *libspi_flash.a:spi_flash_os_func_app.*(.literal.spi_flash_os_yield .text.spi_flash_os_yield)
+    *libspi_flash.a:spi_flash_os_func_noos.*(.literal.delay_us .text.delay_us)
+    *libspi_flash.a:spi_flash_os_func_noos.*(.literal.esp_flash_app_disable_os_functions .text.esp_flash_app_disable_os_functions)
+    *libspi_flash.a:spi_flash_os_func_noos.*(.literal.get_temp_buffer_not_supported .text.get_temp_buffer_not_supported)
     *libspi_flash.a:spi_flash_wrap.*(.literal .literal.* .text .text.*)
     *libtinyh264.a:h264bsd_cavlc.*(.literal .literal.* .text .text.*)
     *libtinyh264.a:h264bsd_intra_prediction.*(.literal .literal.* .text .text.*)
@@ -380,7 +528,7 @@ SECTIONS
     *libtinyh264.a:h264bsd_stream.*(.literal .literal.* .text .text.*)
     *libtinyh264.a:h264bsd_transform.*(.literal .literal.* .text .text.*)
     *libtinyh264.a:h264bsd_vlc.*(.literal .literal.* .text .text.*)
-  } > sram_low
+  } > sram_seg
   /* Marks the end of IRAM code segment */
   .iram0.text_end (NOLOAD) :
   {
@@ -389,18 +537,18 @@ SECTIONS
     
  . = ALIGN(4); 
  _iram_text_end = ABSOLUTE(.);
-  } > sram_low
+  } > sram_seg
   .iram0.data :
   {
     
  . = ALIGN(16); 
  _iram_data_start = ABSOLUTE(.);
+    *(.iram.data .iram.data.*)
     _coredump_iram_start = ABSOLUTE(.);
     *(.iram2.coredump .iram2.coredump.*)
     _coredump_iram_end = ABSOLUTE(.);
-    *(.iram.data .iram.data.*)
     _iram_data_end = ABSOLUTE(.);
-  } > sram_low
+  } > sram_seg
   .iram0.bss (NOLOAD) :
   {
     
@@ -411,10 +559,21 @@ SECTIONS
     
  . = ALIGN(16); 
  _iram_end = ABSOLUTE(.);
-  } > sram_low
+  } > sram_seg
+  /**
+
+   * This section is required to skip .iram0.text area because sram_seg and
+
+   * sram_seg reflect the same address space on different buses.
+
+   */
+  .dram0.dummy (NOLOAD):
+  {
+    . = ORIGIN(sram_seg) + _iram_end - _iram_start;
+  } > sram_seg
   .dram0.data :
   {
-    _data_start_low = ABSOLUTE(.);
+    _data_start = ABSOLUTE(.);
     *(.gnu.linkonce.d.*)
     *(.data1)
     __global_pointer$ = . + 0x800;
@@ -423,26 +582,49 @@ SECTIONS
     *(.gnu.linkonce.s.*)
     *(.gnu.linkonce.s2.*)
     *(.jcr)
+    *(.data .data.*)
+    *(.dram1 .dram1.*)
     _coredump_dram_start = ABSOLUTE(.);
     *(.dram2.coredump .dram2.coredump.*)
     _coredump_dram_end = ABSOLUTE(.);
-    *(.data .data.*)
-    *(.dram1 .dram1.*)
     *libapp_trace.a:app_trace.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libapp_trace.a:app_trace_util.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libapp_trace.a:port_uart.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libclang_rt.builtins.a:_divsf3.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libclang_rt.builtins.a:restore.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libclang_rt.builtins.a:save.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_driver_parlio.a:parlio_rx.*(.rodata.parlio_rx_default_desc_done_callback .rodata.parlio_rx_default_desc_done_callback.str1.4 .sdata2.parlio_rx_default_desc_done_callback .srodata.parlio_rx_default_desc_done_callback)
+    *libesp_driver_parlio.a:parlio_tx.*(.rodata.parlio_tx_default_isr .rodata.parlio_tx_default_isr.str1.4 .sdata2.parlio_tx_default_isr .srodata.parlio_tx_default_isr)
+    *libesp_driver_rmt.a:rmt_tx.*(.rodata.rmt_isr_handle_tx_done .rodata.rmt_isr_handle_tx_done.str1.4 .sdata2.rmt_isr_handle_tx_done .srodata.rmt_isr_handle_tx_done)
+    *libesp_driver_rmt.a:rmt_tx.*(.rodata.rmt_tx_do_transaction .rodata.rmt_tx_do_transaction.str1.4 .sdata2.rmt_tx_do_transaction .srodata.rmt_tx_do_transaction)
+    *libesp_hw_support.a:adc_share_hw_ctrl.*(.rodata.adc_apb_periph_free .rodata.adc_apb_periph_free.str1.4 .sdata2.adc_apb_periph_free .srodata.adc_apb_periph_free)
+    *libesp_hw_support.a:clk_utils.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_hw_support.a:cpu.*(.rodata.esp_cpu_stall .rodata.esp_cpu_stall.str1.4 .sdata2.esp_cpu_stall .srodata.esp_cpu_stall)
+    *libesp_hw_support.a:dma2d.*(.rodata._dma2d_default_rx_isr .rodata._dma2d_default_rx_isr.str1.4 .sdata2._dma2d_default_rx_isr .srodata._dma2d_default_rx_isr)
+    *libesp_hw_support.a:dma2d.*(.rodata.free_up_channels .rodata.free_up_channels.str1.4 .sdata2.free_up_channels .srodata.free_up_channels)
+    *libesp_hw_support.a:dw_gdma.*(.rodata.dw_gdma_channel_use_link_list .rodata.dw_gdma_channel_use_link_list.str1.4 .sdata2.dw_gdma_channel_use_link_list .srodata.dw_gdma_channel_use_link_list)
+    *libesp_hw_support.a:dw_gdma.*(.rodata.dw_gdma_link_list_get_item .rodata.dw_gdma_link_list_get_item.str1.4 .sdata2.dw_gdma_link_list_get_item .srodata.dw_gdma_link_list_get_item)
+    *libesp_hw_support.a:esp_dma_utils.*(.rodata.esp_dma_split_rx_buffer_to_cache_aligned .rodata.esp_dma_split_rx_buffer_to_cache_aligned.str1.4 .sdata2.esp_dma_split_rx_buffer_to_cache_aligned .srodata.esp_dma_split_rx_buffer_to_cache_aligned)
     *libesp_hw_support.a:esp_memory_utils.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_hw_support.a:gdma.*(.rodata.gdma_start .rodata.gdma_start.str1.4 .sdata2.gdma_start .srodata.gdma_start)
+    *libesp_hw_support.a:gdma_link.*(.rodata.gdma_link_mount_buffers .rodata.gdma_link_mount_buffers.str1.4 .sdata2.gdma_link_mount_buffers .srodata.gdma_link_mount_buffers)
     *libesp_hw_support.a:mspi_timing_by_dqs.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_hw_support.a:mspi_timing_by_flash_delay.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libesp_hw_support.a:mspi_timing_config.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libesp_hw_support.a:mspi_timing_tuning.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_hw_support.a:pmu_pvt.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libesp_hw_support.a:pmu_sleep.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_hw_support.a:regi2c_ctrl.*(.rodata.regi2c_saradc_disable .rodata.regi2c_saradc_disable.str1.4 .sdata2.regi2c_saradc_disable .srodata.regi2c_saradc_disable)
     *libesp_hw_support.a:rtc_clk.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_hw_support.a:sar_periph_ctrl_common.*(.rodata.temperature_sensor_power_release .rodata.temperature_sensor_power_release.str1.4 .sdata2.temperature_sensor_power_release .srodata.temperature_sensor_power_release)
     *libesp_hw_support.a:sleep_console.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_hw_support.a:sleep_modes.*(.rodata.esp_sleep_enable_timer_wakeup .rodata.esp_sleep_enable_timer_wakeup.str1.4 .sdata2.esp_sleep_enable_timer_wakeup .srodata.esp_sleep_enable_timer_wakeup)
+    *libesp_hw_support.a:sleep_mspi.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_hw_support.a:sleep_usb.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libesp_hw_support.a:systimer.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_mm.a:esp_cache.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_lcd.a:esp_lcd_panel_dpi.*(.rodata.mipi_dsi_bridge_isr_handler .rodata.mipi_dsi_bridge_isr_handler.str1.4 .sdata2.mipi_dsi_bridge_isr_handler .srodata.mipi_dsi_bridge_isr_handler)
+    *libesp_mm.a:esp_cache_msync.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_mm.a:esp_cache_utils.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libesp_psram.a:esp_psram_impl_ap_hex.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libesp_rom.a:esp_rom_print.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libesp_rom.a:esp_rom_spiflash.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
@@ -451,6 +633,8 @@ SECTIONS
     *libesp_rom.a:esp_rom_wdt.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libesp_system.a:esp_err.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libesp_system.a:image_process.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libesp_system.a:reset_reason.*(.rodata.esp_reset_reason_set_hint .rodata.esp_reset_reason_set_hint.str1.4 .sdata2.esp_reset_reason_set_hint .srodata.esp_reset_reason_set_hint)
+    *libesp_system.a:system_internal.*(.rodata.esp_system_reset_modules_on_exit .rodata.esp_system_reset_modules_on_exit.str1.4 .sdata2.esp_system_reset_modules_on_exit .srodata.esp_system_reset_modules_on_exit)
     *libesp_system.a:ubsan.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libgcc.a:_divsf3.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libgcc.a:save-restore.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
@@ -465,12 +649,33 @@ SECTIONS
     *libhal.a:spi_flash_hal_iram.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libhal.a:spi_hal_iram.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libhal.a:spi_slave_hal_iram.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libheap.a:multi_heap.*(.rodata.assert_valid_block .rodata.assert_valid_block.str1.4 .sdata2.assert_valid_block .srodata.assert_valid_block)
+    *libheap.a:multi_heap.*(.rodata.multi_heap_get_first_block .rodata.multi_heap_get_first_block.str1.4 .sdata2.multi_heap_get_first_block .srodata.multi_heap_get_first_block)
+    *libheap.a:multi_heap.*(.rodata.multi_heap_get_next_block .rodata.multi_heap_get_next_block.str1.4 .sdata2.multi_heap_get_next_block .srodata.multi_heap_get_next_block)
+    *libheap.a:tlsf.*(.rodata.tlsf_free .rodata.tlsf_free.str1.4 .sdata2.tlsf_free .srodata.tlsf_free)
+    *libheap.a:tlsf.*(.rodata.tlsf_malloc .rodata.tlsf_malloc.str1.4 .sdata2.tlsf_malloc .srodata.tlsf_malloc)
+    *libheap.a:tlsf.*(.rodata.tlsf_memalign_offs .rodata.tlsf_memalign_offs.str1.4 .sdata2.tlsf_memalign_offs .srodata.tlsf_memalign_offs)
+    *libheap.a:tlsf.*(.rodata.tlsf_realloc .rodata.tlsf_realloc.str1.4 .sdata2.tlsf_realloc .srodata.tlsf_realloc)
+    *liblog.a:log.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *liblog.a:log_format_text.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *liblog.a:log_lock.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *liblog.a:log_print.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *liblog.a:log_timestamp_common.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *liblog.a:util.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libnewlib.a:abort.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libnewlib.a:assert.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libnewlib.a:heap.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libnewlib.a:memcmp.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libnewlib.a:memcpy.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libnewlib.a:memmove.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libnewlib.a:stdatomic.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libnewlib.a:strcmp.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libnewlib.a:strcpy.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libnewlib.a:strncmp.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libnewlib.a:strncpy.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libsoc.a:lldesc.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libsoc.a:parlio_periph.*(.rodata.parlio_periph_signals .sdata2.parlio_periph_signals .srodata.parlio_periph_signals)
+    *libsoc.a:temperature_sensor_periph.*(.rodata.temperature_sensor_attributes .sdata2.temperature_sensor_attributes .srodata.temperature_sensor_attributes)
     *libspi_flash.a:flash_brownout_hook.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libspi_flash.a:memspi_host_driver.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libspi_flash.a:spi_flash_chip_boya.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
@@ -480,6 +685,8 @@ SECTIONS
     *libspi_flash.a:spi_flash_chip_mxic.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libspi_flash.a:spi_flash_chip_th.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libspi_flash.a:spi_flash_chip_winbond.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libspi_flash.a:spi_flash_hpm_enable.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
+    *libspi_flash.a:spi_flash_os_func_app.*(.rodata.spi_flash_os_check_yield .rodata.spi_flash_os_check_yield.str1.4 .sdata2.spi_flash_os_check_yield .srodata.spi_flash_os_check_yield)
     *libspi_flash.a:spi_flash_wrap.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libtinyh264.a:h264bsd_cavlc.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libtinyh264.a:h264bsd_intra_prediction.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
@@ -487,74 +694,8 @@ SECTIONS
     *libtinyh264.a:h264bsd_stream.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libtinyh264.a:h264bsd_transform.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
     *libtinyh264.a:h264bsd_vlc.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    _data_end_low = ABSOLUTE(.);
-  } > sram_low
-  .dram1.data :
-  {
-    _data_start_high = ABSOLUTE(.);
-    *(.data .data.*)
-    *(.dram1 .dram1.*)
-    *libapp_trace.a:app_trace.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libapp_trace.a:app_trace_util.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libapp_trace.a:port_uart.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libclang_rt.builtins.a:_divsf3.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libclang_rt.builtins.a:restore.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libclang_rt.builtins.a:save.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_hw_support.a:esp_memory_utils.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_hw_support.a:mspi_timing_by_dqs.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_hw_support.a:mspi_timing_config.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_hw_support.a:mspi_timing_tuning.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_hw_support.a:pmu_sleep.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_hw_support.a:rtc_clk.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_hw_support.a:sleep_console.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_hw_support.a:systimer.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_mm.a:esp_cache.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_psram.a:esp_psram_impl_ap_hex.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_rom.a:esp_rom_print.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_rom.a:esp_rom_spiflash.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_rom.a:esp_rom_sys.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_rom.a:esp_rom_systimer.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_rom.a:esp_rom_wdt.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_system.a:esp_err.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_system.a:image_process.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libesp_system.a:ubsan.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libgcc.a:_divsf3.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libgcc.a:save-restore.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libgcov.a:(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libhal.a:cache_hal.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libhal.a:i2c_hal_iram.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libhal.a:ledc_hal_iram.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libhal.a:mmu_hal.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libhal.a:pmu_hal.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libhal.a:spi_flash_encrypt_hal_iram.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libhal.a:spi_flash_hal_gpspi.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libhal.a:spi_flash_hal_iram.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libhal.a:spi_hal_iram.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libhal.a:spi_slave_hal_iram.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *liblog.a:log_lock.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libnewlib.a:abort.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libnewlib.a:assert.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libnewlib.a:heap.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libnewlib.a:stdatomic.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libsoc.a:lldesc.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libspi_flash.a:flash_brownout_hook.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libspi_flash.a:memspi_host_driver.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libspi_flash.a:spi_flash_chip_boya.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libspi_flash.a:spi_flash_chip_gd.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libspi_flash.a:spi_flash_chip_generic.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libspi_flash.a:spi_flash_chip_issi.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libspi_flash.a:spi_flash_chip_mxic.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libspi_flash.a:spi_flash_chip_th.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libspi_flash.a:spi_flash_chip_winbond.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libspi_flash.a:spi_flash_wrap.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libtinyh264.a:h264bsd_cavlc.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libtinyh264.a:h264bsd_intra_prediction.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libtinyh264.a:h264bsd_reconstruct.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libtinyh264.a:h264bsd_stream.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libtinyh264.a:h264bsd_transform.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    *libtinyh264.a:h264bsd_vlc.*(.rodata .rodata.* .sdata2 .sdata2.* .srodata .srodata.*)
-    _data_end_high = ABSOLUTE(.);
-  } > sram_high
+    _data_end = ABSOLUTE(.);
+  } > sram_seg
   /**
 
    * This section holds data that should not be initialized at power up.
@@ -575,7 +716,35 @@ SECTIONS
     
  . = ALIGN(4); 
  _noinit_end = ABSOLUTE(.);
-  } > sram_low
+  } > sram_seg
+    .dram0.bss (NOLOAD) :
+  {
+    
+ . = ALIGN(4); 
+ _bss_start = ABSOLUTE(.);
+    /**
+
+     * ldgen places all bss-related data to mapping[dram0_bss]
+
+     * (See components/esp_system/app.lf).
+
+     */
+    *(.bss .bss.*)
+    *(.dynbss .dynsbss .gnu.linkonce.b .gnu.linkonce.b.* .gnu.linkonce.sb .gnu.linkonce.sb.* .gnu.linkonce.sb2 .gnu.linkonce.sb2.* .sbss .sbss.* .sbss2 .sbss2.* .scommon .share.mem)
+    *(.ext_ram.bss .ext_ram.bss.*)
+    *(COMMON)
+    
+ . = ALIGN(4); 
+ _bss_end = ABSOLUTE(.);
+  } > sram_seg
+  /* Marks the end of data, bss and possibly rodata */
+  .dram0.heap_start (NOLOAD) :
+  {
+    
+ . = ALIGN(16); 
+ _heap_start = ABSOLUTE(.);
+  } > sram_seg
+  ASSERT(((_heap_start - ORIGIN(sram_seg)) <= LENGTH(sram_seg)), "DRAM segment data does not fit.")
   .flash.text :
   {
     _stext = .;
@@ -588,33 +757,73 @@ SECTIONS
      */
     _instruction_reserved_start = ABSOLUTE(.);
     _text_start = ABSOLUTE(.);
-    *(EXCLUDE_FILE(*libesp_ringbuf.a *libfreertos.a *libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_gptimer.a:gptimer.* *libesp_event.a:default_event_loop.* *libesp_event.a:esp_event.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:periph_ctrl.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:rtc_time.* *libesp_hw_support.a:sar_periph_ctrl.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:systimer.* *libesp_mm.a:esp_cache.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:esp_system_chip.* *libesp_system.a:image_process.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:lib2funcs.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:gdma_hal_ahb_v2.* *libhal.a:gdma_hal_axi.* *libhal.a:gdma_hal_top.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libhal.a:timer_hal.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log_lock.* *liblog.a:log_timestamp.* *liblog.a:log_write.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:stdatomic.* *libriscv.a:interrupt.* *libriscv.a:vectors.* *libsoc.a:lldesc.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .literal EXCLUDE_FILE(*libesp_ringbuf.a *libfreertos.a *libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_gptimer.a:gptimer.* *libesp_event.a:default_event_loop.* *libesp_event.a:esp_event.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:periph_ctrl.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:rtc_time.* *libesp_hw_support.a:sar_periph_ctrl.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:systimer.* *libesp_mm.a:esp_cache.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:esp_system_chip.* *libesp_system.a:image_process.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:lib2funcs.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:gdma_hal_ahb_v2.* *libhal.a:gdma_hal_axi.* *libhal.a:gdma_hal_top.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libhal.a:timer_hal.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log_lock.* *liblog.a:log_timestamp.* *liblog.a:log_write.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:stdatomic.* *libriscv.a:interrupt.* *libriscv.a:vectors.* *libsoc.a:lldesc.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .literal.* EXCLUDE_FILE(*libesp_ringbuf.a *libfreertos.a *libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_gptimer.a:gptimer.* *libesp_event.a:default_event_loop.* *libesp_event.a:esp_event.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:periph_ctrl.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:rtc_time.* *libesp_hw_support.a:sar_periph_ctrl.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:systimer.* *libesp_mm.a:esp_cache.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:esp_system_chip.* *libesp_system.a:image_process.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:lib2funcs.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:gdma_hal_ahb_v2.* *libhal.a:gdma_hal_axi.* *libhal.a:gdma_hal_top.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libhal.a:timer_hal.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log_lock.* *liblog.a:log_timestamp.* *liblog.a:log_write.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:stdatomic.* *libriscv.a:interrupt.* *libriscv.a:vectors.* *libsoc.a:lldesc.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .text EXCLUDE_FILE(*libesp_ringbuf.a *libfreertos.a *libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_gptimer.a:gptimer.* *libesp_event.a:default_event_loop.* *libesp_event.a:esp_event.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:periph_ctrl.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:rtc_time.* *libesp_hw_support.a:sar_periph_ctrl.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:systimer.* *libesp_mm.a:esp_cache.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:esp_system_chip.* *libesp_system.a:image_process.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:lib2funcs.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:gdma_hal_ahb_v2.* *libhal.a:gdma_hal_axi.* *libhal.a:gdma_hal_top.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libhal.a:timer_hal.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log_lock.* *liblog.a:log_timestamp.* *liblog.a:log_write.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:stdatomic.* *libriscv.a:interrupt.* *libriscv.a:vectors.* *libsoc.a:lldesc.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .text.*)
+    *(EXCLUDE_FILE(*libesp_ringbuf.a *libfreertos.a *libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_ana_cmpr.a:ana_cmpr.* *libesp_driver_gptimer.a:gptimer.* *libesp_driver_i2c.a:i2c_master.* *libesp_driver_mcpwm.a:mcpwm_cap.* *libesp_driver_mcpwm.a:mcpwm_cmpr.* *libesp_driver_mcpwm.a:mcpwm_fault.* *libesp_driver_mcpwm.a:mcpwm_oper.* *libesp_driver_mcpwm.a:mcpwm_timer.* *libesp_driver_parlio.a:parlio_rx.* *libesp_driver_parlio.a:parlio_tx.* *libesp_driver_rmt.a:rmt_encoder.* *libesp_driver_rmt.a:rmt_rx.* *libesp_driver_rmt.a:rmt_tx.* *libesp_event.a:default_event_loop.* *libesp_event.a:esp_event.* *libesp_hw_support.a:adc_share_hw_ctrl.* *libesp_hw_support.a:clk_utils.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_clk.* *libesp_hw_support.a:esp_clk_tree.* *libesp_hw_support.a:esp_dma_utils.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:gdma_link.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_by_flash_delay.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:periph_ctrl.* *libesp_hw_support.a:pmu_pvt.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:regi2c_ctrl.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:rtc_time.* *libesp_hw_support.a:sar_periph_ctrl.* *libesp_hw_support.a:sar_periph_ctrl_common.* *libesp_hw_support.a:sleep_clock.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:sleep_cpu.* *libesp_hw_support.a:sleep_modem.* *libesp_hw_support.a:sleep_modes.* *libesp_hw_support.a:sleep_mspi.* *libesp_hw_support.a:sleep_system_peripheral.* *libesp_hw_support.a:sleep_usb.* *libesp_hw_support.a:systimer.* *libesp_lcd.a:esp_lcd_panel_dpi.* *libesp_mm.a:esp_cache_msync.* *libesp_mm.a:esp_cache_utils.* *libesp_pm.a:pm_impl.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:esp_system_chip.* *libesp_system.a:freertos_hooks.* *libesp_system.a:image_process.* *libesp_system.a:panic.* *libesp_system.a:reset_reason.* *libesp_system.a:system_internal.* *libesp_system.a:system_time.* *libesp_system.a:ubsan.* *libesp_timer.a:esp_timer_impl_common.* *libesp_timer.a:esp_timer_impl_systimer.* *libgcc.a:_divsf3.* *libgcc.a:lib2funcs.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:gdma_hal_ahb_v2.* *libhal.a:gdma_hal_axi.* *libhal.a:gdma_hal_top.* *libhal.a:gpio_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libhal.a:timer_hal.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log.* *liblog.a:log_format_text.* *liblog.a:log_lock.* *liblog.a:log_print.* *liblog.a:log_timestamp.* *liblog.a:log_timestamp_common.* *liblog.a:log_write.* *liblog.a:tag_log_level.* *liblog.a:util.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:esp_time_impl.* *libnewlib.a:heap.* *libnewlib.a:memcmp.* *libnewlib.a:memcpy.* *libnewlib.a:memmove.* *libnewlib.a:stdatomic.* *libnewlib.a:strcmp.* *libnewlib.a:strcpy.* *libnewlib.a:strncmp.* *libnewlib.a:strncpy.* *libriscv.a:interrupt.* *libriscv.a:rv_utils.* *libriscv.a:vectors.* *libsoc.a:lldesc.* *libspi_flash.a:esp_flash_api.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_hpm_enable.* *libspi_flash.a:spi_flash_os_func_app.* *libspi_flash.a:spi_flash_os_func_noos.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .literal EXCLUDE_FILE(*libesp_ringbuf.a *libfreertos.a *libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_ana_cmpr.a:ana_cmpr.* *libesp_driver_gptimer.a:gptimer.* *libesp_driver_i2c.a:i2c_master.* *libesp_driver_mcpwm.a:mcpwm_cap.* *libesp_driver_mcpwm.a:mcpwm_cmpr.* *libesp_driver_mcpwm.a:mcpwm_fault.* *libesp_driver_mcpwm.a:mcpwm_oper.* *libesp_driver_mcpwm.a:mcpwm_timer.* *libesp_driver_parlio.a:parlio_rx.* *libesp_driver_parlio.a:parlio_tx.* *libesp_driver_rmt.a:rmt_encoder.* *libesp_driver_rmt.a:rmt_rx.* *libesp_driver_rmt.a:rmt_tx.* *libesp_event.a:default_event_loop.* *libesp_event.a:esp_event.* *libesp_hw_support.a:adc_share_hw_ctrl.* *libesp_hw_support.a:clk_utils.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_clk.* *libesp_hw_support.a:esp_clk_tree.* *libesp_hw_support.a:esp_dma_utils.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:gdma_link.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_by_flash_delay.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:periph_ctrl.* *libesp_hw_support.a:pmu_pvt.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:regi2c_ctrl.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:rtc_time.* *libesp_hw_support.a:sar_periph_ctrl.* *libesp_hw_support.a:sar_periph_ctrl_common.* *libesp_hw_support.a:sleep_clock.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:sleep_cpu.* *libesp_hw_support.a:sleep_modem.* *libesp_hw_support.a:sleep_modes.* *libesp_hw_support.a:sleep_mspi.* *libesp_hw_support.a:sleep_system_peripheral.* *libesp_hw_support.a:sleep_usb.* *libesp_hw_support.a:systimer.* *libesp_lcd.a:esp_lcd_panel_dpi.* *libesp_mm.a:esp_cache_msync.* *libesp_mm.a:esp_cache_utils.* *libesp_pm.a:pm_impl.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:esp_system_chip.* *libesp_system.a:freertos_hooks.* *libesp_system.a:image_process.* *libesp_system.a:panic.* *libesp_system.a:reset_reason.* *libesp_system.a:system_internal.* *libesp_system.a:system_time.* *libesp_system.a:ubsan.* *libesp_timer.a:esp_timer_impl_common.* *libesp_timer.a:esp_timer_impl_systimer.* *libgcc.a:_divsf3.* *libgcc.a:lib2funcs.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:gdma_hal_ahb_v2.* *libhal.a:gdma_hal_axi.* *libhal.a:gdma_hal_top.* *libhal.a:gpio_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libhal.a:timer_hal.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log.* *liblog.a:log_format_text.* *liblog.a:log_lock.* *liblog.a:log_print.* *liblog.a:log_timestamp.* *liblog.a:log_timestamp_common.* *liblog.a:log_write.* *liblog.a:tag_log_level.* *liblog.a:util.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:esp_time_impl.* *libnewlib.a:heap.* *libnewlib.a:memcmp.* *libnewlib.a:memcpy.* *libnewlib.a:memmove.* *libnewlib.a:stdatomic.* *libnewlib.a:strcmp.* *libnewlib.a:strcpy.* *libnewlib.a:strncmp.* *libnewlib.a:strncpy.* *libriscv.a:interrupt.* *libriscv.a:rv_utils.* *libriscv.a:vectors.* *libsoc.a:lldesc.* *libspi_flash.a:esp_flash_api.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_hpm_enable.* *libspi_flash.a:spi_flash_os_func_app.* *libspi_flash.a:spi_flash_os_func_noos.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .literal.* EXCLUDE_FILE(*libesp_ringbuf.a *libfreertos.a *libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_ana_cmpr.a:ana_cmpr.* *libesp_driver_gptimer.a:gptimer.* *libesp_driver_i2c.a:i2c_master.* *libesp_driver_mcpwm.a:mcpwm_cap.* *libesp_driver_mcpwm.a:mcpwm_cmpr.* *libesp_driver_mcpwm.a:mcpwm_fault.* *libesp_driver_mcpwm.a:mcpwm_oper.* *libesp_driver_mcpwm.a:mcpwm_timer.* *libesp_driver_parlio.a:parlio_rx.* *libesp_driver_parlio.a:parlio_tx.* *libesp_driver_rmt.a:rmt_encoder.* *libesp_driver_rmt.a:rmt_rx.* *libesp_driver_rmt.a:rmt_tx.* *libesp_event.a:default_event_loop.* *libesp_event.a:esp_event.* *libesp_hw_support.a:adc_share_hw_ctrl.* *libesp_hw_support.a:clk_utils.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_clk.* *libesp_hw_support.a:esp_clk_tree.* *libesp_hw_support.a:esp_dma_utils.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:gdma_link.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_by_flash_delay.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:periph_ctrl.* *libesp_hw_support.a:pmu_pvt.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:regi2c_ctrl.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:rtc_time.* *libesp_hw_support.a:sar_periph_ctrl.* *libesp_hw_support.a:sar_periph_ctrl_common.* *libesp_hw_support.a:sleep_clock.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:sleep_cpu.* *libesp_hw_support.a:sleep_modem.* *libesp_hw_support.a:sleep_modes.* *libesp_hw_support.a:sleep_mspi.* *libesp_hw_support.a:sleep_system_peripheral.* *libesp_hw_support.a:sleep_usb.* *libesp_hw_support.a:systimer.* *libesp_lcd.a:esp_lcd_panel_dpi.* *libesp_mm.a:esp_cache_msync.* *libesp_mm.a:esp_cache_utils.* *libesp_pm.a:pm_impl.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:esp_system_chip.* *libesp_system.a:freertos_hooks.* *libesp_system.a:image_process.* *libesp_system.a:panic.* *libesp_system.a:reset_reason.* *libesp_system.a:system_internal.* *libesp_system.a:system_time.* *libesp_system.a:ubsan.* *libesp_timer.a:esp_timer_impl_common.* *libesp_timer.a:esp_timer_impl_systimer.* *libgcc.a:_divsf3.* *libgcc.a:lib2funcs.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:gdma_hal_ahb_v2.* *libhal.a:gdma_hal_axi.* *libhal.a:gdma_hal_top.* *libhal.a:gpio_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libhal.a:timer_hal.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log.* *liblog.a:log_format_text.* *liblog.a:log_lock.* *liblog.a:log_print.* *liblog.a:log_timestamp.* *liblog.a:log_timestamp_common.* *liblog.a:log_write.* *liblog.a:tag_log_level.* *liblog.a:util.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:esp_time_impl.* *libnewlib.a:heap.* *libnewlib.a:memcmp.* *libnewlib.a:memcpy.* *libnewlib.a:memmove.* *libnewlib.a:stdatomic.* *libnewlib.a:strcmp.* *libnewlib.a:strcpy.* *libnewlib.a:strncmp.* *libnewlib.a:strncpy.* *libriscv.a:interrupt.* *libriscv.a:rv_utils.* *libriscv.a:vectors.* *libsoc.a:lldesc.* *libspi_flash.a:esp_flash_api.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_hpm_enable.* *libspi_flash.a:spi_flash_os_func_app.* *libspi_flash.a:spi_flash_os_func_noos.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .text EXCLUDE_FILE(*libesp_ringbuf.a *libfreertos.a *libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_ana_cmpr.a:ana_cmpr.* *libesp_driver_gptimer.a:gptimer.* *libesp_driver_i2c.a:i2c_master.* *libesp_driver_mcpwm.a:mcpwm_cap.* *libesp_driver_mcpwm.a:mcpwm_cmpr.* *libesp_driver_mcpwm.a:mcpwm_fault.* *libesp_driver_mcpwm.a:mcpwm_oper.* *libesp_driver_mcpwm.a:mcpwm_timer.* *libesp_driver_parlio.a:parlio_rx.* *libesp_driver_parlio.a:parlio_tx.* *libesp_driver_rmt.a:rmt_encoder.* *libesp_driver_rmt.a:rmt_rx.* *libesp_driver_rmt.a:rmt_tx.* *libesp_event.a:default_event_loop.* *libesp_event.a:esp_event.* *libesp_hw_support.a:adc_share_hw_ctrl.* *libesp_hw_support.a:clk_utils.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_clk.* *libesp_hw_support.a:esp_clk_tree.* *libesp_hw_support.a:esp_dma_utils.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:gdma_link.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_by_flash_delay.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:periph_ctrl.* *libesp_hw_support.a:pmu_pvt.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:regi2c_ctrl.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:rtc_time.* *libesp_hw_support.a:sar_periph_ctrl.* *libesp_hw_support.a:sar_periph_ctrl_common.* *libesp_hw_support.a:sleep_clock.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:sleep_cpu.* *libesp_hw_support.a:sleep_modem.* *libesp_hw_support.a:sleep_modes.* *libesp_hw_support.a:sleep_mspi.* *libesp_hw_support.a:sleep_system_peripheral.* *libesp_hw_support.a:sleep_usb.* *libesp_hw_support.a:systimer.* *libesp_lcd.a:esp_lcd_panel_dpi.* *libesp_mm.a:esp_cache_msync.* *libesp_mm.a:esp_cache_utils.* *libesp_pm.a:pm_impl.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:esp_system_chip.* *libesp_system.a:freertos_hooks.* *libesp_system.a:image_process.* *libesp_system.a:panic.* *libesp_system.a:reset_reason.* *libesp_system.a:system_internal.* *libesp_system.a:system_time.* *libesp_system.a:ubsan.* *libesp_timer.a:esp_timer_impl_common.* *libesp_timer.a:esp_timer_impl_systimer.* *libgcc.a:_divsf3.* *libgcc.a:lib2funcs.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:gdma_hal_ahb_v2.* *libhal.a:gdma_hal_axi.* *libhal.a:gdma_hal_top.* *libhal.a:gpio_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libhal.a:timer_hal.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log.* *liblog.a:log_format_text.* *liblog.a:log_lock.* *liblog.a:log_print.* *liblog.a:log_timestamp.* *liblog.a:log_timestamp_common.* *liblog.a:log_write.* *liblog.a:tag_log_level.* *liblog.a:util.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:esp_time_impl.* *libnewlib.a:heap.* *libnewlib.a:memcmp.* *libnewlib.a:memcpy.* *libnewlib.a:memmove.* *libnewlib.a:stdatomic.* *libnewlib.a:strcmp.* *libnewlib.a:strcpy.* *libnewlib.a:strncmp.* *libnewlib.a:strncpy.* *libriscv.a:interrupt.* *libriscv.a:rv_utils.* *libriscv.a:vectors.* *libsoc.a:lldesc.* *libspi_flash.a:esp_flash_api.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_hpm_enable.* *libspi_flash.a:spi_flash_os_func_app.* *libspi_flash.a:spi_flash_os_func_noos.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .text.*)
+    *libesp_driver_ana_cmpr.a:ana_cmpr.*(.text .text.ana_cmpr_del_unit .text.ana_cmpr_destroy_unit .text.ana_cmpr_disable .text.ana_cmpr_enable .text.ana_cmpr_get_gpio .text.ana_cmpr_get_unit_id .text.ana_cmpr_new_unit .text.ana_cmpr_register_event_callbacks .text.ana_cmpr_set_cross_type .text.ana_cmpr_set_debounce .text.ana_cmpr_set_internal_reference .text.s_ana_cmpr_init_gpio)
     *libesp_driver_gptimer.a:gptimer.*(.text .text.gptimer_del_timer .text.gptimer_destroy .text.gptimer_disable .text.gptimer_enable .text.gptimer_get_captured_count .text.gptimer_get_raw_count .text.gptimer_get_resolution .text.gptimer_new_timer .text.gptimer_register_event_callbacks .text.gptimer_register_to_group .text.gptimer_set_alarm_action .text.gptimer_set_raw_count .text.gptimer_start .text.gptimer_stop .text.gptimer_unregister_from_group)
+    *libesp_driver_i2c.a:i2c_master.*(.text .text.i2c_del_master_bus .text.i2c_ll_master_set_fractional_divider .text.i2c_ll_set_source_clk .text.i2c_master_bus_add_device .text.i2c_master_bus_destroy .text.i2c_master_bus_reset .text.i2c_master_bus_rm_device .text.i2c_master_bus_wait_all_done .text.i2c_master_device_change_address .text.i2c_master_execute_defined_operations .text.i2c_master_get_bus_handle .text.i2c_master_multi_buffer_transmit .text.i2c_master_probe .text.i2c_master_receive .text.i2c_master_register_event_callbacks .text.i2c_master_transmit .text.i2c_master_transmit_receive .text.i2c_new_master_bus .text.i2c_param_master_config .text.lp_i2c_ll_set_source_clk .text.s_i2c_asynchronous_transaction .text.s_i2c_err_log_print .text.s_i2c_hw_fsm_reset .text.s_i2c_master_clear_bus .text.s_i2c_read_command .text.s_i2c_send_command_async .text.s_i2c_send_commands .text.s_i2c_start_end_command .text.s_i2c_synchronous_transaction .text.s_i2c_transaction_start .text.s_i2c_write_command)
+    *libesp_driver_mcpwm.a:mcpwm_cap.*(.text .text.mcpwm_cap_timer_destroy .text.mcpwm_cap_timer_register_to_group .text.mcpwm_cap_timer_unregister_from_group .text.mcpwm_capture_channel_destroy .text.mcpwm_capture_channel_disable .text.mcpwm_capture_channel_enable .text.mcpwm_capture_channel_register_event_callbacks .text.mcpwm_capture_channel_register_to_timer .text.mcpwm_capture_channel_trigger_soft_catch .text.mcpwm_capture_channel_unregister_from_timer .text.mcpwm_capture_timer_disable .text.mcpwm_capture_timer_enable .text.mcpwm_capture_timer_get_resolution .text.mcpwm_capture_timer_set_phase_on_sync .text.mcpwm_capture_timer_start .text.mcpwm_capture_timer_stop .text.mcpwm_del_capture_channel .text.mcpwm_del_capture_timer .text.mcpwm_ll_capture_set_prescale .text.mcpwm_new_capture_channel .text.mcpwm_new_capture_timer)
+    *libesp_driver_mcpwm.a:mcpwm_cmpr.*(.text .text.mcpwm_comparator_destroy .text.mcpwm_comparator_register_event_callbacks .text.mcpwm_comparator_register_to_operator .text.mcpwm_comparator_set_compare_value .text.mcpwm_comparator_unregister_from_operator .text.mcpwm_del_comparator .text.mcpwm_ll_operator_enable_update_compare_on_sync .text.mcpwm_ll_operator_enable_update_compare_on_tep .text.mcpwm_ll_operator_enable_update_compare_on_tez .text.mcpwm_new_comparator .text.mcpwm_new_event_comparator)
+    *libesp_driver_mcpwm.a:mcpwm_fault.*(.text .text.mcpwm_del_fault .text.mcpwm_del_gpio_fault .text.mcpwm_del_soft_fault .text.mcpwm_fault_register_event_callbacks .text.mcpwm_gpio_fault_destroy .text.mcpwm_gpio_fault_register_to_group .text.mcpwm_gpio_fault_unregister_from_group .text.mcpwm_ll_fault_set_active_level .text.mcpwm_new_gpio_fault .text.mcpwm_new_soft_fault .text.mcpwm_soft_fault_activate)
+    *libesp_driver_mcpwm.a:mcpwm_oper.*(.text .text.mcpwm_del_operator .text.mcpwm_ll_brake_enable_cbc_mode .text.mcpwm_ll_brake_enable_oneshot_mode .text.mcpwm_ll_carrier_set_first_pulse_width .text.mcpwm_ll_carrier_set_prescale .text.mcpwm_ll_deadtime_enable_update_delay_on_sync .text.mcpwm_ll_deadtime_enable_update_delay_on_tep .text.mcpwm_ll_deadtime_enable_update_delay_on_tez .text.mcpwm_new_operator .text.mcpwm_operator_apply_carrier .text.mcpwm_operator_connect_timer .text.mcpwm_operator_destroy .text.mcpwm_operator_recover_from_fault .text.mcpwm_operator_register_event_callbacks .text.mcpwm_operator_register_to_group .text.mcpwm_operator_set_brake_on_fault .text.mcpwm_operator_unregister_from_group)
+    *libesp_driver_mcpwm.a:mcpwm_timer.*(.text .text.mcpwm_del_timer .text.mcpwm_ll_timer_set_clock_prescale .text.mcpwm_ll_timer_set_count_mode .text.mcpwm_ll_timer_set_start_stop_command .text.mcpwm_new_timer .text.mcpwm_timer_destroy .text.mcpwm_timer_disable .text.mcpwm_timer_enable .text.mcpwm_timer_get_phase .text.mcpwm_timer_register_event_callbacks .text.mcpwm_timer_register_to_group .text.mcpwm_timer_set_period .text.mcpwm_timer_set_phase_on_sync .text.mcpwm_timer_start_stop .text.mcpwm_timer_unregister_from_group)
+    *libesp_driver_parlio.a:parlio_rx.*(.text .text._parlio_ll_rx_set_clock_div .text._parlio_ll_rx_set_clock_source .text.parlio_del_rx_delimiter .text.parlio_del_rx_unit .text.parlio_destroy_rx_unit .text.parlio_ll_rx_set_bus_width .text.parlio_new_rx_level_delimiter .text.parlio_new_rx_pulse_delimiter .text.parlio_new_rx_soft_delimiter .text.parlio_new_rx_unit .text.parlio_rx_create_dma_link .text.parlio_rx_soft_delimiter_start_stop .text.parlio_rx_unit_disable .text.parlio_rx_unit_do_transaction .text.parlio_rx_unit_enable .text.parlio_rx_unit_init_dma .text.parlio_rx_unit_receive .text.parlio_rx_unit_register_event_callbacks .text.parlio_rx_unit_set_gpio .text.parlio_rx_unit_trigger_fake_eof .text.parlio_rx_unit_wait_all_done .text.parlio_select_periph_clock)
+    *libesp_driver_parlio.a:parlio_tx.*(.text .text._parlio_ll_tx_set_clock_div .text.parlio_del_tx_unit .text.parlio_destroy_tx_unit .text.parlio_ll_tx_set_bus_width .text.parlio_ll_tx_set_valid_delay .text.parlio_new_tx_unit .text.parlio_select_periph_clock .text.parlio_tx_create_trans_queue .text.parlio_tx_get_alignment_constraints .text.parlio_tx_unit_configure_gpio .text.parlio_tx_unit_disable .text.parlio_tx_unit_enable .text.parlio_tx_unit_init_dma .text.parlio_tx_unit_register_event_callbacks .text.parlio_tx_unit_transmit .text.parlio_tx_unit_wait_all_done)
+    *libesp_driver_rmt.a:rmt_encoder.*(.text .text.rmt_alloc_encoder_mem .text.rmt_del_encoder)
+    *libesp_driver_rmt.a:rmt_rx.*(.text .text.rmt_del_rx_channel .text.rmt_ll_rx_enable_dma .text.rmt_ll_rx_set_carrier_high_low_ticks .text.rmt_new_rx_channel .text.rmt_receive .text.rmt_rx_demodulate_carrier .text.rmt_rx_destroy .text.rmt_rx_disable .text.rmt_rx_enable .text.rmt_rx_init_dma_link .text.rmt_rx_register_event_callbacks .text.rmt_rx_register_to_group .text.rmt_rx_unregister_from_group)
+    *libesp_driver_rmt.a:rmt_tx.*(.text .text.rmt_del_sync_manager .text.rmt_del_tx_channel .text.rmt_ll_tx_enable_dma .text.rmt_ll_tx_set_carrier_high_low_ticks .text.rmt_new_sync_manager .text.rmt_new_tx_channel .text.rmt_sync_reset .text.rmt_transmit .text.rmt_tx_create_trans_queue .text.rmt_tx_destroy .text.rmt_tx_disable .text.rmt_tx_enable .text.rmt_tx_init_dma_link .text.rmt_tx_modulate_carrier .text.rmt_tx_register_event_callbacks .text.rmt_tx_register_to_group .text.rmt_tx_switch_gpio .text.rmt_tx_unregister_from_group .text.rmt_tx_wait_all_done)
     *libesp_event.a:default_event_loop.*(.text .text.esp_event_handler_instance_register .text.esp_event_handler_instance_unregister .text.esp_event_handler_register .text.esp_event_handler_unregister .text.esp_event_loop_create_default .text.esp_event_loop_delete_default .text.esp_event_post)
-    *libesp_event.a:esp_event.*(.text .text.base_node_add_handler .text.base_node_remove_all_handler .text.base_node_remove_handler .text.esp_event_dump .text.esp_event_handler_instance_register_with .text.esp_event_handler_instance_unregister_with .text.esp_event_handler_register_with .text.esp_event_handler_register_with_internal .text.esp_event_handler_unregister_with .text.esp_event_handler_unregister_with_internal .text.esp_event_loop_create .text.esp_event_loop_delete .text.esp_event_loop_run .text.esp_event_loop_run_task .text.esp_event_post_to .text.handler_execute .text.handler_instances_add .text.handler_instances_remove .text.handler_instances_remove_all .text.loop_node_add_handler .text.loop_node_remove_all_handler .text.loop_node_remove_handler)
+    *libesp_event.a:esp_event.*(.text .text.base_node_add_handler .text.base_node_remove_all_handler .text.base_node_remove_handler .text.esp_event_dump .text.esp_event_handler_instance_register_with .text.esp_event_handler_instance_unregister_with .text.esp_event_handler_register_with .text.esp_event_handler_register_with_internal .text.esp_event_handler_unregister_with .text.esp_event_handler_unregister_with_internal .text.esp_event_loop_create .text.esp_event_loop_delete .text.esp_event_loop_run .text.esp_event_loop_run_task .text.esp_event_post_to .text.find_and_unregister_handler .text.handler_execute .text.handler_instances_add .text.handler_instances_remove .text.handler_instances_remove_all .text.loop_node_add_handler .text.loop_node_remove_all_handler .text.loop_node_remove_handler .text.loop_remove_handler)
+    *libesp_hw_support.a:adc_share_hw_ctrl.*(.text .text.adc2_wifi_acquire .text.adc2_wifi_release .text.adc_calc_hw_calibration_code .text.adc_load_hw_calibration_chan_compens .text.adc_lock_acquire .text.adc_lock_release .text.adc_lock_try_acquire)
     *libesp_hw_support.a:cpu.*(.text .text.esp_cpu_clear_breakpoint .text.esp_cpu_clear_watchpoint .text.esp_cpu_set_breakpoint .text.esp_cpu_set_watchpoint)
     *libesp_hw_support.a:dma2d.*(.text .text.dma2d_acquire_pool .text.dma2d_append .text.dma2d_apply_strategy .text.dma2d_configure_color_space_conversion .text.dma2d_configure_dscr_port_mode .text.dma2d_connect .text.dma2d_enqueue .text.dma2d_force_end .text.dma2d_get_trans_elm_size .text.dma2d_register_rx_event_callbacks .text.dma2d_register_tx_event_callbacks .text.dma2d_release_pool .text.dma2d_reset .text.dma2d_set_desc_addr .text.dma2d_set_transfer_ability .text.dma2d_start .text.dma2d_stop)
-    *libesp_hw_support.a:dw_gdma.*(.text .text.channel_destroy .text.channel_register_to_group .text.channel_unregister_from_group .text.dw_gdma_acquire_group_handle .text.dw_gdma_channel_abort .text.dw_gdma_channel_config_transfer .text.dw_gdma_channel_continue .text.dw_gdma_channel_enable_ctrl .text.dw_gdma_channel_get_id .text.dw_gdma_channel_lock .text.dw_gdma_channel_register_event_callbacks .text.dw_gdma_channel_set_block_markers .text.dw_gdma_channel_suspend_ctrl .text.dw_gdma_channel_unlock .text.dw_gdma_channel_use_link_list .text.dw_gdma_del_channel .text.dw_gdma_del_link_list .text.dw_gdma_install_channel_interrupt .text.dw_gdma_link_list_get_item .text.dw_gdma_ll_channel_set_dst_handshake_periph .text.dw_gdma_ll_channel_set_src_handshake_periph .text.dw_gdma_ll_channel_set_trans_flow .text.dw_gdma_lli_config_transfer .text.dw_gdma_lli_set_block_markers .text.dw_gdma_lli_set_next .text.dw_gdma_new_channel .text.dw_gdma_new_link_list .text.dw_gdma_release_group_handle)
+    *libesp_hw_support.a:dw_gdma.*(.text .text.channel_destroy .text.channel_register_to_group .text.channel_unregister_from_group .text.dw_gdma_acquire_group_handle .text.dw_gdma_channel_abort .text.dw_gdma_channel_config_transfer .text.dw_gdma_channel_continue .text.dw_gdma_channel_get_id .text.dw_gdma_channel_lock .text.dw_gdma_channel_register_event_callbacks .text.dw_gdma_channel_set_block_markers .text.dw_gdma_channel_suspend_ctrl .text.dw_gdma_channel_unlock .text.dw_gdma_del_channel .text.dw_gdma_del_link_list .text.dw_gdma_install_channel_interrupt .text.dw_gdma_ll_channel_set_dst_handshake_periph .text.dw_gdma_ll_channel_set_src_handshake_periph .text.dw_gdma_ll_channel_set_trans_flow .text.dw_gdma_lli_config_transfer .text.dw_gdma_lli_set_next .text.dw_gdma_new_channel .text.dw_gdma_new_link_list .text.dw_gdma_release_group_handle)
+    *libesp_hw_support.a:esp_clk.*(.text .text.esp_clk_rtc_time)
+    *libesp_hw_support.a:esp_clk_tree.*(.text .text.esp_clk_tree_src_get_freq_hz)
+    *libesp_hw_support.a:esp_dma_utils.*(.text .text.esp_dma_calculate_node_count .text.esp_dma_calloc .text.esp_dma_capable_calloc .text.esp_dma_capable_malloc .text.esp_dma_is_buffer_aligned .text.esp_dma_is_buffer_alignment_satisfied .text.esp_dma_malloc .text.s_buf_in_region .text.s_buf_in_region_legacy .text.s_legacy_malloc)
     *libesp_hw_support.a:gdma.*(.text .text.do_allocate_gdma_channel .text.gdma_acquire_group_handle .text.gdma_acquire_pair_handle .text.gdma_apply_strategy .text.gdma_config_transfer .text.gdma_connect .text.gdma_del_channel .text.gdma_del_rx_channel .text.gdma_del_tx_channel .text.gdma_disconnect .text.gdma_get_alignment_constraints .text.gdma_get_free_m2m_trig_id_mask .text.gdma_get_group_channel_id .text.gdma_install_rx_interrupt .text.gdma_install_tx_interrupt .text.gdma_new_ahb_channel .text.gdma_new_axi_channel .text.gdma_register_rx_event_callbacks .text.gdma_register_tx_event_callbacks .text.gdma_release_group_handle .text.gdma_release_pair_handle .text.gdma_set_priority)
-    *libesp_hw_support.a:periph_ctrl.*(.text .text.periph_module_disable .text.periph_module_enable .text.periph_rcc_acquire_enter .text.periph_rcc_acquire_exit .text.periph_rcc_release_enter .text.periph_rcc_release_exit)
-    *libesp_hw_support.a:sar_periph_ctrl.*(.text .text.s_sar_power_acquire .text.s_sar_power_release .text.sar_periph_ctrl_adc_continuous_power_acquire .text.sar_periph_ctrl_adc_continuous_power_release .text.sar_periph_ctrl_adc_oneshot_power_acquire .text.sar_periph_ctrl_adc_oneshot_power_release .text.sar_periph_ctrl_init .text.sar_periph_ctrl_power_disable .text.sar_periph_ctrl_pwdet_power_acquire .text.sar_periph_ctrl_pwdet_power_release)
+    *libesp_hw_support.a:gdma_link.*(.text .text.gdma_del_link_list .text.gdma_link_count_buffer_size_till_eof .text.gdma_link_get_owner .text.gdma_link_set_owner .text.gdma_new_link_list)
+    *libesp_hw_support.a:periph_ctrl.*(.text .text.periph_module_disable .text.periph_module_enable)
+    *libesp_hw_support.a:regi2c_ctrl.*(.text .text.regi2c_ctrl_ll_i2c_sar_periph_enable)
+    *libesp_hw_support.a:sar_periph_ctrl.*(.text .text.s_sar_power_acquire .text.s_sar_power_release .text.sar_periph_ctrl_adc_continuous_power_acquire .text.sar_periph_ctrl_adc_continuous_power_release .text.sar_periph_ctrl_adc_oneshot_power_acquire .text.sar_periph_ctrl_adc_oneshot_power_release .text.sar_periph_ctrl_init .text.sar_periph_ctrl_pwdet_power_acquire .text.sar_periph_ctrl_pwdet_power_release)
+    *libesp_hw_support.a:sar_periph_ctrl_common.*(.text .text.temp_sensor_sync_tsens_idx .text.temperature_sensor_ll_set_range)
+    *libesp_hw_support.a:sleep_clock.*(.text .text.__esp_system_init_fn_sleep_clock_startup_init .text.sleep_clock_system_retention_init)
+    *libesp_hw_support.a:sleep_cpu.*(.text .text.cpu_domain_dev_sleep_frame_alloc_and_init .text.esp_sleep_cpu_retention_deinit .text.esp_sleep_cpu_retention_deinit_impl .text.esp_sleep_cpu_retention_init .text.esp_sleep_cpu_retention_init_impl .text.sleep_cpu_configure .text.sleep_smp_cpu_sleep_prepare .text.sleep_smp_cpu_wakeup_prepare)
+    *libesp_hw_support.a:sleep_modem.*(.text .text.esp_pm_light_sleep_default_params_config .text.esp_pm_register_inform_out_light_sleep_overhead_callback .text.esp_pm_register_light_sleep_default_params_config_callback .text.esp_pm_unregister_inform_out_light_sleep_overhead_callback .text.esp_pm_unregister_light_sleep_default_params_config_callback .text.sleep_modem_configure)
+    *libesp_hw_support.a:sleep_modes.*(.text .text.esp_deep_sleep .text.esp_deep_sleep_deregister_hook .text.esp_deep_sleep_enable_gpio_wakeup .text.esp_deep_sleep_register_hook .text.esp_deep_sleep_try .text.esp_sleep_disable_bt_wakeup .text.esp_sleep_disable_ext1_wakeup_io .text.esp_sleep_disable_wakeup_source .text.esp_sleep_disable_wifi_beacon_wakeup .text.esp_sleep_disable_wifi_wakeup .text.esp_sleep_enable_adc_tsens_monitor .text.esp_sleep_enable_bt_wakeup .text.esp_sleep_enable_ext1_wakeup .text.esp_sleep_enable_ext1_wakeup_io .text.esp_sleep_enable_ext1_wakeup_with_level_mask .text.esp_sleep_enable_gpio_wakeup .text.esp_sleep_enable_touchpad_wakeup .text.esp_sleep_enable_uart_wakeup .text.esp_sleep_enable_ulp_wakeup .text.esp_sleep_enable_vad_wakeup .text.esp_sleep_enable_vbat_under_volt_wakeup .text.esp_sleep_enable_wifi_beacon_wakeup .text.esp_sleep_enable_wifi_wakeup .text.esp_sleep_get_ext1_wakeup_status .text.esp_sleep_get_gpio_wakeup_status .text.esp_sleep_get_touchpad_wakeup_status .text.esp_sleep_get_wakeup_cause .text.esp_sleep_get_wakeup_causes .text.esp_sleep_is_valid_wakeup_gpio .text.esp_sleep_overhead_out_time_refresh .text.esp_sleep_pd_config .text.esp_sleep_periph_use_8m .text.esp_sleep_sub_mode_config .text.esp_sleep_sub_mode_dump_config .text.esp_sleep_sub_mode_force_disable .text.ext1_wakeup_prepare .text.gpio_deep_sleep_wakeup_prepare .text.rtc_sleep_enable_ultra_low .text.s_sleep_hook_deregister .text.s_sleep_hook_register .text.touch_wakeup_prepare .text.vbat_under_volt_wakeup_prepare)
+    *libesp_hw_support.a:sleep_system_peripheral.*(.text .text.sleep_pau_retention_init .text.sleep_pvt_retention_init .text.sleep_sys_periph_cache_retention_init)
+    *libesp_lcd.a:esp_lcd_panel_dpi.*(.text .text.dpi_panel_create_dma_link .text.dpi_panel_del .text.dpi_panel_draw_bitmap .text.dpi_panel_init .text.esp_lcd_dpi_panel_get_frame_buffer .text.esp_lcd_dpi_panel_register_event_callbacks .text.esp_lcd_dpi_panel_set_color_conversion .text.esp_lcd_dpi_panel_set_pattern .text.esp_lcd_new_panel_dpi .text.mipi_dsi_brg_ll_set_input_color_format .text.mipi_dsi_brg_ll_set_output_color_format .text.mipi_dsi_brg_ll_set_yuv422_pack_order .text.mipi_dsi_brg_ll_set_yuv_convert_std .text.mipi_dsi_host_ll_dpi_set_color_coding .text.mipi_dsi_host_ll_dpi_set_pattern_type .text.mipi_dsi_ll_set_dpi_clock_source)
+    *libesp_pm.a:pm_impl.*(.text .text.esp_pm_configure .text.esp_pm_get_configuration .text.esp_pm_impl_get_mode .text.esp_pm_impl_idle_hook .text.esp_pm_impl_init .text.esp_pm_impl_waiti)
     *libesp_system.a:esp_system_chip.*(.text .text.esp_get_free_heap_size .text.esp_get_free_internal_heap_size .text.esp_get_idf_version .text.esp_get_minimum_free_heap_size)
+    *libesp_system.a:freertos_hooks.*(.text .text.esp_deregister_freertos_idle_hook .text.esp_deregister_freertos_idle_hook_for_cpu .text.esp_deregister_freertos_tick_hook .text.esp_deregister_freertos_tick_hook_for_cpu .text.esp_register_freertos_idle_hook .text.esp_register_freertos_idle_hook_for_cpu .text.esp_register_freertos_tick_hook .text.esp_register_freertos_tick_hook_for_cpu .text.esp_vApplicationIdleHook)
+    *libesp_system.a:panic.*(.text .text.disable_all_wdts .text.esp_panic_handler .text.esp_panic_handler_disable_timg_wdts .text.esp_panic_handler_enable_rtc_wdt .text.esp_panic_handler_feed_wdts .text.esp_panic_handler_increment_entry_count .text.esp_reset_reason_get_hint .text.esp_reset_reason_set_hint .text.panic_print_char .text.panic_print_char_uart .text.panic_print_char_usb_serial_jtag .text.panic_print_dec .text.panic_print_hex .text.panic_print_str .text.print_abort_details .text.semihosting_call_noerrno .text.usb_serial_jtag_ll_write_txfifo)
+    *libesp_system.a:reset_reason.*(.text .text.esp_reset_reason .text.esp_reset_reason_get_hint .text.esp_reset_reason_init .text.get_reset_reason)
+    *libesp_system.a:system_internal.*(.text)
+    *libesp_system.a:system_time.*(.text)
+    *libesp_timer.a:esp_timer_impl_common.*(.text)
+    *libesp_timer.a:esp_timer_impl_systimer.*(.text .text.esp_timer_impl_deinit .text.esp_timer_impl_early_init .text.esp_timer_impl_get_alarm_reg .text.esp_timer_impl_init)
     *libfreertos.a:app_startup.*(.literal .literal.* .text .text.*)
     *libfreertos.a:freertos_compatibility.*(.literal .literal.* .text .text.*)
     *libfreertos.a:idf_additions.*(.literal .literal.* .text .text.*)
+    *libfreertos.a:idf_additions_event_groups.*(.literal .literal.* .text .text.*)
     *libfreertos.a:tasks.*(.literal.pxGetTaskListByIndex .text.pxGetTaskListByIndex)
     *libfreertos.a:tasks.*(.literal.uxTaskGetSnapshotAll .text.uxTaskGetSnapshotAll)
     *libfreertos.a:tasks.*(.literal.xTaskGetNext .text.xTaskGetNext)
-    *libhal.a:gdma_hal_ahb_v2.*(.text .text.ahb_dma_ll_rx_crc_set_lfsr_data_mask .text.ahb_dma_ll_rx_crc_set_width .text.ahb_dma_ll_tx_crc_set_lfsr_data_mask .text.ahb_dma_ll_tx_crc_set_width .text.gdma_ahb_hal_clear_crc .text.gdma_ahb_hal_connect_peri .text.gdma_ahb_hal_disconnect_peri .text.gdma_ahb_hal_enable_burst .text.gdma_ahb_hal_enable_etm_task .text.gdma_ahb_hal_enable_intr .text.gdma_ahb_hal_get_crc_result .text.gdma_ahb_hal_get_intr_status_reg .text.gdma_ahb_hal_init .text.gdma_ahb_hal_set_crc_poly .text.gdma_ahb_hal_set_priority .text.gdma_ahb_hal_set_strategy)
-    *libhal.a:gdma_hal_axi.*(.text .text.axi_dma_ll_rx_crc_set_lfsr_data_mask .text.axi_dma_ll_rx_crc_set_width .text.axi_dma_ll_rx_set_burst_size .text.axi_dma_ll_tx_crc_set_lfsr_data_mask .text.axi_dma_ll_tx_crc_set_width .text.axi_dma_ll_tx_set_burst_size .text.gdma_axi_hal_clear_crc .text.gdma_axi_hal_connect_peri .text.gdma_axi_hal_disconnect_peri .text.gdma_axi_hal_enable_access_encrypt_mem .text.gdma_axi_hal_enable_burst .text.gdma_axi_hal_enable_etm_task .text.gdma_axi_hal_enable_intr .text.gdma_axi_hal_get_crc_result .text.gdma_axi_hal_get_intr_status_reg .text.gdma_axi_hal_init .text.gdma_axi_hal_set_burst_size .text.gdma_axi_hal_set_crc_poly .text.gdma_axi_hal_set_priority .text.gdma_axi_hal_set_strategy)
-    *libhal.a:gdma_hal_top.*(.text .text.gdma_hal_clear_crc .text.gdma_hal_connect_peri .text.gdma_hal_deinit .text.gdma_hal_disconnect_peri .text.gdma_hal_enable_access_encrypt_mem .text.gdma_hal_enable_burst .text.gdma_hal_enable_etm_task .text.gdma_hal_enable_intr .text.gdma_hal_get_crc_result .text.gdma_hal_get_intr_status_reg .text.gdma_hal_set_burst_size .text.gdma_hal_set_crc_poly .text.gdma_hal_set_priority .text.gdma_hal_set_strategy)
+    *libhal.a:gdma_hal_ahb_v2.*(.text .text.ahb_dma_ll_rx_crc_set_lfsr_data_mask .text.ahb_dma_ll_rx_crc_set_width .text.ahb_dma_ll_rx_set_burst_size .text.ahb_dma_ll_tx_crc_set_lfsr_data_mask .text.ahb_dma_ll_tx_crc_set_width .text.ahb_dma_ll_tx_set_burst_size .text.gdma_ahb_hal_clear_crc .text.gdma_ahb_hal_connect_peri .text.gdma_ahb_hal_disconnect_peri .text.gdma_ahb_hal_enable_burst .text.gdma_ahb_hal_enable_etm_task .text.gdma_ahb_hal_enable_intr .text.gdma_ahb_hal_get_crc_result .text.gdma_ahb_hal_get_intr_status_reg .text.gdma_ahb_hal_init .text.gdma_ahb_hal_set_burst_size .text.gdma_ahb_hal_set_crc_poly .text.gdma_ahb_hal_set_priority .text.gdma_ahb_hal_set_strategy)
+    *libhal.a:gdma_hal_axi.*(.text .text.axi_dma_ll_rx_crc_set_lfsr_data_mask .text.axi_dma_ll_rx_crc_set_width .text.axi_dma_ll_rx_set_burst_size .text.axi_dma_ll_tx_crc_set_lfsr_data_mask .text.axi_dma_ll_tx_crc_set_width .text.axi_dma_ll_tx_set_burst_size .text.gdma_axi_hal_clear_crc .text.gdma_axi_hal_connect_peri .text.gdma_axi_hal_disconnect_peri .text.gdma_axi_hal_enable_burst .text.gdma_axi_hal_enable_etm_task .text.gdma_axi_hal_enable_intr .text.gdma_axi_hal_get_crc_result .text.gdma_axi_hal_get_intr_status_reg .text.gdma_axi_hal_init .text.gdma_axi_hal_set_burst_size .text.gdma_axi_hal_set_crc_poly .text.gdma_axi_hal_set_priority .text.gdma_axi_hal_set_strategy)
+    *libhal.a:gdma_hal_top.*(.text .text.gdma_hal_clear_crc .text.gdma_hal_connect_peri .text.gdma_hal_deinit .text.gdma_hal_disconnect_peri .text.gdma_hal_enable_burst .text.gdma_hal_enable_etm_task .text.gdma_hal_enable_intr .text.gdma_hal_get_crc_result .text.gdma_hal_get_intr_status_reg .text.gdma_hal_set_burst_size .text.gdma_hal_set_crc_poly .text.gdma_hal_set_priority .text.gdma_hal_set_strategy)
+    *libhal.a:gpio_hal.*(.text .text.gpio_hal_hysteresis_soft_enable .text.gpio_hal_intr_disable .text.gpio_hal_intr_enable_on_core .text.gpio_hal_iomux_in .text.gpio_hal_iomux_out .text.gpio_ll_pin_input_hysteresis_disable .text.gpio_ll_pin_input_hysteresis_enable)
     *libhal.a:timer_hal.*(.text .text.timer_hal_deinit .text.timer_hal_init .text.timer_hal_set_counter_value)
-    *libheap.a:multi_heap.*(.text .text.multi_heap_check .text.multi_heap_dump .text.multi_heap_dump_tlsf .text.multi_heap_free_size_impl .text.multi_heap_get_info_impl .text.multi_heap_get_info_tlsf .text.multi_heap_minimum_free_size_impl .text.multi_heap_register_impl .text.multi_heap_reset_minimum_free_bytes .text.multi_heap_restore_minimum_free_bytes .text.multi_heap_walk)
-    *libheap.a:tlsf.*(.text .text.control_construct .text.default_walker .text.integrity_walker .text.tlsf_add_pool .text.tlsf_check .text.tlsf_check_pool .text.tlsf_create .text.tlsf_create_with_pool .text.tlsf_destroy .text.tlsf_fit_size .text.tlsf_malloc_addr .text.tlsf_pool_overhead .text.tlsf_remove_pool .text.tlsf_walk_pool)
+    *libheap.a:multi_heap.*(.text .text.multi_heap_check .text.multi_heap_dump .text.multi_heap_dump_tlsf .text.multi_heap_find_containing_block_impl .text.multi_heap_free_size_impl .text.multi_heap_get_info_impl .text.multi_heap_get_info_tlsf .text.multi_heap_minimum_free_size_impl .text.multi_heap_register_impl .text.multi_heap_reset_minimum_free_bytes .text.multi_heap_restore_minimum_free_bytes .text.multi_heap_walk)
+    *libheap.a:tlsf.*(.text .text.control_construct .text.default_walker .text.integrity_walker .text.tlsf_add_pool .text.tlsf_check .text.tlsf_check_pool .text.tlsf_create .text.tlsf_create_with_pool .text.tlsf_destroy .text.tlsf_find_containing_block .text.tlsf_fit_size .text.tlsf_malloc_addr .text.tlsf_pool_overhead .text.tlsf_remove_pool .text.tlsf_walk_pool)
     *liblog.a:log_timestamp.*(.text)
-    *liblog.a:log_write.*(.text .text.esp_log_set_vprintf .text.esp_log_writev)
+    *liblog.a:log_write.*(.text .text.esp_log_set_vprintf)
+    *liblog.a:tag_log_level.*(.text .text.esp_log_level_get .text.esp_log_level_set .text.log_level_get .text.log_level_set)
+    *libnewlib.a:esp_time_impl.*(.text .text.esp_sync_timekeeping_timers .text.esp_time_impl_get_time .text.esp_time_impl_get_time_since_boot)
     *libriscv.a:interrupt.*(.literal.intr_handler_get .text.intr_handler_get)
     *libriscv.a:interrupt.*(.literal.intr_handler_set .text.intr_handler_set)
+    *libspi_flash.a:esp_flash_api.*(.text .text.esp_flash_app_disable_protect .text.esp_flash_get_protectable_regions .text.esp_flash_read_chip_id .text.esp_flash_read_id .text.esp_flash_read_unique_chip_id .text.esp_flash_suspend_cmd_init .text.find_region)
+    *libspi_flash.a:spi_flash_os_func_app.*(.text .text.esp_flash_app_enable_os_functions .text.esp_flash_deinit_os_functions .text.esp_flash_init_main_bus_lock .text.esp_flash_init_os_functions .text.esp_flash_set_dangerous_write_protection .text.use_bus_lock)
+    *libspi_flash.a:spi_flash_os_func_noos.*(.text)
     *(.stub)
     *(.gnu.linkonce.t.*)
     *(.gnu.warning)
@@ -706,7 +915,27 @@ SECTIONS
     __esp_ipa_detect_array_start = ABSOLUTE(.);
     KEEP(*(.esp_ipa_detect .esp_ipa_detect.*))
     __esp_ipa_detect_array_end = ABSOLUTE(.);
-    *(EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:systimer.* *libesp_mm.a:esp_cache.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *liblog.a:log_lock.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:stdatomic.* *libsoc.a:lldesc.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .rodata EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:systimer.* *libesp_mm.a:esp_cache.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *liblog.a:log_lock.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:stdatomic.* *libsoc.a:lldesc.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .rodata.* EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:systimer.* *libesp_mm.a:esp_cache.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *liblog.a:log_lock.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:stdatomic.* *libsoc.a:lldesc.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .sdata2 EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:systimer.* *libesp_mm.a:esp_cache.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *liblog.a:log_lock.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:stdatomic.* *libsoc.a:lldesc.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .sdata2.* EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:systimer.* *libesp_mm.a:esp_cache.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *liblog.a:log_lock.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:stdatomic.* *libsoc.a:lldesc.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .srodata EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:systimer.* *libesp_mm.a:esp_cache.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *liblog.a:log_lock.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:stdatomic.* *libsoc.a:lldesc.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .srodata.*)
+    *(EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_parlio.a:parlio_rx.* *libesp_driver_parlio.a:parlio_tx.* *libesp_driver_rmt.a:rmt_tx.* *libesp_hw_support.a:adc_share_hw_ctrl.* *libesp_hw_support.a:clk_utils.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_dma_utils.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:gdma_link.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_by_flash_delay.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_pvt.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:regi2c_ctrl.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sar_periph_ctrl_common.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:sleep_modes.* *libesp_hw_support.a:sleep_mspi.* *libesp_hw_support.a:sleep_usb.* *libesp_hw_support.a:systimer.* *libesp_lcd.a:esp_lcd_panel_dpi.* *libesp_mm.a:esp_cache_msync.* *libesp_mm.a:esp_cache_utils.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:reset_reason.* *libesp_system.a:system_internal.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log.* *liblog.a:log_format_text.* *liblog.a:log_lock.* *liblog.a:log_print.* *liblog.a:log_timestamp_common.* *liblog.a:util.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:memcmp.* *libnewlib.a:memcpy.* *libnewlib.a:memmove.* *libnewlib.a:stdatomic.* *libnewlib.a:strcmp.* *libnewlib.a:strcpy.* *libnewlib.a:strncmp.* *libnewlib.a:strncpy.* *libsoc.a:lldesc.* *libsoc.a:parlio_periph.* *libsoc.a:temperature_sensor_periph.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_hpm_enable.* *libspi_flash.a:spi_flash_os_func_app.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .rodata EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_parlio.a:parlio_rx.* *libesp_driver_parlio.a:parlio_tx.* *libesp_driver_rmt.a:rmt_tx.* *libesp_hw_support.a:adc_share_hw_ctrl.* *libesp_hw_support.a:clk_utils.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_dma_utils.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:gdma_link.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_by_flash_delay.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_pvt.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:regi2c_ctrl.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sar_periph_ctrl_common.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:sleep_modes.* *libesp_hw_support.a:sleep_mspi.* *libesp_hw_support.a:sleep_usb.* *libesp_hw_support.a:systimer.* *libesp_lcd.a:esp_lcd_panel_dpi.* *libesp_mm.a:esp_cache_msync.* *libesp_mm.a:esp_cache_utils.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:reset_reason.* *libesp_system.a:system_internal.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log.* *liblog.a:log_format_text.* *liblog.a:log_lock.* *liblog.a:log_print.* *liblog.a:log_timestamp_common.* *liblog.a:util.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:memcmp.* *libnewlib.a:memcpy.* *libnewlib.a:memmove.* *libnewlib.a:stdatomic.* *libnewlib.a:strcmp.* *libnewlib.a:strcpy.* *libnewlib.a:strncmp.* *libnewlib.a:strncpy.* *libsoc.a:lldesc.* *libsoc.a:parlio_periph.* *libsoc.a:temperature_sensor_periph.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_hpm_enable.* *libspi_flash.a:spi_flash_os_func_app.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .rodata.* EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_parlio.a:parlio_rx.* *libesp_driver_parlio.a:parlio_tx.* *libesp_driver_rmt.a:rmt_tx.* *libesp_hw_support.a:adc_share_hw_ctrl.* *libesp_hw_support.a:clk_utils.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_dma_utils.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:gdma_link.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_by_flash_delay.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_pvt.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:regi2c_ctrl.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sar_periph_ctrl_common.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:sleep_modes.* *libesp_hw_support.a:sleep_mspi.* *libesp_hw_support.a:sleep_usb.* *libesp_hw_support.a:systimer.* *libesp_lcd.a:esp_lcd_panel_dpi.* *libesp_mm.a:esp_cache_msync.* *libesp_mm.a:esp_cache_utils.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:reset_reason.* *libesp_system.a:system_internal.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log.* *liblog.a:log_format_text.* *liblog.a:log_lock.* *liblog.a:log_print.* *liblog.a:log_timestamp_common.* *liblog.a:util.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:memcmp.* *libnewlib.a:memcpy.* *libnewlib.a:memmove.* *libnewlib.a:stdatomic.* *libnewlib.a:strcmp.* *libnewlib.a:strcpy.* *libnewlib.a:strncmp.* *libnewlib.a:strncpy.* *libsoc.a:lldesc.* *libsoc.a:parlio_periph.* *libsoc.a:temperature_sensor_periph.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_hpm_enable.* *libspi_flash.a:spi_flash_os_func_app.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .sdata2 EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_parlio.a:parlio_rx.* *libesp_driver_parlio.a:parlio_tx.* *libesp_driver_rmt.a:rmt_tx.* *libesp_hw_support.a:adc_share_hw_ctrl.* *libesp_hw_support.a:clk_utils.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_dma_utils.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:gdma_link.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_by_flash_delay.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_pvt.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:regi2c_ctrl.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sar_periph_ctrl_common.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:sleep_modes.* *libesp_hw_support.a:sleep_mspi.* *libesp_hw_support.a:sleep_usb.* *libesp_hw_support.a:systimer.* *libesp_lcd.a:esp_lcd_panel_dpi.* *libesp_mm.a:esp_cache_msync.* *libesp_mm.a:esp_cache_utils.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:reset_reason.* *libesp_system.a:system_internal.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log.* *liblog.a:log_format_text.* *liblog.a:log_lock.* *liblog.a:log_print.* *liblog.a:log_timestamp_common.* *liblog.a:util.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:memcmp.* *libnewlib.a:memcpy.* *libnewlib.a:memmove.* *libnewlib.a:stdatomic.* *libnewlib.a:strcmp.* *libnewlib.a:strcpy.* *libnewlib.a:strncmp.* *libnewlib.a:strncpy.* *libsoc.a:lldesc.* *libsoc.a:parlio_periph.* *libsoc.a:temperature_sensor_periph.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_hpm_enable.* *libspi_flash.a:spi_flash_os_func_app.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .sdata2.* EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_parlio.a:parlio_rx.* *libesp_driver_parlio.a:parlio_tx.* *libesp_driver_rmt.a:rmt_tx.* *libesp_hw_support.a:adc_share_hw_ctrl.* *libesp_hw_support.a:clk_utils.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_dma_utils.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:gdma_link.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_by_flash_delay.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_pvt.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:regi2c_ctrl.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sar_periph_ctrl_common.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:sleep_modes.* *libesp_hw_support.a:sleep_mspi.* *libesp_hw_support.a:sleep_usb.* *libesp_hw_support.a:systimer.* *libesp_lcd.a:esp_lcd_panel_dpi.* *libesp_mm.a:esp_cache_msync.* *libesp_mm.a:esp_cache_utils.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:reset_reason.* *libesp_system.a:system_internal.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log.* *liblog.a:log_format_text.* *liblog.a:log_lock.* *liblog.a:log_print.* *liblog.a:log_timestamp_common.* *liblog.a:util.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:memcmp.* *libnewlib.a:memcpy.* *libnewlib.a:memmove.* *libnewlib.a:stdatomic.* *libnewlib.a:strcmp.* *libnewlib.a:strcpy.* *libnewlib.a:strncmp.* *libnewlib.a:strncpy.* *libsoc.a:lldesc.* *libsoc.a:parlio_periph.* *libsoc.a:temperature_sensor_periph.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_hpm_enable.* *libspi_flash.a:spi_flash_os_func_app.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .srodata EXCLUDE_FILE(*libgcov.a *libapp_trace.a:app_trace.* *libapp_trace.a:app_trace_util.* *libapp_trace.a:port_uart.* *libclang_rt.builtins.a:_divsf3.* *libclang_rt.builtins.a:restore.* *libclang_rt.builtins.a:save.* *libesp_driver_parlio.a:parlio_rx.* *libesp_driver_parlio.a:parlio_tx.* *libesp_driver_rmt.a:rmt_tx.* *libesp_hw_support.a:adc_share_hw_ctrl.* *libesp_hw_support.a:clk_utils.* *libesp_hw_support.a:cpu.* *libesp_hw_support.a:dma2d.* *libesp_hw_support.a:dw_gdma.* *libesp_hw_support.a:esp_dma_utils.* *libesp_hw_support.a:esp_memory_utils.* *libesp_hw_support.a:gdma.* *libesp_hw_support.a:gdma_link.* *libesp_hw_support.a:mspi_timing_by_dqs.* *libesp_hw_support.a:mspi_timing_by_flash_delay.* *libesp_hw_support.a:mspi_timing_config.* *libesp_hw_support.a:mspi_timing_tuning.* *libesp_hw_support.a:pmu_pvt.* *libesp_hw_support.a:pmu_sleep.* *libesp_hw_support.a:regi2c_ctrl.* *libesp_hw_support.a:rtc_clk.* *libesp_hw_support.a:sar_periph_ctrl_common.* *libesp_hw_support.a:sleep_console.* *libesp_hw_support.a:sleep_modes.* *libesp_hw_support.a:sleep_mspi.* *libesp_hw_support.a:sleep_usb.* *libesp_hw_support.a:systimer.* *libesp_lcd.a:esp_lcd_panel_dpi.* *libesp_mm.a:esp_cache_msync.* *libesp_mm.a:esp_cache_utils.* *libesp_psram.a:esp_psram_impl_ap_hex.* *libesp_rom.a:esp_rom_print.* *libesp_rom.a:esp_rom_spiflash.* *libesp_rom.a:esp_rom_sys.* *libesp_rom.a:esp_rom_systimer.* *libesp_rom.a:esp_rom_wdt.* *libesp_system.a:esp_err.* *libesp_system.a:image_process.* *libesp_system.a:reset_reason.* *libesp_system.a:system_internal.* *libesp_system.a:ubsan.* *libgcc.a:_divsf3.* *libgcc.a:save-restore.* *libhal.a:cache_hal.* *libhal.a:i2c_hal_iram.* *libhal.a:ledc_hal_iram.* *libhal.a:mmu_hal.* *libhal.a:pmu_hal.* *libhal.a:spi_flash_encrypt_hal_iram.* *libhal.a:spi_flash_hal_gpspi.* *libhal.a:spi_flash_hal_iram.* *libhal.a:spi_hal_iram.* *libhal.a:spi_slave_hal_iram.* *libheap.a:multi_heap.* *libheap.a:tlsf.* *liblog.a:log.* *liblog.a:log_format_text.* *liblog.a:log_lock.* *liblog.a:log_print.* *liblog.a:log_timestamp_common.* *liblog.a:util.* *libnewlib.a:abort.* *libnewlib.a:assert.* *libnewlib.a:heap.* *libnewlib.a:memcmp.* *libnewlib.a:memcpy.* *libnewlib.a:memmove.* *libnewlib.a:stdatomic.* *libnewlib.a:strcmp.* *libnewlib.a:strcpy.* *libnewlib.a:strncmp.* *libnewlib.a:strncpy.* *libsoc.a:lldesc.* *libsoc.a:parlio_periph.* *libsoc.a:temperature_sensor_periph.* *libspi_flash.a:flash_brownout_hook.* *libspi_flash.a:memspi_host_driver.* *libspi_flash.a:spi_flash_chip_boya.* *libspi_flash.a:spi_flash_chip_gd.* *libspi_flash.a:spi_flash_chip_generic.* *libspi_flash.a:spi_flash_chip_issi.* *libspi_flash.a:spi_flash_chip_mxic.* *libspi_flash.a:spi_flash_chip_th.* *libspi_flash.a:spi_flash_chip_winbond.* *libspi_flash.a:spi_flash_hpm_enable.* *libspi_flash.a:spi_flash_os_func_app.* *libspi_flash.a:spi_flash_wrap.* *libtinyh264.a:h264bsd_cavlc.* *libtinyh264.a:h264bsd_intra_prediction.* *libtinyh264.a:h264bsd_reconstruct.* *libtinyh264.a:h264bsd_stream.* *libtinyh264.a:h264bsd_transform.* *libtinyh264.a:h264bsd_vlc.*) .srodata.*)
+    *libesp_driver_parlio.a:parlio_rx.*(.rodata.__FUNCTION__.0 .rodata.__FUNCTION__.1 .rodata.__FUNCTION__.10 .rodata.__FUNCTION__.12 .rodata.__FUNCTION__.13 .rodata.__FUNCTION__.14 .rodata.__FUNCTION__.18 .rodata.__FUNCTION__.19 .rodata.__FUNCTION__.2 .rodata.__FUNCTION__.20 .rodata.__FUNCTION__.21 .rodata.__FUNCTION__.22 .rodata.__FUNCTION__.3 .rodata.__FUNCTION__.4 .rodata.__FUNCTION__.5 .rodata.__FUNCTION__.6 .rodata.__FUNCTION__.7 .rodata.__FUNCTION__.8 .rodata.__FUNCTION__.9 .rodata.__func__.11 .rodata.__func__.15 .rodata.__func__.16 .rodata.__func__.17 .rodata._parlio_ll_rx_set_clock_div.str1.4 .rodata._parlio_ll_rx_set_clock_source.str1.4 .rodata.parlio_del_rx_delimiter.str1.4 .rodata.parlio_del_rx_unit.str1.4 .rodata.parlio_destroy_rx_unit.str1.4 .rodata.parlio_new_rx_level_delimiter.str1.4 .rodata.parlio_new_rx_pulse_delimiter.str1.4 .rodata.parlio_new_rx_soft_delimiter.str1.4 .rodata.parlio_new_rx_unit.str1.4 .rodata.parlio_rx_create_dma_link.str1.4 .rodata.parlio_rx_soft_delimiter_start_stop.str1.4 .rodata.parlio_rx_unit_disable.str1.4 .rodata.parlio_rx_unit_do_transaction.str1.4 .rodata.parlio_rx_unit_enable.str1.4 .rodata.parlio_rx_unit_init_dma.str1.4 .rodata.parlio_rx_unit_receive.str1.4 .rodata.parlio_rx_unit_set_gpio.str1.4 .rodata.parlio_rx_unit_trigger_fake_eof.str1.4 .rodata.parlio_rx_unit_wait_all_done.str1.4 .rodata.parlio_select_periph_clock.str1.4)
+    *libesp_driver_parlio.a:parlio_tx.*(.rodata.__FUNCTION__.0 .rodata.__FUNCTION__.11 .rodata.__FUNCTION__.13 .rodata.__FUNCTION__.14 .rodata.__FUNCTION__.17 .rodata.__FUNCTION__.18 .rodata.__FUNCTION__.2 .rodata.__FUNCTION__.4 .rodata.__FUNCTION__.5 .rodata.__FUNCTION__.6 .rodata.__FUNCTION__.7 .rodata.__FUNCTION__.8 .rodata.__func__.1 .rodata.__func__.10 .rodata.__func__.12 .rodata.__func__.15 .rodata.__func__.16 .rodata.__func__.3 .rodata._parlio_ll_tx_set_clock_div.str1.4 .rodata.parlio_del_tx_unit.str1.4 .rodata.parlio_destroy_tx_unit.str1.4 .rodata.parlio_ll_tx_set_bus_width.str1.4 .rodata.parlio_new_tx_unit.str1.4 .rodata.parlio_select_periph_clock.str1.4 .rodata.parlio_tx_create_trans_queue.str1.4 .rodata.parlio_tx_get_alignment_constraints.str1.4 .rodata.parlio_tx_unit_disable.str1.4 .rodata.parlio_tx_unit_enable.str1.4 .rodata.parlio_tx_unit_init_dma.str1.4 .rodata.parlio_tx_unit_register_event_callbacks.str1.4 .rodata.parlio_tx_unit_transmit.str1.4 .rodata.parlio_tx_unit_wait_all_done.str1.4)
+    *libesp_driver_rmt.a:rmt_tx.*(.rodata.__FUNCTION__.0 .rodata.__FUNCTION__.10 .rodata.__FUNCTION__.12 .rodata.__FUNCTION__.13 .rodata.__FUNCTION__.14 .rodata.__FUNCTION__.15 .rodata.__FUNCTION__.19 .rodata.__FUNCTION__.21 .rodata.__FUNCTION__.22 .rodata.__FUNCTION__.3 .rodata.__FUNCTION__.4 .rodata.__FUNCTION__.5 .rodata.__FUNCTION__.6 .rodata.__FUNCTION__.7 .rodata.__FUNCTION__.9 .rodata.__func__.1 .rodata.__func__.16 .rodata.__func__.17 .rodata.__func__.18 .rodata.__func__.2 .rodata.__func__.20 .rodata.__func__.8 .rodata.rmt_del_tx_channel.str1.4 .rodata.rmt_ll_tx_enable_dma.str1.4 .rodata.rmt_ll_tx_set_carrier_high_low_ticks.str1.4 .rodata.rmt_new_sync_manager.str1.4 .rodata.rmt_new_tx_channel.str1.4 .rodata.rmt_transmit.str1.4 .rodata.rmt_tx_create_trans_queue.str1.4 .rodata.rmt_tx_destroy.str1.4 .rodata.rmt_tx_disable.str1.4 .rodata.rmt_tx_enable.str1.4 .rodata.rmt_tx_init_dma_link.str1.4 .rodata.rmt_tx_register_event_callbacks.str1.4 .rodata.rmt_tx_register_to_group.str1.4 .rodata.rmt_tx_switch_gpio.str1.4 .rodata.rmt_tx_wait_all_done.str1.4)
+    *libesp_hw_support.a:adc_share_hw_ctrl.*(.rodata.__FUNCTION__.1 .rodata.__func__.0 .rodata.adc_lock_release.str1.4)
+    *libesp_hw_support.a:cpu.*(.rodata.__func__.0 .rodata.__func__.1 .rodata.__func__.2)
+    *libesp_hw_support.a:dma2d.*(.rodata .rodata.__FUNCTION__.1 .rodata.__FUNCTION__.10 .rodata.__FUNCTION__.11 .rodata.__FUNCTION__.13 .rodata.__FUNCTION__.14 .rodata.__FUNCTION__.15 .rodata.__FUNCTION__.16 .rodata.__FUNCTION__.19 .rodata.__FUNCTION__.2 .rodata.__FUNCTION__.21 .rodata.__FUNCTION__.24 .rodata.__FUNCTION__.3 .rodata.__FUNCTION__.6 .rodata.__FUNCTION__.7 .rodata.__FUNCTION__.8 .rodata.__FUNCTION__.9 .rodata.__func__.0 .rodata.__func__.12 .rodata.__func__.17 .rodata.__func__.18 .rodata.__func__.20 .rodata.__func__.22 .rodata.__func__.23 .rodata.dma2d_acquire_pool.str1.4 .rodata.dma2d_configure_color_space_conversion.str1.4 .rodata.dma2d_connect.str1.4 .rodata.dma2d_enqueue.str1.4 .rodata.dma2d_force_end.str1.4 .rodata.dma2d_register_tx_event_callbacks.str1.4 .rodata.dma2d_release_pool.str1.4 .rodata.dma2d_start.str1.4)
+    *libesp_hw_support.a:dw_gdma.*(.rodata.__FUNCTION__.0 .rodata.__FUNCTION__.1 .rodata.__FUNCTION__.10 .rodata.__FUNCTION__.11 .rodata.__FUNCTION__.12 .rodata.__FUNCTION__.13 .rodata.__FUNCTION__.14 .rodata.__FUNCTION__.15 .rodata.__FUNCTION__.16 .rodata.__FUNCTION__.17 .rodata.__FUNCTION__.18 .rodata.__FUNCTION__.2 .rodata.__FUNCTION__.20 .rodata.__FUNCTION__.21 .rodata.__FUNCTION__.3 .rodata.__FUNCTION__.4 .rodata.__FUNCTION__.5 .rodata.__FUNCTION__.6 .rodata.__FUNCTION__.7 .rodata.__FUNCTION__.8 .rodata.__FUNCTION__.9 .rodata.channel_register_to_group.str1.4 .rodata.dw_gdma_channel_register_event_callbacks.str1.4 .rodata.dw_gdma_del_channel.str1.4 .rodata.dw_gdma_install_channel_interrupt.str1.4 .rodata.dw_gdma_new_channel.str1.4 .rodata.dw_gdma_new_link_list.str1.4)
+    *libesp_hw_support.a:esp_dma_utils.*(.rodata.__FUNCTION__.1 .rodata.__FUNCTION__.2 .rodata.__FUNCTION__.4 .rodata.__FUNCTION__.6 .rodata.__FUNCTION__.7 .rodata.__FUNCTION__.8 .rodata.__FUNCTION__.9 .rodata.__func__.0 .rodata.__func__.3 .rodata.__func__.5 .rodata.esp_dma_calculate_node_count.str1.4 .rodata.esp_dma_capable_calloc.str1.4 .rodata.esp_dma_capable_malloc.str1.4 .rodata.esp_dma_is_buffer_alignment_satisfied.str1.4 .rodata.s_legacy_malloc.str1.4)
+    *libesp_hw_support.a:gdma.*(.rodata .rodata.__FUNCTION__.0 .rodata.__FUNCTION__.10 .rodata.__FUNCTION__.11 .rodata.__FUNCTION__.12 .rodata.__FUNCTION__.13 .rodata.__FUNCTION__.14 .rodata.__FUNCTION__.15 .rodata.__FUNCTION__.16 .rodata.__FUNCTION__.17 .rodata.__FUNCTION__.18 .rodata.__FUNCTION__.19 .rodata.__FUNCTION__.20 .rodata.__FUNCTION__.4 .rodata.__FUNCTION__.5 .rodata.__FUNCTION__.6 .rodata.__FUNCTION__.7 .rodata.__FUNCTION__.8 .rodata.__FUNCTION__.9 .rodata.__func__.1 .rodata.__func__.2 .rodata.__func__.3 .rodata.do_allocate_gdma_channel.str1.4 .rodata.gdma_config_transfer.str1.4 .rodata.gdma_connect.str1.4 .rodata.gdma_disconnect.str1.4 .rodata.gdma_install_tx_interrupt.str1.4 .rodata.gdma_register_rx_event_callbacks.str1.4 .rodata.gdma_register_tx_event_callbacks.str1.4 .rodata.gdma_release_group_handle.str1.4 .rodata.gdma_release_pair_handle.str1.4)
+    *libesp_hw_support.a:gdma_link.*(.rodata.__FUNCTION__.0 .rodata.__FUNCTION__.1 .rodata.__FUNCTION__.2 .rodata.gdma_new_link_list.str1.4)
+    *libesp_hw_support.a:regi2c_ctrl.*(.rodata.str1.4)
+    *libesp_hw_support.a:sar_periph_ctrl_common.*(.rodata.__func__.0 .srodata.cst8)
+    *libesp_hw_support.a:sleep_modes.*(.rodata.__func__.0 .rodata.__func__.1 .rodata.__func__.2 .rodata.__func__.3 .rodata.esp_deep_sleep_enable_gpio_wakeup.str1.4 .rodata.esp_sleep_disable_ext1_wakeup_io.str1.4 .rodata.esp_sleep_disable_wakeup_source.str1.4 .rodata.esp_sleep_enable_ext1_wakeup_io.str1.4 .rodata.esp_sleep_enable_vad_wakeup.str1.4 .rodata.esp_sleep_pd_config.str1.4 .rodata.esp_sleep_sub_mode_config.str1.4 .rodata.esp_sleep_sub_mode_dump_config.str1.4 .rodata.gpio_deep_sleep_wakeup_prepare.str1.4 .rodata.s_sleep_hook_register.str1.4 .rodata.s_submode2str .rodata.str1.4)
+    *libesp_lcd.a:esp_lcd_panel_dpi.*(.rodata.__FUNCTION__.0 .rodata.__FUNCTION__.2 .rodata.__FUNCTION__.3 .rodata.__FUNCTION__.4 .rodata.__FUNCTION__.6 .rodata.__FUNCTION__.8 .rodata.__FUNCTION__.9 .rodata.__func__.1 .rodata.__func__.5 .rodata.dpi_panel_create_dma_link.str1.4 .rodata.dpi_panel_draw_bitmap.str1.4 .rodata.esp_lcd_dpi_panel_get_frame_buffer.str1.4 .rodata.esp_lcd_dpi_panel_set_color_conversion.str1.4 .rodata.esp_lcd_new_panel_dpi.str1.4 .rodata.mipi_dsi_host_ll_dpi_set_color_coding.str1.4 .srodata.cst4)
+    *libesp_system.a:reset_reason.*(.rodata.__func__.0)
+    *libesp_system.a:system_internal.*(.rodata.__func__.0)
+    *libheap.a:multi_heap.*(.rodata.__func__.0 .rodata.__func__.1 .rodata.__func__.2 .rodata.__func__.3 .rodata.__func__.4 .rodata.__func__.5 .rodata.__func__.6 .rodata.__func__.7 .rodata.__func__.8 .rodata.multi_heap_dump.str1.4 .rodata.multi_heap_dump_tlsf.str1.4 .rodata.multi_heap_find_containing_block_impl.str1.4 .rodata.multi_heap_register_impl.str1.4)
+    *libheap.a:tlsf.*(.rodata.__func__.0 .rodata.__func__.1 .rodata.__func__.10 .rodata.__func__.11 .rodata.__func__.12 .rodata.__func__.13 .rodata.__func__.14 .rodata.__func__.15 .rodata.__func__.16 .rodata.__func__.17 .rodata.__func__.19 .rodata.__func__.2 .rodata.__func__.20 .rodata.__func__.3 .rodata.__func__.5 .rodata.__func__.6 .rodata.__func__.7 .rodata.__func__.8 .rodata.__func__.9 .rodata.control_construct.str1.4 .rodata.default_walker.str1.4 .rodata.tlsf_add_pool.str1.4 .rodata.tlsf_check.str1.4 .rodata.tlsf_create.str1.4 .rodata.tlsf_remove_pool.str1.4)
+    *libsoc.a:parlio_periph.*(.rodata.parlio_reg_retention_info .rodata.parlio_regs_retention)
+    *libspi_flash.a:spi_flash_os_func_app.*(.rodata.__func__.0 .rodata.esp_flash_spi23_default_os_functions)
     *(.irom1.text) /* catch stray ICACHE_RODATA_ATTR */
     *(.gnu.linkonce.r.*)
     *(.rodata1)
@@ -725,33 +954,26 @@ SECTIONS
 
      * Excluding crtbegin.o/crtend.o since IDF doesn't use the toolchain crt.
 
-     *
-
-     * RISC-V gcc is configured with --enable-initfini-array so it emits
-
-     * .init_array section instead. But the init_priority sections will be
-
-     * sorted for iteration in ascending order during startup.
-
-     * The rest of the init_array sections is sorted for iteration in descending
-
-     * order during startup, however. Hence a different section is generated for
-
-     * the init_priority functions which is iterated in ascending order during
-
-     * startup. The corresponding code can be found in startup.c.
-
      */
     
  . = ALIGN(4); 
- __init_priority_array_start = ABSOLUTE(.);
-    KEEP (*(EXCLUDE_FILE (*crtend.* *crtbegin.*) .init_array.*))
-    __init_priority_array_end = ABSOLUTE(.);
+ __preinit_array_start = ABSOLUTE(.);
+    
+ . = ALIGN(4); 
+ __bothinit_array_start = ABSOLUTE(.);
+    KEEP (*(.preinit_array))
+    __preinit_array_end = ABSOLUTE(.);
+    . = ALIGN(4);
+    PROVIDE(__init_priority_array_start = ABSOLUTE(.));
+    KEEP (*(SORT_BY_INIT_PRIORITY(EXCLUDE_FILE (*crtend.* *crtbegin.*) .init_array.*)))
+    . = ALIGN(4);
+    PROVIDE(__init_priority_array_end = ABSOLUTE(.));
     
  . = ALIGN(4); 
  __init_array_start = ABSOLUTE(.);
     KEEP (*(EXCLUDE_FILE (*crtend.* *crtbegin.*) .init_array))
     __init_array_end = ABSOLUTE(.);
+    __bothinit_array_end = ABSOLUTE(.);
     /* Addresses of memory regions reserved via SOC_RESERVE_MEMORY_REGION() */
     
  . = ALIGN(4); 
@@ -765,34 +987,38 @@ SECTIONS
     KEEP (*(SORT_BY_INIT_PRIORITY(.esp_system_init_fn.*)))
     _esp_system_init_fn_array_end = ABSOLUTE(.);
     _rodata_end = ABSOLUTE(.);
-    . = ALIGN(ALIGNOF(.eh_frame_hdr));
-  } > rodata_seg_low
-  ASSERT((ADDR(.eh_frame_hdr) == ADDR(.flash.init_array) + SIZEOF(.flash.init_array)), "The gap between .flash.init_array and .eh_frame_hdr must not exist to produce the final bin image.")
-  .eh_frame_hdr :
-  {
-    . = ALIGN(ALIGNOF(.eh_frame));
-  } > rodata_seg_low
-  ASSERT((ADDR(.eh_frame) == ADDR(.eh_frame_hdr) + SIZEOF(.eh_frame_hdr)), "The gap between .eh_frame_hdr and .eh_frame must not exist to produce the final bin image.")
-  .eh_frame :
-  {
     . = ALIGN(ALIGNOF(.flash.tdata));
   } > rodata_seg_low
-  ASSERT((ADDR(.flash.tdata) == ADDR(.eh_frame) + SIZEOF(.eh_frame)), "The gap between .eh_frame and .flash.tdata must not exist to produce the final bin image.")
+  ASSERT((ADDR(.flash.tdata) == ADDR(.flash.init_array) + SIZEOF(.flash.init_array)), "The gap between .flash.init_array and .flash.tdata must not exist to produce the final bin image.")
   .flash.tdata :
   {
+    /* Keep tdata and tbss sections contiguous (no gaps between them).
+
+     * The TLS runtime code calculates offsets assuming these sections are
+
+     * adjacent. Gaps would cause incorrect address calculations, leading
+
+     * to accessing wrong memory.
+
+     */
+    /* tdata sections */
     _thread_local_data_start = ABSOLUTE(.);
     *(.tdata .tdata.* .gnu.linkonce.td.*)
     . = ALIGN(ALIGNOF(.flash.tbss));
     _thread_local_data_end = ABSOLUTE(.);
   } > rodata_seg_low
   ASSERT((ADDR(.flash.tbss) == ADDR(.flash.tdata) + SIZEOF(.flash.tdata)), "The gap between .flash.tdata and .flash.tbss must not exist to produce the final bin image.")
+ 
   .flash.tbss (NOLOAD) :
   {
+    /* tbss sections */
     _thread_local_bss_start = ABSOLUTE(.);
     *(.tbss .tbss.* .gnu.linkonce.tb.*)
     *(.tcommon .tcommon.*)
     _thread_local_bss_end = ABSOLUTE(.);
   } > rodata_seg_low
+  ASSERT(_thread_local_data_end == _thread_local_bss_start,
+         "tdata and tbss must be contiguous.")
   /**
 
    * This section contains all the rodata that is not used
@@ -811,62 +1037,21 @@ SECTIONS
      * NOLOAD rodata may not be included in this section.
 
      */
-    _rodata_reserved_end = ADDR(.flash.tbss);
+    _rodata_reserved_end = .;
   } > rodata_seg_low
-  .dram0.bss (NOLOAD) :
+  /**
+
+   * This section is not included in the binary image; it is only present in the ELF file.
+
+   * It is used to keep certain symbols in the ELF file.
+
+   */
+  .noload 0 (INFO) :
   {
-    
- . = ALIGN(4); 
- _bss_start_low = ABSOLUTE(.);
-    /**
-
-     * ldgen places all bss-related data to mapping[dram0_bss]
-
-     * (See components/esp_system/app.lf).
-
-     */
-    *(.bss .bss.*)
-    *(.dynbss .dynsbss .gnu.linkonce.b .gnu.linkonce.b.* .gnu.linkonce.sb .gnu.linkonce.sb.* .gnu.linkonce.sb2 .gnu.linkonce.sb2.* .sbss .sbss.* .sbss2 .sbss2.* .scommon .share.mem)
-    *(.ext_ram.bss .ext_ram.bss.*)
-    *(COMMON)
-    
- . = ALIGN(4); 
- _bss_end_low = ABSOLUTE(.);
-  } > sram_low
-  .dram1.bss (NOLOAD) :
-  {
-    
- . = ALIGN(4); 
- _bss_start_high = ABSOLUTE(.);
-    /**
-
-     * ldgen places all bss-related data to mapping[dram0_bss]
-
-     * (See components/esp_system/app.lf).
-
-     */
-    *(.bss .bss.*)
-    *(.dynbss .dynsbss .gnu.linkonce.b .gnu.linkonce.b.* .gnu.linkonce.sb .gnu.linkonce.sb.* .gnu.linkonce.sb2 .gnu.linkonce.sb2.* .sbss .sbss.* .sbss2 .sbss2.* .scommon .share.mem)
-    *(.ext_ram.bss .ext_ram.bss.*)
-    *(COMMON)
-    
- . = ALIGN(4); 
- _bss_end_high = ABSOLUTE(.);
-  } > sram_high
-  /* Marks the end of data, bss and possibly rodata */
-  .dram0.heap_start_low (NOLOAD) :
-  {
-    
- . = ALIGN(16); 
- _heap_start_low = ABSOLUTE(.);
-  } > sram_low
-    /* Marks the end of data, bss and possibly rodata */
-  .dram1.heap_start_high (NOLOAD) :
-  {
-    
- . = ALIGN(16); 
- _heap_start_high = ABSOLUTE(.);
-  } > sram_high
+    _noload_keep_in_elf_start = ABSOLUTE(.);
+    KEEP(*(.noload_keep_in_elf .noload_keep_in_elf.*))
+    _noload_keep_in_elf_end = ABSOLUTE(.);
+  }
   /* DWARF 1 */
   .debug 0 : { *(.debug) }
   .line 0 : { *(.line) }
