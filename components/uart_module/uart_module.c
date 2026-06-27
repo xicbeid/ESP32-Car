@@ -21,11 +21,11 @@ int Send_Motor_U8(uint8_t data)
 
 void uart0_init()
 {
-    /* If console driver already owns UART0, tear it down first.
-     * Otherwise our RX event queue won't be created and
-     * UART_Process_Task will crash on xQueueReceive(NULL). */
+    /* 如果控制台驱动已占用 UART0，先拆除。
+     * 否则我们的 RX 事件队列无法创建，
+     * UART_Process_Task 会在 xQueueReceive(NULL) 时崩溃。 */
     if (uart_is_driver_installed(UART_NUM_0)) {
-        ESP_LOGW("UART", "UART0 driver already installed (console) — re-initializing for motor");
+        ESP_LOGW("UART", "UART0 驱动已安装(控制台) — 重新初始化为电机通信");
         uart_driver_delete(UART_NUM_0);
     }
 
@@ -41,14 +41,14 @@ void uart0_init()
     uart_param_config(UART_NUM_0, &uart_config);
     uart_set_pin(UART_NUM_0, UART0_TX_PIN, UART0_RX_PIN,
                  UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
-    /* Install driver with RX event queue — motor UART_Process_Task needs this */
+    /* 安装带 RX 事件队列的驱动 — 电机 UART_Process_Task 需要 */
     ESP_ERROR_CHECK(uart_driver_install(UART_NUM_0, 2048, 2048, 50, &uart_queue, 0));
 }
 
 void UART_Process_Task(void *pvParameters) {
     uart_event_t event;
     uint8_t* dtmp = (uint8_t*) malloc(RD_BUF_SIZE);
-    if (!dtmp) { ESP_LOGE("UART", "RX buf alloc fail"); vTaskDelete(NULL); return; }
+    if (!dtmp) { ESP_LOGE("UART", "接收缓冲区分配失败"); vTaskDelete(NULL); return; }
 
     while (1) {
         if (xQueueReceive(uart_queue, (void *)&event, (TickType_t)portMAX_DELAY)) {

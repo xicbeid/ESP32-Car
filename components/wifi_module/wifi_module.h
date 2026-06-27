@@ -1,11 +1,11 @@
 /*
- * WiFi Module - ESP32-P4 WiFi via ESP-Hosted (WiFi Remote)
+ * WiFi 模块 — ESP32-P4 WiFi 通过 ESP-Hosted (WiFi Remote)
  *
- * This module provides WiFi STA functionality for ESP32-P4, which has no
- * built-in WiFi hardware. It uses the ESP-Hosted protocol (esp_wifi_remote)
- * to communicate with a slave chip (ESP32-C6) over SDIO.
+ * 本模块为 ESP32-P4 提供 WiFi STA 功能，P4 芯片自身没有
+ * 内置 WiFi 硬件。它使用 ESP-Hosted 协议 (esp_wifi_remote)
+ * 通过 SDIO 与从属芯片 (ESP32-C6) 通信。
  *
- * API reference: esp_brookesia_phone/components/apps/setting/Setting.cpp
+ * API 参考: esp_brookesia_phone/components/apps/setting/Setting.cpp
  */
 
 #ifndef __WIFI_MODULE_H__
@@ -20,87 +20,87 @@ extern "C" {
 #endif
 
 /**
- * @brief Initialize the WiFi networking stack (call once).
+ * @brief 初始化 WiFi 网络协议栈 (仅需调用一次)。
  *
- * Initializes netif and event loop. Must be called before
- * wifi_module_init_sta() or wifi_module_init_ap().
- * NVS must be initialized first by the caller.
+ * 初始化 netif 和事件循环。必须在
+ * wifi_module_init_sta() 或 wifi_module_init_ap() 之前调用。
+ * 调用者需先初始化 NVS。
  *
- * @return ESP_OK on success, otherwise error.
+ * @return 成功返回 ESP_OK，否则返回错误码。
  */
 esp_err_t wifi_module_init_netstack(void);
 
 /**
- * @brief Initialize WiFi STA mode via ESP-Hosted.
+ * @brief 通过 ESP-Hosted 初始化 WiFi STA 模式。
  *
- * Initializes WiFi driver and starts STA mode. The ESP-Hosted slave
- * will be reset and brought up as part of this process.
- * wifi_module_init_netstack() must be called first.
+ * 初始化 WiFi 驱动并启动 STA 模式。
+ * ESP-Hosted 从属芯片将在此过程中被复位并启动。
+ * 必须首先调用 wifi_module_init_netstack()。
  *
- * @return ESP_OK on success, otherwise error.
+ * @return 成功返回 ESP_OK，否则返回错误码。
  */
 esp_err_t wifi_module_init_sta(void);
 
 /**
- * @brief Initialize WiFi SoftAP mode via ESP-Hosted.
+ * @brief 通过 ESP-Hosted 初始化 WiFi SoftAP 模式。
  *
- * Creates a WiFi hotspot that phones can connect to directly.
- * wifi_module_init_netstack() must be called first.
+ * 创建手机可直接连接的 WiFi 热点。
+ * 必须首先调用 wifi_module_init_netstack()。
  *
- * @param ssid      WiFi hotspot name (max 32 chars).
- * @param password  WiFi password (min 8 chars, NULL or "" for open).
- * @param channel   WiFi channel (1-13).
- * @return ESP_OK on success, otherwise error.
+ * @param ssid      WiFi 热点名称 (最大 32 字符)。
+ * @param password  WiFi 密码 (最少 8 字符，NULL 或 "" 表示开放网络)。
+ * @param channel   WiFi 信道 (1-13)。
+ * @return 成功返回 ESP_OK，否则返回错误码。
  */
 esp_err_t wifi_module_init_ap(const char *ssid, const char *password, uint8_t channel);
 
 /**
- * @brief Start scanning for nearby WiFi APs.
+ * @brief 开始扫描附近的 WiFi AP。
  *
- * Scanning runs asynchronously in a background FreeRTOS task.
- * Results can be retrieved via wifi_module_get_scan_results().
+ * 扫描在后台 FreeRTOS 任务中异步运行。
+ * 结果可通过 wifi_module_get_scan_results() 获取。
  *
- * @return ESP_OK on success, otherwise error.
+ * @return 成功返回 ESP_OK，否则返回错误码。
  */
 esp_err_t wifi_module_scan_start(void);
 
 /**
- * @brief Stop WiFi scanning and hide results.
+ * @brief 停止 WiFi 扫描并隐藏结果。
  */
 void wifi_module_scan_stop(void);
 
 /**
- * @brief Get the latest scan results.
+ * @brief 获取最新扫描结果。
  *
- * @param[out] ap_info   Buffer to hold AP records.
- * @param[in]  max_ap    Maximum number of APs the buffer can hold.
- * @return Number of APs found (0 if none).
+ * @param[out] ap_info   存放 AP 记录的缓冲区。
+ * @param[in]  max_ap    缓冲区可容纳的最大 AP 数量。
+ * @return 找到的 AP 数量 (0 表示无)。
  */
 uint16_t wifi_module_get_scan_results(wifi_ap_record_t *ap_info, uint16_t max_ap);
 
 /**
- * @brief Connect to the given AP (non-blocking).
+ * @brief 连接到指定 AP (非阻塞)。
  *
- * A FreeRTOS task is spawned to handle the connection.
- * Use wifi_module_is_connected() to check the result.
+ * 会创建一个 FreeRTOS 任务来处理连接。
+ * 使用 wifi_module_is_connected() 检查连接结果。
  *
- * @param ssid      Target AP SSID.
- * @param password  Target AP password.
- * @return ESP_OK if the connect task was created successfully.
+ * @param ssid      目标 AP 的 SSID。
+ * @param password  目标 AP 的密码。
+ * @return 连接任务创建成功则返回 ESP_OK。
  */
 esp_err_t wifi_module_connect(const char *ssid, const char *password);
 
 /**
- * @brief Disconnect from the currently connected AP.
+ * @brief 断开当前连接的 AP。
  *
- * @return ESP_OK on success.
+ * @return 成功返回 ESP_OK。
  */
 esp_err_t wifi_module_disconnect(void);
 
 /**
- * @brief Query whether WiFi is currently connected.
+ * @brief 查询 WiFi 是否已连接。
  *
- * @return true if connected, false otherwise.
+ * @return 已连接返回 true，否则返回 false。
  */
 bool wifi_module_is_connected(void);
 
