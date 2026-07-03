@@ -25,6 +25,7 @@
 #include "web_control.h"
 #include "camera_module.h"
 #include "imu_usb.h"
+#include "human_detect.h"
 
 #define delay_ms(ms) vTaskDelay(pdMS_TO_TICKS(ms))
 
@@ -343,6 +344,14 @@ static void encoder_monitor_task(void *arg)
     }
 }
 
+/* ── 人脸检测 pre-JPEG 回调 (在摄像头任务上下文中调用) ── */
+static void pre_jpeg_draw_cb(uint8_t *rgb565, int w, int h, int stride, void *ctx)
+{
+    human_detect_feed_frame(rgb565, w, h, stride);
+    human_detect_draw_boxes(rgb565, w, h, stride);
+    (void)ctx;
+}
+
 /* ── 主函数 ── */
 void app_main(void)
 {
@@ -372,6 +381,17 @@ void app_main(void)
     esp_err_t cam_err = camera_module_init(NULL);
     if (cam_err != ESP_OK) {
         ESP_LOGW(TAG, "Camera init failed (%s) — running without camera", esp_err_to_name(cam_err));
+    }
+
+    /* 2.5 人脸检测 — ESP-DL MSRMNP 模型 (默认关闭) */
+    ESP_LOGI(TAG, "正在初始化人脸检测 (ESP-DL)...");
+    int cam_w = 1280, cam_h = 720;
+    esp_err_t hd_err = human_detect_init(cam_w, cam_h);
+    if (hd_err == ESP_OK) {
+        camera_module_set_pre_jpeg_cb(pre_jpeg_draw_cb, NULL);
+        ESP_LOGI(TAG, "人脸检测就绪 (ESP-DL MSRMNP @ 1280x720, 默认关闭)");
+    } else {
+        ESP_LOGW(TAG, "人脸检测初始化失败 (%s)", esp_err_to_name(hd_err));
     }
 
     /* 3. 电机初始化 — UART0 重新初始化 (拆除控制台 UART，安装带接收队列的驱动) */

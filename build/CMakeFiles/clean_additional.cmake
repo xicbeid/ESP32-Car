@@ -16,6 +16,7 @@ if("${CONFIG}" STREQUAL "" OR "${CONFIG}" STREQUAL "")
   "flash_bootloader_args"
   "flash_project_args"
   "flasher_args.json"
+  "human_face_detect.espdl.S"
   "ldgen_libraries"
   "ldgen_libraries.in"
   "project_elf_src_esp32p4.c"

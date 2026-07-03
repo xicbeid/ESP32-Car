@@ -23,6 +23,7 @@
 #include "web_control.h"
 #include "camera_module.h"
 #include "imu_usb.h"
+#include "human_detect.h"
 
 #define TAG "WebCtrl"
 
@@ -115,10 +116,19 @@ static const char INDEX_HTML[] =
 "background:rgba(255,255,255,.03);border-radius:4px}"
 ".imu-qrow .ql{color:#6895c0;font-size:9px;font-weight:bold;min-width:40px;text-align:center}"
 ".imu-qrow .qv{color:#aaa;font-size:8px;flex:1;text-align:right;font-family:'Courier New',monospace}"
+/* === 人脸检测 (ESP-DL) === */
+".det-tgl{display:block;width:100%;max-width:210px;margin:6px auto;padding:6px 8px;"
+"border-radius:10px;font-size:12px;color:#ccc;background:rgba(255,255,255,.06);"
+"border:1px solid #555;cursor:pointer;text-align:center;"
+"user-select:none;-webkit-tap-highlight-color:transparent}"
+".det-tgl.on{background:rgba(231,76,60,.4);border-color:#e74c3c;color:#fff}"
+".bg-det{background:#e74c3c;display:none}"
+".bg-det.show{display:inline-block}"
 "</style></head>"
 
 "<body><h1>ESP32-P4 搜救小车</h1>"
-"<div class='cam-box'><img id='camImg' alt='Camera'><span class='cam-label'>&#128247; 实时画面</span></div>"
+"<div class='cam-box'><img id='camImg' alt='Camera'><span class='cam-label'>&#128247; 实时画面</span>"
+"</div>"
 "<div class='st' id='st'>就绪</div>"
 
 /* === Telemetry Dashboard === */
@@ -129,6 +139,7 @@ static const char INDEX_HTML[] =
 "<span class='tl-badge bg-fps' id='bfps'>帧率:--</span>"
 "<span class='tl-badge bg-idle' id='bmode'>空闲</span>"
 "<span class='tl-badge bg-rx' id='brx'>通信</span>"
+"<span class='tl-badge bg-det' id='bdet'>检测:--</span>"
 "</div>"
 
 /* IMU Attitude: Roll / Pitch bars + Yaw */
@@ -197,6 +208,7 @@ static const char INDEX_HTML[] =
 "<button class='pb pr' id='br'>&#9654;</button>"
 "<button class='pb pd' id='bd'>&#9660;</button>"
 "</div>"
+"<button class='det-tgl' id='detTgl'>&#128065; 人脸检测</button>"
 
 /* Sliders */
 "<div class='ctls'>"
@@ -289,6 +301,20 @@ static const char INDEX_HTML[] =
 "DI.oninput=function(){document.getElementById('d2').textContent=DI.value+'cm'};"
 "SP.oninput=function(){document.getElementById('s2').textContent=SP.value};"
 
+/* === Detection toggle (ESP-DL 人脸检测) === */
+"var detEl=document.getElementById('detTgl');"
+"detEl.addEventListener('click',function(e){"
+"  e.preventDefault();"
+"  var on=detEl.classList.contains('on');"
+"  fetch('/detect?en='+(on?0:1))"
+"  .then(function(r){return r.json()})"
+"  .then(function(d){"
+"    if(d.en){detEl.classList.add('on');detEl.innerHTML='&#128065; 人脸检测中';}"
+"    else{detEl.classList.remove('on');detEl.innerHTML='&#128065; 人脸检测';}"
+"  })"
+"  .catch(function(){});"
+"});"
+
 /* === Dashboard polling === */
 "(function(){"
 "var elFps=document.getElementById('bfps'),elMode=document.getElementById('bmode');"
@@ -325,6 +351,16 @@ static const char INDEX_HTML[] =
 "var mi=MODE_MAP[d.mode]||{l:d.mode,c:'bg-idle'};"
 "elMode.textContent=mi.l;elMode.className='tl-badge '+mi.c;"
 "elRx.style.display=d.recv?'inline-block':'none';"
+"/* Detection (ESP-DL 人脸) */"
+"var bdet=document.getElementById('bdet');"
+"if(d.detect){"
+"  bdet.style.display=d.detect.en?'inline-block':'none';"
+"  if(d.detect.en){bdet.textContent='人脸:'+d.detect.n;bdet.className='tl-badge bg-det show';"
+"    if(!detEl.classList.contains('on')){detEl.classList.add('on');detEl.innerHTML='&#128065; 人脸检测中';}"
+"  }else{bdet.style.display='none';"
+"    if(detEl.classList.contains('on')){detEl.classList.remove('on');detEl.innerHTML='&#128065; 人脸检测';}"
+"  }"
+"}else{bdet.style.display='none';}"
 
 "/* Encoder */"
 "var m=d.m;"
@@ -520,6 +556,34 @@ static void mjpeg_server_task(void *arg)
     }
 }
 
+/* ── 人脸检测开关处理 ── */
+static esp_err_t detect_handler(httpd_req_t *req)
+{
+    char buf[64];
+    size_t buf_len = httpd_req_get_url_query_len(req) + 1;
+    if (buf_len > sizeof(buf)) { httpd_resp_send_500(req); return ESP_FAIL; }
+    if (httpd_req_get_url_query_str(req, buf, buf_len) != ESP_OK) {
+        /* 无参数 — 返回当前状态 */
+        bool en = human_detect_is_enabled();
+        char rsp[32];
+        snprintf(rsp, sizeof(rsp), "{\"en\":%d}", en ? 1 : 0);
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_send(req, rsp, -1);
+        return ESP_OK;
+    }
+    char en_str[4] = {0};
+    httpd_query_key_value(buf, "en", en_str, sizeof(en_str));
+    if (en_str[0]) {
+        human_detect_set_enabled(en_str[0] == '1');
+    }
+    bool en = human_detect_is_enabled();
+    char rsp[32];
+    snprintf(rsp, sizeof(rsp), "{\"en\":%d}", en ? 1 : 0);
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, rsp, -1);
+    return ESP_OK;
+}
+
 /* ── 状态 JSON 处理 ── */
 static const char *motor_mode_str(void)
 {
@@ -538,9 +602,11 @@ static esp_err_t status_handler(httpd_req_t *req)
     imu_data_t imu;
 
     camera_module_get_ae_status(&brightness, &exp_100us, &gain_idx);
+    hd_result_t det = human_detect_get_results();
+    bool det_en = human_detect_is_enabled();
     imu_usb_get_data(&imu);
 
-    char buf[1280];
+    char buf[1792];
     int len = snprintf(buf, sizeof(buf),
         "{"
         "\"t\":%lld,"
@@ -563,6 +629,10 @@ static esp_err_t status_handler(httpd_req_t *req)
           "\"q0\":%.4f,\"q1\":%.4f,\"q2\":%.4f,\"q3\":%.4f,"
           "\"tmp\":%.1f,"
           "\"ok\":%d"
+        "},"
+        "\"detect\":{"
+          "\"en\":%d,"
+          "\"n\":%u"
         "}"
         "}",
         uptime_ms, (unsigned long)fps,
@@ -580,7 +650,9 @@ static esp_err_t status_handler(httpd_req_t *req)
         (double)imu.pressure, (double)imu.altitude,
         (double)imu.quat_q0, (double)imu.quat_q1, (double)imu.quat_q2, (double)imu.quat_q3,
         (double)imu.temperature,
-        imu_usb_is_connected() ? 1 : 0
+        imu_usb_is_connected() ? 1 : 0,
+        det_en ? 1 : 0,
+        (unsigned)det.count
     );
 
     httpd_resp_set_type(req, "application/json");
@@ -610,6 +682,7 @@ esp_err_t web_control_start(motor_control_cb_t callback)
     u.handler = ctrl_handler;     u.uri = "/ctrl";        httpd_register_uri_handler(srv80, &u);
     u.handler = snapshot_handler; u.uri = "/snapshot";    httpd_register_uri_handler(srv80, &u);
     u.handler = status_handler;   u.uri = "/status";      httpd_register_uri_handler(srv80, &u);
+    u.handler = detect_handler;   u.uri = "/detect";      httpd_register_uri_handler(srv80, &u);
 
     xTaskCreate(mjpeg_server_task, "mjpeg_srv", 4096, NULL, 5, NULL);
 

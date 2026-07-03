@@ -26,6 +26,7 @@ typedef enum {
     MOTOR_CMD_VEL_LEFT,      /* 速度模式: 原地左转 */
     MOTOR_CMD_VEL_RIGHT,     /* 速度模式: 原地右转 */
     MOTOR_CMD_GO,            /* 编码器闭环: 前进 <dist> cm, 速度 <speed> */
+    MOTOR_CMD_DETECT,        /* 人脸检测开关: distance_cm=0关/1开 */
 } motor_cmd_t;
 
 typedef void (*motor_control_cb_t)(motor_cmd_t cmd, int distance_cm, int speed);

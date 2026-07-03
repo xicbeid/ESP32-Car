@@ -25,6 +25,24 @@
 extern "C" {
 #endif
 
+/* ── Pre-JPEG 回调 (用于在编码前画检测框等叠加层) ── */
+/**
+ * @brief 在 JPEG 编码前调用的回调。
+ *  仅在 RGB565 模式下有效。回调可原地修改帧数据以叠加图形。
+ * @param rgb565  RGB565 帧缓冲区 (可修改)
+ * @param w       帧宽度 (像素)
+ * @param h       帧高度 (像素)
+ * @param stride  行字节数 (通常 w*2)
+ * @param user_ctx  用户上下文
+ */
+typedef void (*camera_pre_jpeg_cb_t)(uint8_t *rgb565, int w, int h,
+                                     int stride, void *user_ctx);
+
+/**
+ * @brief 注册 pre-JPEG 回调。传 NULL 取消。
+ */
+void camera_module_set_pre_jpeg_cb(camera_pre_jpeg_cb_t cb, void *user_ctx);
+
 /**
  * @brief 摄像头帧分辨率配置
  */
@@ -83,6 +101,13 @@ esp_err_t camera_module_stop(void);
  * @return 每秒帧数。
  */
 uint32_t camera_module_get_fps(void);
+
+/**
+ * @brief 获取当前帧分辨率。
+ * @param[out] w  帧宽度 (可为 NULL)
+ * @param[out] h  帧高度 (可为 NULL)
+ */
+void camera_module_get_resolution(int *w, int *h);
 
 /**
  * @brief 导出当前自动曝光状态。

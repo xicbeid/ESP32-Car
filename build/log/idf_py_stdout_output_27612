@@ -1,0 +1,25 @@
+Command: ninja all
+[1/16] Linking C static library esp-idf\uart_module\libuart_module.a
+[2/16] Linking C static library esp-idf\wifi_module\libwifi_module.a
+[3/16] Linking C static library esp-idf\camera_module\libcamera_module.a
+[4/16] Linking C static library esp-idf\imu_usb\libimu_usb.a
+[5/16] Linking C static library esp-idf\motor_module\libmotor_module.a
+[6/16] Performing build step for 'bootloader'
+[1/1] C:\Windows\system32\cmd.exe /C "cd /D F:\project_ESP32_p4\UART\build\bootloader\esp-idf\esptool_py && F:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe F:/Espressif/frameworks/v5.5.4/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 F:/project_ESP32_p4/UART/build/bootloader/bootloader.bin"
+Bootloader binary size 0x5a20 bytes. 0x5e0 bytes (6%) free.
+[7/16] No install step for 'bootloader'
+[8/16] Building C object esp-idf/human_detect/CMakeFiles/__idf_human_detect.dir/human_detect.c.obj
+[9/16] Completed 'bootloader'
+[10/16] Linking C static library esp-idf\human_detect\libhuman_detect.a
+[11/16] Linking C static library esp-idf\main\libmain.a
+[12/16] Generating esp-idf/esp_system/ld/sections.ld
+[13/16] Building C object CMakeFiles/UART.elf.dir/project_elf_src_esp32p4.c.obj
+[14/16] Linking CXX executable UART.elf
+[15/16] Generating binary image from built executable
+esptool.py v4.12.dev2
+Creating esp32p4 image...
+Merged 2 ELF sections
+Successfully created esp32p4 image.
+Generated F:/project_ESP32_p4/UART/build/UART.bin
+[16/16] C:\Windows\system32\cmd.exe /C "cd /D F:\project_ESP32_p4\UART\build\esp-idf\esptool_py && F:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe F:/Espressif/frameworks/v5.5.4/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app F:/project_ESP32_p4/UART/build/partition_table/partition-table.bin F:/project_ESP32_p4/UART/build/UART.bin"
+UART.bin binary size 0x1133e0 bytes. Smallest app partition is 0x1f0000 bytes. 0xdcc20 bytes (45%) free.

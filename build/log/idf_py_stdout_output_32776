@@ -1,0 +1,4 @@
+Command: ninja list-components
+[0/1] Re-running CMake...
+-- Minimal build - OFF
+-- Building ESP-IDF components for target esp32p4

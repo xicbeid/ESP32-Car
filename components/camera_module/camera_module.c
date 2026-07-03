@@ -16,7 +16,8 @@
  * 修复记录 (2026-06-14):
  *   - 软件 AE: 亮度采样 + V4L2 曝光/增益控制
  *   - RGB565 支持: ISP 输出路径 (多字节步长修复, 绿通道 AE)
- *   - 切换到 640×480 RAW10 @ 50fps (原为 1280×720 RAW8 @ 30fps)
+ *   - 切换到 1280×720 RAW8 @ 30fps (sdkconfig 默认格式)
+ *   - AE 参数适配 30fps: FRAME_INTERVAL=12, SETTLE=25, DEADBAND=15
  */
 
 #include <string.h>
@@ -38,6 +39,8 @@
 #include "linux/videodev2.h"
 #include "linux/v4l2-controls.h"
 #include "esp_video_init.h"
+#include "esp_video_ioctl.h"
+#include "esp_cam_sensor_types.h"
 #include "driver/jpeg_encode.h"
 #include "camera_module.h"
 
@@ -49,14 +52,44 @@
 #define JPEG_BUF_SIZE        (256 * 1024)
 #define MAX_FB_NUM           3
 
-/* ==================== 自动曝光 (AE) ==================== */
-#define AE_TARGET_BRIGHTNESS   40    /* 8-bit 目标 (~15% of 255) */
-#define AE_SAMPLE_SKIP         6     /* 每隔 N 行和列采样 (640px → 106×80) */
-#define AE_FRAME_INTERVAL      10    /* 每隔 N 帧运行 AE (50fps → 5Hz) */
-#define AE_DAMPING             0.55f /* 平滑因子 (0-1, 越小越慢) */
-#define AE_DEADBAND            8     /* 亮度死区，防止震荡 */
-#define AE_FALLBACK_EXP_US     8000  /* 查询失败时的回退曝光值 (μs) */
-#define AE_GAIN_SMALL_STEP     8     /* 微调用的增益索引步进 */
+/* ==================== 自动曝光 (AE) ====================
+ *
+ * 策略: 偏向暗光人脸检测 — 目标亮度 65 (~25%量程), 暗光时快速拉升。
+ *   30fps 模式下每 12 帧运行一次 AE (=2.5Hz)。
+ *   - 检测饱和 (>15% 像素在 255) → 降曝 12% (应急模式)
+ *   - 暗光加速: 满增益+亮度<目标一半 → 曝光 +25% 大步
+ *   - 正常模式: 每次只调 ±10%, 需要同方向连续 2 次读数才行动
+ *   - 方向翻转 → 罚 30 帧静默 (防震荡)
+ *   - 增益步进 5 (比 3 更快), 暗光场景优先推增益
+ *   - AE 变更后收紧 bytesused 校验 (5%), 滤除损坏帧 */
+#define AE_TARGET_BRIGHTNESS   65    /* 8-bit 目标亮度 (~25%), 为暗光人脸检测留足对比度 */
+#define AE_SAMPLE_SKIP         8     /* 每隔 N 行/列采样 */
+#define AE_FRAME_INTERVAL      12    /* 每 N 帧运行 AE (30fps → 2.5Hz) */
+#define AE_DAMPING             0.85f /* EMA 平滑 (0.85=极强阻尼) */
+#define AE_DEADBAND            15    /* 死区: ±15 不调整 (加宽防震荡) */
+#define AE_SETTLE_FRAMES       25    /* 调整后静默 N 帧 (~833ms, 传感器充分稳定) */
+#define AE_FLIP_PENALTY        30    /* 方向翻转后额外跳过 N 帧 */
+#define AE_CONSEC_SAME         2     /* 需要连续 N 次同方向才动作 */
+#define AE_FALLBACK_EXP_US     8000  /* 查询失败回退值 (μs) */
+
+/* 应急模式: 检测到像素饱和时降曝 (温和, 避免震荡) */
+#define AE_SATURATION_THRESH   0.15f /* >15% 像素达 255 = 饱和 */
+#define AE_SAT_STEP_DOWN       0.88f /* 饱和时每次降 12% (温和, 避免与正常模式形成振荡) */
+
+/* 正常模式: 小步慢调 */
+#define AE_EXP_STEP_UP         1.10f /* +10% per step */
+#define AE_EXP_STEP_DOWN       0.90f /* -10% per step */
+#define AE_GAIN_STEP           5     /* 增益步进 (暗光需要快速拉升) */
+#define AE_EXP_DARK_BOOST      1.25f /* 暗光满增益时曝光加速 (+25%) */
+
+/* 软抗频闪: 强制曝光为 10ms 的整数倍 (消除 50Hz 灯光滚动条纹)
+ * 仅在曝光 ≥10ms 时生效 (极短曝光无法抗频闪, 靠 AE 稳即可) */
+#define AE_FLICKER_PERIOD_100US  100  /* 10ms = 100 × 100μs (50Hz 半周期) */
+#define AE_FLICKER_MIN_100US     100  /* 曝光 <10ms 不强制取整 */
+
+/* AE 稳定期内收紧 bytesused 校验 (滤除传感器寄存器写入时的损坏帧) */
+#define AE_STRICT_VALIDATION_PCT  5   /* 稳定期容差 5% */
+#define AE_LOOSE_VALIDATION_PCT  15   /* 正常容差 15% */
 
 /* ==================== 状态 ==================== */
 static int               s_video_fd = -1;
@@ -80,6 +113,10 @@ static TaskHandle_t      s_cam_task = NULL;
 static SemaphoreHandle_t s_frame_mutex = NULL;
 static SemaphoreHandle_t s_frame_ready = NULL;  /* 二进制信号量: 新帧就绪时发布 */
 
+/* ── Pre-JPEG 回调 ── */
+static camera_pre_jpeg_cb_t s_pre_jpeg_cb = NULL;
+static void                *s_pre_jpeg_ctx = NULL;
+
 /* ==================== 双缓冲 JPEG 输出 ====================
  * 摄像头任务写入 s_jpeg_out[!s_published_idx]，然后交换。
  * 读取方读取 s_jpeg_out[s_published_idx] — 在下一帧编码完成前不会被覆盖
@@ -92,15 +129,19 @@ static volatile bool s_has_frame = false; /* 至少有一帧已发布 */
 
 /* AE 状态 */
 typedef struct {
-    bool     active;            /* AE 已初始化并运行 */
-    int32_t  exp_100us;         /* 当前曝光值 (100μs) */
-    int32_t  gain_idx;          /* 当前增益表索引 */
-    int32_t  exp_min_100us;     /* 最小曝光值 */
-    int32_t  exp_max_100us;     /* 最大曝光值 */
+    bool     active;            /* AE 已初始化 */
+    int32_t  exp_100us;         /* 当前曝光值 (100μs 单位 — 注意: 实际单位取决于传感器 V4L2 映射) */
+    int32_t  gain_idx;          /* 当前增益索引 */
+    int32_t  exp_min_100us;     /* 最小曝光 */
+    int32_t  exp_max_100us;     /* 最大曝光 */
     int32_t  gain_min;          /* 最小增益索引 */
     int32_t  gain_max;          /* 最大增益索引 */
     float    smooth_brightness; /* EMA 平滑亮度 */
-    uint32_t frame_count;       /* 帧计数器 (用于间隔控制) */
+    uint32_t frame_count;       /* 帧计数 */
+    int      settle_count;      /* 剩余稳定帧数 */
+    int      strict_validation; /* AE变更后收紧帧校验 (剩余帧数) */
+    int      last_dir;          /* 上次方向: -1/0/+1 */
+    int      same_dir_count;    /* 同方向连续计数 */
 } ae_state_t;
 
 static ae_state_t s_ae = {
@@ -128,19 +169,13 @@ static uint8_t *cam_alloc(size_t size)
     return p;
 }
 
-/* ==================== AE: 读取/写入 V4L2 控件 ==================== */
+/* ==================== AE: 读取/查询 V4L2 控件 ====================
+ * (写入由原子 VIDIOC_S_EXT_CTRLS + V4L2_CID_CAMERA_GROUP 完成) */
 static int32_t ae_get_ctrl(uint32_t cid)
 {
     struct v4l2_control ctrl = { .id = cid };
     if (ioctl(s_video_fd, VIDIOC_G_CTRL, &ctrl) == 0) return ctrl.value;
     return -1;
-}
-
-static esp_err_t ae_set_ctrl(uint32_t cid, int32_t value)
-{
-    struct v4l2_control ctrl = { .id = cid, .value = value };
-    if (ioctl(s_video_fd, VIDIOC_S_CTRL, &ctrl) == 0) return ESP_OK;
-    return ESP_FAIL;
 }
 
 static esp_err_t ae_query_ctrl(uint32_t cid, struct v4l2_queryctrl *q)
@@ -150,42 +185,50 @@ static esp_err_t ae_query_ctrl(uint32_t cid, struct v4l2_queryctrl *q)
     return ESP_FAIL;
 }
 
-/* ==================== AE: 亮度测量 ==================== */
-static float ae_measure_brightness(const uint8_t *raw, uint32_t stride)
+/* ==================== AE: 亮度测量 + 饱和检测 ==================== */
+static float ae_measure_brightness(const uint8_t *raw, uint32_t stride,
+                                    float *out_sat_ratio)
 {
     uint64_t sum = 0;
     uint32_t count = 0;
+    uint32_t saturated = 0;
     bool is_rgb565 = (s_pixelformat == V4L2_PIX_FMT_RGB565);
 
     if (is_rgb565) {
-        /* RGB565: 2字节/像素。提取绿色通道 (6位 → 8位量程) */
+        /* RGB565: 绿色通道 (6位→8位) */
         for (uint32_t y = 0; y < s_fb_height; y += AE_SAMPLE_SKIP) {
             const uint8_t *line = raw + y * stride;
             for (uint32_t x = 0; x < s_fb_width; x += AE_SAMPLE_SKIP) {
                 uint8_t lo = line[x * 2];
                 uint8_t hi = line[x * 2 + 1];
-                /* 绿色: RGB565 的 bit[10:5] = (hi[2:0] << 3) | (lo[7:5]) */
                 uint8_t g6 = ((hi & 0x07) << 3) | (lo >> 5);
-                sum += (g6 << 2); /* 6-bit → 8-bit */
+                uint8_t g8 = (g6 << 2) | (g6 >> 4);
+                sum += g8;
+                if (g8 >= 252) saturated++;  /* 接近饱和 */
                 count++;
             }
         }
     } else if (s_is_raw10) {
-        /* RAW10: 16bit/px LE, 采样 byte[1] = bits[9:2] */
         for (uint32_t y = 0; y < s_fb_height; y += AE_SAMPLE_SKIP) {
             for (uint32_t x = 0; x < s_fb_width; x += AE_SAMPLE_SKIP) {
-                sum += raw[y * stride + x * 2 + 1];
+                uint8_t v = raw[y * stride + x * 2 + 1];
+                sum += v;
+                if (v >= 252) saturated++;
                 count++;
             }
         }
     } else {
-        /* RAW8 / 灰度: 1字节/像素 */
         for (uint32_t y = 0; y < s_fb_height; y += AE_SAMPLE_SKIP) {
             for (uint32_t x = 0; x < s_fb_width; x += AE_SAMPLE_SKIP) {
-                sum += raw[y * stride + x];
+                uint8_t v = raw[y * stride + x];
+                sum += v;
+                if (v >= 252) saturated++;
                 count++;
             }
         }
+    }
+    if (out_sat_ratio && count > 0) {
+        *out_sat_ratio = (float)saturated / (float)count;
     }
     return (count > 0) ? (float)sum / (float)count : 0.0f;
 }
@@ -216,48 +259,116 @@ static void ae_init(void)
              (int)s_ae.gain_idx, (int)s_ae.gain_min, (int)s_ae.gain_max);
 }
 
-/* ==================== AE: 主循环 ==================== */
+/* ==================== AE: 主循环 ====================
+ *
+ * 两模式策略:
+ *   1. 应急模式 (saturation > 15%) — 像素大规模饱和, 快速降曝 25%
+ *   2. 正常模式 — 小步 ±10%, 需要同方向连续 AE_CONSEC_SAME 次才动作
+ *
+ * 防震荡规则:
+ *   - 方向翻转 → settle_count += 20 (长静默)
+ *   - 增益只在曝光触底/触顶时调整
+ *   - 死区内不动作
+ */
 static void ae_run(const uint8_t *raw, uint32_t stride)
 {
     if (!s_ae.active) return;
 
     s_ae.frame_count++;
+
+    /* ── 稳定期 ── */
+    if (s_ae.settle_count > 0) {
+        s_ae.settle_count--;
+        return;
+    }
+
     if (s_ae.frame_count % AE_FRAME_INTERVAL != 0) return;
 
-    /* 测量亮度 */
-    float measured = ae_measure_brightness(raw, stride);
-    if (measured < 1.0f) return; /* 太暗无法可靠测量 */
+    /* ── 测量亮度 + 饱和率 ── */
+    float sat_ratio = 0.0f;
+    float measured = ae_measure_brightness(raw, stride, &sat_ratio);
+    if (measured < 1.0f) return;
 
     /* EMA 平滑 */
-    s_ae.smooth_brightness = AE_DAMPING * measured + (1.0f - AE_DAMPING) * s_ae.smooth_brightness;
-
-    /* 死区检查 */
-    float err = AE_TARGET_BRIGHTNESS - s_ae.smooth_brightness;
-    if (err > -AE_DEADBAND && err < AE_DEADBAND) return;
+    s_ae.smooth_brightness = AE_DAMPING * measured
+                           + (1.0f - AE_DAMPING) * s_ae.smooth_brightness;
 
     int32_t new_exp = s_ae.exp_100us;
     int32_t new_gain = s_ae.gain_idx;
+    int     this_dir = 0;
+    int     prev_dir = s_ae.last_dir;  /* 保存旧方向, 供 apply 段判翻转 */
 
-    if (err < 0) {
-        /* 太亮 — 先降曝光，再降增益 */
-        float ratio = AE_TARGET_BRIGHTNESS / s_ae.smooth_brightness;
-        if (new_exp > (s_ae.exp_min_100us + 1)) {
-            new_exp = (int32_t)(new_exp * ratio);
+    /* ── 应急模式: 像素大规模饱和 → 快速降曝 ── */
+    if (sat_ratio > AE_SATURATION_THRESH) {
+        this_dir = -1;
+        if (new_exp > s_ae.exp_min_100us) {
+            new_exp = (int32_t)(new_exp * AE_SAT_STEP_DOWN);
             if (new_exp < s_ae.exp_min_100us) new_exp = s_ae.exp_min_100us;
-            if (new_exp == s_ae.exp_min_100us && s_ae.smooth_brightness > AE_TARGET_BRIGHTNESS + AE_DEADBAND) {
-                /* 最小曝光仍然过亮 — 降低增益 */
-                new_gain = s_ae.gain_idx - AE_GAIN_SMALL_STEP;
+        } else {
+            /* 最小曝光仍饱和 → 降增益 */
+            new_gain = s_ae.gain_idx - AE_GAIN_STEP;
+        }
+        goto apply;
+    }
+
+    /* ── 正常模式: 小步慢调 ── */
+    {
+        float err = AE_TARGET_BRIGHTNESS - s_ae.smooth_brightness;
+
+        /* 死区 */
+        if (err > -AE_DEADBAND && err < AE_DEADBAND) {
+            s_ae.last_dir = 0;
+            s_ae.same_dir_count = 0;
+            return;
+        }
+
+        if (err < 0) {
+            /* 太亮 → 降曝光 */
+            this_dir = -1;
+            if (new_exp > s_ae.exp_min_100us) {
+                new_exp = (int32_t)(new_exp * AE_EXP_STEP_DOWN);
+                if (new_exp < s_ae.exp_min_100us) new_exp = s_ae.exp_min_100us;
+            } else if (s_ae.smooth_brightness > AE_TARGET_BRIGHTNESS + AE_DEADBAND * 4) {
+                /* 严重过亮 → 降增益 */
+                new_gain = s_ae.gain_idx - AE_GAIN_STEP;
+            } else {
+                return;  /* 已达极限 */
             }
         } else {
-            new_gain = s_ae.gain_idx - AE_GAIN_SMALL_STEP;
+            /* 太暗 → 升增益优先, 再升曝光 */
+            this_dir = 1;
+            if (new_gain < s_ae.gain_max) {
+                new_gain = s_ae.gain_idx + AE_GAIN_STEP;
+            } else {
+                /* 暗光加速: 满增益+亮度仍远低目标 → 大步拉升曝光 */
+                if (s_ae.smooth_brightness < AE_TARGET_BRIGHTNESS / 2) {
+                    new_exp = (int32_t)(new_exp * AE_EXP_DARK_BOOST);
+                } else {
+                    new_exp = (int32_t)(new_exp * AE_EXP_STEP_UP);
+                }
+            }
         }
-    } else {
-        /* 太暗 — 先升增益，再升曝光 */
-        if (new_gain < s_ae.gain_max) {
-            new_gain = s_ae.gain_idx + AE_GAIN_SMALL_STEP;
+
+        /* ── 方向一致性检查 ── */
+        if (this_dir == prev_dir) {
+            s_ae.same_dir_count++;
         } else {
-            float ratio = AE_TARGET_BRIGHTNESS / s_ae.smooth_brightness;
-            new_exp = (int32_t)(new_exp * ratio);
+            s_ae.same_dir_count = 1;
+        }
+        s_ae.last_dir = this_dir;
+
+        /* 需要连续 N 次同方向才执行调整 */
+        if (s_ae.same_dir_count < AE_CONSEC_SAME) return;
+    }
+
+apply:
+    /* ── 软抗频闪: 曝光取整到 10ms 整数倍 (消除 50Hz 灯闪烁) ── */
+    if (new_exp >= AE_FLICKER_MIN_100US) {
+        int32_t p = AE_FLICKER_PERIOD_100US;
+        int32_t r = new_exp % p;
+        if (r != 0) {
+            /* 取最近的整数倍 */
+            new_exp = (r < p / 2) ? (new_exp - r) : (new_exp + p - r);
         }
     }
 
@@ -267,29 +378,56 @@ static void ae_run(const uint8_t *raw, uint32_t stride)
     if (new_gain < s_ae.gain_min) new_gain = s_ae.gain_min;
     if (new_gain > s_ae.gain_max) new_gain = s_ae.gain_max;
 
-    /* 有变化则应用 */
-    bool changed = false;
-    if (new_exp != s_ae.exp_100us) {
-        if (ae_set_ctrl(V4L2_CID_EXPOSURE_ABSOLUTE, new_exp) == ESP_OK) {
-            s_ae.exp_100us = new_exp;
-            changed = true;
+    /* 应用变更 — 原子写入 (一次 ioctl 同时设置曝光+增益, 减少闪烁) */
+    if (new_exp == s_ae.exp_100us && new_gain == s_ae.gain_idx) return;
+
+    {
+        struct v4l2_ext_controls controls;
+        struct v4l2_ext_control  control[1];
+        esp_cam_sensor_gh_exp_gain_t group = {
+            .exposure_us = (uint32_t)new_exp,
+            .exposure_val = 0,
+            .gain_index  = (uint32_t)new_gain,
+        };
+
+        controls.ctrl_class = V4L2_CID_CAMERA_CLASS;
+        controls.count      = 1;
+        controls.controls   = control;
+        control[0].id       = V4L2_CID_CAMERA_GROUP;
+        control[0].p_u8     = (uint8_t *)&group;
+        control[0].size     = sizeof(group);
+
+        if (ioctl(s_video_fd, VIDIOC_S_EXT_CTRLS, &controls) != 0) {
+            return;  /* 原子写入失败, 跳过本轮 */
         }
-    }
-    if (new_gain != s_ae.gain_idx) {
-        if (ae_set_ctrl(V4L2_CID_GAIN, new_gain) == ESP_OK) {
-            s_ae.gain_idx = new_gain;
-            changed = true;
+
+        s_ae.exp_100us = new_exp;
+        s_ae.gain_idx  = new_gain;
+
+        /* 标准静默期 */
+        s_ae.settle_count = AE_SETTLE_FRAMES;
+        s_ae.same_dir_count = 0;
+
+        /* AE 变更后收紧帧校验 (滤除传感器寄存器写入造成的损坏帧) */
+        s_ae.strict_validation = AE_SETTLE_FRAMES;
+
+        /* 方向翻转 → 额外惩罚 (防震荡) */
+        if (this_dir != 0 && prev_dir != 0 && this_dir != prev_dir) {
+            s_ae.settle_count = AE_FLIP_PENALTY;
+            s_ae.strict_validation = AE_FLIP_PENALTY;
+            ESP_LOGD(TAG, "AE: 方向翻转, 静默 %d 帧", AE_FLIP_PENALTY);
         }
     }
 
-    if (changed && s_ae.frame_count % (AE_FRAME_INTERVAL * 10) == 0) {
-        ESP_LOGI(TAG, "AE: 亮度=%.0f 曝光=%d 增益=%d",
+    /* 定期日志 */
+    if (s_ae.frame_count % (AE_FRAME_INTERVAL * 15) == 0) {
+        ESP_LOGI(TAG, "AE: 亮度=%.0f(饱和%.0f%%) 曝光=%d 增益=%d",
                  (double)s_ae.smooth_brightness,
+                 (double)(sat_ratio * 100.0f),
                  (int)s_ae.exp_100us,
                  (int)s_ae.gain_idx);
     }
-    /* 定期状态输出 (~10s一次)，即使稳定不变 */
-    if (s_ae.frame_count % (AE_FRAME_INTERVAL * 100) == 0) {
+    if (s_ae.frame_count % (AE_FRAME_INTERVAL * 150) == 0) {
         ESP_LOGI(TAG, "AE 状态: 亮度=%.0f 曝光=%d/%d 增益=%d/%d",
                  (double)s_ae.smooth_brightness,
                  (int)s_ae.exp_100us, (int)s_ae.exp_max_100us,
@@ -365,14 +503,41 @@ static void camera_task(void *arg)
             vTaskDelay(pdMS_TO_TICKS(10)); continue;
         }
 
-        /* 跳过不完整帧 (官方示例模式) */
-        if (!(vbuf.flags & V4L2_BUF_FLAG_DONE)) {
+        /* 跳过不完整/错误帧 (官方示例 + 硬件错误检测) */
+        if (!(vbuf.flags & V4L2_BUF_FLAG_DONE) ||
+            (vbuf.flags & V4L2_BUF_FLAG_ERROR)) {
             ioctl(s_video_fd, VIDIOC_QBUF, &vbuf);
             continue;
         }
 
         uint8_t *src = s_mmap_buf[vbuf.index];
         if (!src) goto qbuf;
+
+        /* 帧校验: AE 稳定期内收紧容差 (滤除传感器寄存器写入损坏帧),
+         * 正常状态使用宽松容差 (15%) */
+        uint32_t expected_size;
+        if (s_is_raw10) {
+            expected_size = s_fb_stride * s_fb_height; /* 16-bit/px */
+        } else if (s_pixelformat == V4L2_PIX_FMT_RGB565) {
+            expected_size = s_fb_stride * s_fb_height;
+        } else {
+            expected_size = s_fb_stride * s_fb_height; /* RAW8 */
+        }
+        uint32_t tolerance = (s_ae.strict_validation > 0)
+                             ? AE_STRICT_VALIDATION_PCT
+                             : AE_LOOSE_VALIDATION_PCT;
+        if (vbuf.bytesused < (expected_size * (100 - tolerance) / 100) ||
+            vbuf.bytesused > (expected_size * (100 + tolerance) / 100)) {
+            if (fc < 10 || fc % 50 == 0) {
+                ESP_LOGW(TAG, "帧校验失败: bytesused=%u 预期=%u (容差=%u%%), 丢弃",
+                         (unsigned)vbuf.bytesused, (unsigned)expected_size,
+                         (unsigned)tolerance);
+            }
+            if (s_ae.strict_validation > 0) s_ae.strict_validation--;
+            goto qbuf;
+        }
+        /* AE 稳定期递减 */
+        if (s_ae.strict_validation > 0) s_ae.strict_validation--;
 
         /* ── 像素格式处理 ──
          * RAW10: V4L2 → 16bit/px (LE) → 提取 byte[1] → 8bit/px 供 JPEG 使用
@@ -404,6 +569,12 @@ static void camera_task(void *arg)
             }
             enc_src = s_row_buf;
             enc_src_size = s_fb_width * s_fb_height;
+        }
+
+        /* ── Pre-JPEG 回调 (画检测框等叠加层, 仅 RGB565) ── */
+        if (is_rgb565 && s_pre_jpeg_cb) {
+            s_pre_jpeg_cb(enc_src, (int)s_fb_width, (int)s_fb_height,
+                          (int)s_fb_stride, s_pre_jpeg_ctx);
         }
 
         /* ── 硬件 JPEG 编码 ── */
@@ -592,6 +763,18 @@ esp_err_t camera_module_get_frame(const uint8_t **jpeg_buf, size_t *jpeg_len)
 }
 
 esp_err_t camera_module_start(void) { return ESP_OK; }
+
+void camera_module_get_resolution(int *w, int *h)
+{
+    if (w) *w = (int)s_fb_width;
+    if (h) *h = (int)s_fb_height;
+}
+
+void camera_module_set_pre_jpeg_cb(camera_pre_jpeg_cb_t cb, void *user_ctx)
+{
+    s_pre_jpeg_cb = cb;
+    s_pre_jpeg_ctx = user_ctx;
+}
 
 /* ==================== 公开 API: FPS + AE 状态 ==================== */
 uint32_t camera_module_get_fps(void)

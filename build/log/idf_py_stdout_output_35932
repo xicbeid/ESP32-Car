@@ -1,0 +1,23 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=F:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe -DESP_PLATFORM=1 -DCCACHE_ENABLE=0 F:\project_ESP32_p4\UART
+-- Minimal build - OFF
+-- Building ESP-IDF components for target esp32p4
+NOTICE: Manifest files have changed, solving dependencies.
+........NOTICE: Skipping optional dependency: espressif/usb
+...............NOTICE: Updating lock file at F:\project_ESP32_p4\UART\dependencies.lock
+NOTICE: Processing 15 dependencies:
+NOTICE: [1/15] espressif/cmake_utilities (0.5.3)
+NOTICE: [2/15] espressif/eppp_link (1.1.5)
+NOTICE: [3/15] espressif/esp-dl (3.1.0)
+NOTICE: [4/15] espressif/esp_cam_sensor (2.2.0)
+NOTICE: [5/15] espressif/esp_h264 (1.3.0)
+NOTICE: [6/15] espressif/esp_hosted (2.12.9)
+NOTICE: [7/15] espressif/esp_ipa (2.1.0)
+NOTICE: [8/15] espressif/esp_jpeg (1.3.1)
+NOTICE: [9/15] espressif/esp_sccb_intf (0.0.8)
+NOTICE: [10/15] espressif/esp_serial_slave_link (1.1.2)
+NOTICE: [11/15] espressif/esp_video (2.2.0)
+NOTICE: [12/15] espressif/esp_wifi_remote (0.14.5)
+NOTICE: [13/15] espressif/usb_host_cdc_acm (2.4.0)
+NOTICE: [14/15] espressif/usb_host_uvc (2.5.1)
+NOTICE: [15/15] idf (5.5.4)
+-- Configuring incomplete, errors occurred!

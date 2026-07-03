@@ -37819,6 +37819,84 @@
             {
                 "children": [
                     {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "HUMAN_FACE_DETECT_MSRMNP_S8_V1",
+                        "name": "HUMAN_FACE_DETECT_MSRMNP_S8_V1",
+                        "range": null,
+                        "title": "human_face_detect_msrmnp_s8_v1",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "HUMAN_FACE_DETECT_MODEL_TYPE",
+                        "name": "HUMAN_FACE_DETECT_MODEL_TYPE",
+                        "range": null,
+                        "title": null,
+                        "type": "int"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "HUMAN_FACE_DETECT_MODEL_IN_FLASH_RODATA",
+                                "name": "HUMAN_FACE_DETECT_MODEL_IN_FLASH_RODATA",
+                                "range": null,
+                                "title": "flash_rodata",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "HUMAN_FACE_DETECT_MODEL_IN_FLASH_PARTITION",
+                                "name": "HUMAN_FACE_DETECT_MODEL_IN_FLASH_PARTITION",
+                                "range": null,
+                                "title": "flash_partition",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "HUMAN_FACE_DETECT_MODEL_IN_SDCARD",
+                                "name": "HUMAN_FACE_DETECT_MODEL_IN_SDCARD",
+                                "range": null,
+                                "title": "sdcard",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "help": "human_face_detect model location",
+                        "id": "component-config-models-human_face_detect-model-location",
+                        "name": null,
+                        "title": "model location",
+                        "type": "choice"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "HUMAN_FACE_DETECT_MODEL_LOCATION",
+                        "name": "HUMAN_FACE_DETECT_MODEL_LOCATION",
+                        "range": null,
+                        "title": null,
+                        "type": "int"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-models-human_face_detect",
+                "title": "models: human_face_detect",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
                         "children": [
                             {
                                 "children": [],
@@ -47360,6 +47438,154 @@
                 "depends_on": null,
                 "id": "component-config-espressif-image-process-algorithm-configuration",
                 "title": "Espressif Image Process Algorithm Configuration",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": "ESP_ROM_HAS_JPEG_DECODE",
+                        "help": "By default, Espressif SoCs use TJpg decoder implemented in ROM code.\nIf this feature is disabled, new configuration of TJpg decoder can be used.\nRefer to REAME.md for more details.",
+                        "id": "JD_USE_ROM",
+                        "name": "JD_USE_ROM",
+                        "range": null,
+                        "title": "Use TinyJPG Decoder from ROM",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "!JD_USE_ROM",
+                        "help": null,
+                        "id": "JD_SZBUF",
+                        "name": "JD_SZBUF",
+                        "range": null,
+                        "title": "Size of stream input buffer",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "!JD_USE_ROM",
+                        "help": null,
+                        "id": "JD_FORMAT",
+                        "name": "JD_FORMAT",
+                        "range": null,
+                        "title": null,
+                        "type": "int"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "JD_FORMAT_RGB888",
+                                "name": "JD_FORMAT_RGB888",
+                                "range": null,
+                                "title": "Support RGB565 and RGB888 output (16-bit/pix and 24-bit/pix)",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "JD_FORMAT_RGB565",
+                                "name": "JD_FORMAT_RGB565",
+                                "range": null,
+                                "title": "Support RGB565 output (16-bit/pix)",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": "!JD_USE_ROM",
+                        "help": "Output format is selected at runtime.",
+                        "id": "component-config-jpeg-decoder-output-pixel-format",
+                        "name": null,
+                        "title": "Output pixel format",
+                        "type": "choice"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "!JD_USE_ROM",
+                        "help": "If scaling is enabled, size of output image can be lowered during decoding.",
+                        "id": "JD_USE_SCALE",
+                        "name": "JD_USE_SCALE",
+                        "range": null,
+                        "title": "Enable descaling",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "!JD_USE_ROM",
+                        "help": "Use table conversion for saturation arithmetic. A bit faster, but increases 1 KB of code size.",
+                        "id": "JD_TBLCLIP",
+                        "name": "JD_TBLCLIP",
+                        "range": null,
+                        "title": "Use table conversion for saturation arithmetic",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "!JD_USE_ROM",
+                        "help": null,
+                        "id": "JD_FASTDECODE",
+                        "name": "JD_FASTDECODE",
+                        "range": null,
+                        "title": null,
+                        "type": "int"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "JD_FASTDECODE_BASIC",
+                                "name": "JD_FASTDECODE_BASIC",
+                                "range": null,
+                                "title": "Basic optimization. Suitable for 8/16-bit MCUs",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "JD_FASTDECODE_32BIT",
+                                "name": "JD_FASTDECODE_32BIT",
+                                "range": null,
+                                "title": "+ 32-bit barrel shifter. Suitable for 32-bit MCUs",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "JD_FASTDECODE_TABLE",
+                                "name": "JD_FASTDECODE_TABLE",
+                                "range": null,
+                                "title": "+ Table conversion for huffman decoding (wants 6 << HUFF_BIT bytes of RAM)",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": "!JD_USE_ROM",
+                        "help": null,
+                        "id": "component-config-jpeg-decoder-optimization-level",
+                        "name": null,
+                        "title": "Optimization level",
+                        "type": "choice"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "!JD_USE_ROM",
+                        "help": "Enable this option to support decoding JPEG images that lack an embedded Huffman table.\nWhen enabled, a default Huffman table is used during decoding, allowing the JPEG decoder to handle\nimages without explicitly provided Huffman tables.\n\nNote: Enabling this option increases ROM usage due to the inclusion of default Huffman tables.",
+                        "id": "JD_DEFAULT_HUFFMAN",
+                        "name": "JD_DEFAULT_HUFFMAN",
+                        "range": null,
+                        "title": "Support images without Huffman table",
+                        "type": "bool"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-jpeg-decoder",
+                "title": "JPEG Decoder",
                 "type": "menu"
             },
             {

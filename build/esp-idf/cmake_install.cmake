@@ -624,6 +624,21 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_jpeg/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp-dl/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("F:/project_ESP32_p4/UART/build/esp-idf/human_detect/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_hosted/cmake_install.cmake")
 endif()
 
