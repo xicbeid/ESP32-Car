@@ -16,8 +16,8 @@
  * 修复记录 (2026-06-14):
  *   - 软件 AE: 亮度采样 + V4L2 曝光/增益控制
  *   - RGB565 支持: ISP 输出路径 (多字节步长修复, 绿通道 AE)
- *   - 切换到 1280×720 RAW8 @ 30fps (sdkconfig 默认格式)
- *   - AE 参数适配 30fps: FRAME_INTERVAL=12, SETTLE=25, DEADBAND=15
+ *   - 切换到 640×480 RAW10 @ 50fps (sdkconfig, via ISP→RGB565)
+ *   - AE 参数适配 50fps: FRAME_INTERVAL=20, SETTLE=42, DEADBAND=15
  */
 
 #include <string.h>
@@ -55,20 +55,20 @@
 /* ==================== 自动曝光 (AE) ====================
  *
  * 策略: 偏向暗光人脸检测 — 目标亮度 65 (~25%量程), 暗光时快速拉升。
- *   30fps 模式下每 12 帧运行一次 AE (=2.5Hz)。
+ *   50fps 模式下每 20 帧运行一次 AE (=2.5Hz)。
  *   - 检测饱和 (>15% 像素在 255) → 降曝 12% (应急模式)
  *   - 暗光加速: 满增益+亮度<目标一半 → 曝光 +25% 大步
  *   - 正常模式: 每次只调 ±10%, 需要同方向连续 2 次读数才行动
- *   - 方向翻转 → 罚 30 帧静默 (防震荡)
+ *   - 方向翻转 → 罚 50 帧静默 (防震荡)
  *   - 增益步进 5 (比 3 更快), 暗光场景优先推增益
  *   - AE 变更后收紧 bytesused 校验 (5%), 滤除损坏帧 */
 #define AE_TARGET_BRIGHTNESS   65    /* 8-bit 目标亮度 (~25%), 为暗光人脸检测留足对比度 */
-#define AE_SAMPLE_SKIP         8     /* 每隔 N 行/列采样 */
-#define AE_FRAME_INTERVAL      12    /* 每 N 帧运行 AE (30fps → 2.5Hz) */
+#define AE_SAMPLE_SKIP         6     /* 每隔 N 行/列采样 (640x480 → ~10600 采样点) */
+#define AE_FRAME_INTERVAL      20    /* 每 N 帧运行 AE (50fps → 2.5Hz) */
 #define AE_DAMPING             0.85f /* EMA 平滑 (0.85=极强阻尼) */
 #define AE_DEADBAND            15    /* 死区: ±15 不调整 (加宽防震荡) */
-#define AE_SETTLE_FRAMES       25    /* 调整后静默 N 帧 (~833ms, 传感器充分稳定) */
-#define AE_FLIP_PENALTY        30    /* 方向翻转后额外跳过 N 帧 */
+#define AE_SETTLE_FRAMES       42    /* 调整后静默 N 帧 (~840ms, 传感器充分稳定) */
+#define AE_FLIP_PENALTY        50    /* 方向翻转后额外跳过 N 帧 (~1s) */
 #define AE_CONSEC_SAME         2     /* 需要连续 N 次同方向才动作 */
 #define AE_FALLBACK_EXP_US     8000  /* 查询失败回退值 (μs) */
 

@@ -51,7 +51,7 @@ static const char INDEX_HTML[] =
 "display:flex;flex-direction:column;align-items:center;padding:4px}"
 "h1{font-size:16px;margin:2px 0;color:#e94560}"
 ".cam-box{position:relative;width:100%;max-width:320px;background:#000;"
-"border-radius:10px;overflow:hidden;margin:2px 0 4px;aspect-ratio:5/4;border:2px solid #0f3460}"
+"border-radius:10px;overflow:hidden;margin:2px 0 4px;aspect-ratio:4/3;border:2px solid #0f3460}"
 ".cam-box img{width:100%;height:100%;object-fit:contain;display:block}"
 ".cam-label{position:absolute;top:4px;left:10px;font-size:10px;color:#fff;"
 "background:rgba(0,0,0,.6);padding:2px 8px;border-radius:6px}"

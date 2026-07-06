@@ -56,28 +56,47 @@ volatile bool g_position_active = false;  /* GO 编码器移动执行中置 true
   #define PULSE_PHASE   30
   #define PULSE_LINE    11
   #define WHEEL_DIA_MM  67.00f
+  #define MOTOR_GEAR_RATIO 1.0f   /* TODO: 实测校准 */
 #elif MOTOR_TYPE == 2 /* 310 motor */
   #define PULSE_PHASE   20
   #define PULSE_LINE    13
   #define WHEEL_DIA_MM  48.00f
+  /*
+   * 减速比校准系数:
+   *   编码器装在电机轴上, 经过减速箱后才驱动轮子,
+   *   PULSES_PER_REV=260 只是电机轴一转的脉冲数, 需要乘减速比。
+   *   实测数据 (2026-07-04):
+   *     80cm@spd50→27cm (ratio 2.96), 160cm@spd50→44cm (ratio 3.64)
+   *     80cm@spd90→29.5cm (ratio 2.71), 160cm@spd10→40cm (ratio 4.00)
+   *   取中值 3.0 为基础校准, 速度越高惯性越大走得越远,
+   *   故加入速度补偿: 高速时略微减少目标脉冲。
+   */
+  #define MOTOR_GEAR_RATIO      3.5f
+  #define SPEED_COMP_REF        50     /* 基准速度 */
+  #define SPEED_COMP_FACTOR     0.0f   /* 2026-07-05: 速度影响小(spd10~50仅差1cm), 暂关闭 */
 #elif MOTOR_TYPE == 3 /* TT encoder */
   #define PULSE_PHASE   45
   #define PULSE_LINE    13
   #define WHEEL_DIA_MM  68.00f
+  #define MOTOR_GEAR_RATIO 1.0f   /* TODO: 实测校准 */
 #elif MOTOR_TYPE == 4 /* TT-DC (no encoder) */
   #define PULSE_PHASE   48
   #define PULSE_LINE    1
   #define WHEEL_DIA_MM  65.00f
+  #define MOTOR_GEAR_RATIO 1.0f   /* 无编码器, 不使用 */
 #elif MOTOR_TYPE == 5 /* L-520 */
   #define PULSE_PHASE   40
   #define PULSE_LINE    11
   #define WHEEL_DIA_MM  67.00f
+  #define MOTOR_GEAR_RATIO 1.0f   /* TODO: 实测校准 */
 #endif
 
 #define PULSES_PER_REV    (PULSE_PHASE * PULSE_LINE)
 #define WHEEL_CIRCUM_MM   (3.14159265f * WHEEL_DIA_MM)   /* 每转周长 mm */
 #define PULSES_PER_MM     ((float)PULSES_PER_REV / WHEEL_CIRCUM_MM)
-#define PULSES_PER_CM     (PULSES_PER_MM * 10.0f)
+/* PULSES_PER_CM_RAW 是电机轴上的理论值, 乘减速比后得到轮上的实际值 */
+#define PULSES_PER_CM_RAW (PULSES_PER_MM * 10.0f)
+#define PULSES_PER_CM     (PULSES_PER_CM_RAW * MOTOR_GEAR_RATIO)
 
 /* 编码器超时等待，每 cm 最大等待 (ms) — 宽松的兜底值 */
 #define ENC_TIMEOUT_PER_CM  500
@@ -85,10 +104,20 @@ volatile bool g_position_active = false;  /* GO 编码器移动执行中置 true
 static int32_t encoder_base[4] = {0};   /* 移动前的编码器快照 */
 static int32_t enc_last_log[4] = {0};   /* 最近记录的增量 (调试用) */
 
-/* cm 转编码器脉冲 (四舍五入) */
-static inline int32_t cm_to_pulses(int cm)
+/* cm 转编码器脉冲 (含速度补偿, 四舍五入)
+ *   速度越高惯性越大, 实际距离会略大, 故高速时少发一些脉冲
+ */
+static inline int32_t cm_to_pulses(int cm, int speed)
 {
-    return (int32_t)(cm * PULSES_PER_CM + 0.5f);
+    float base = (float)cm * PULSES_PER_CM;
+#if MOTOR_TYPE == 2
+    /* 速度补偿: speed>SPEED_COMP_REF → 减脉冲, speed<SPEED_COMP_REF → 加脉冲 */
+    float comp = 1.0f - (float)(speed - SPEED_COMP_REF) * SPEED_COMP_FACTOR;
+    if (comp < 0.70f) comp = 0.70f;   /* 下限 -30% */
+    if (comp > 1.30f) comp = 1.30f;   /* 上限 +30% */
+    base *= comp;
+#endif
+    return (int32_t)(base + 0.5f);
 }
 
 /* 消费待处理的编码器数据，更新 Encoder_Now[0..3] */
@@ -174,12 +203,13 @@ static void motor_task(void *arg)
         if (ms < 100) ms = 100;
         if (ms > 1000) ms = 1000;
 
-        int32_t dist_pulses = cm_to_pulses(msg.distance_cm);
+        int32_t dist_pulses = cm_to_pulses(msg.distance_cm, msg.speed);
         int32_t t[4] = {0};
         int timeout = msg.distance_cm * ENC_TIMEOUT_PER_CM + 5000;
 
-        ESP_LOGI(TAG, "电机: cmd=%d 距离=%dcm(%ld脉冲) 速度=%d 超时=%dms",
-                 msg.cmd, msg.distance_cm, (long)dist_pulses, msg.speed, timeout);
+        ESP_LOGI(TAG, "电机: cmd=%d 距离=%dcm(%ld脉冲 RAW=%.1f/cm) 速度=%d 超时=%dms",
+                 msg.cmd, msg.distance_cm, (long)dist_pulses,
+                 (double)PULSES_PER_CM, msg.speed, timeout);
 
         g_motor_stop_flag = false;
 
@@ -385,11 +415,11 @@ void app_main(void)
 
     /* 2.5 人脸检测 — ESP-DL MSRMNP 模型 (默认关闭) */
     ESP_LOGI(TAG, "正在初始化人脸检测 (ESP-DL)...");
-    int cam_w = 1280, cam_h = 720;
+    int cam_w = 640, cam_h = 480;
     esp_err_t hd_err = human_detect_init(cam_w, cam_h);
     if (hd_err == ESP_OK) {
         camera_module_set_pre_jpeg_cb(pre_jpeg_draw_cb, NULL);
-        ESP_LOGI(TAG, "人脸检测就绪 (ESP-DL MSRMNP @ 1280x720, 默认关闭)");
+        ESP_LOGI(TAG, "人脸检测就绪 (ESP-DL MSRMNP @ 640x480, 默认关闭)");
     } else {
         ESP_LOGW(TAG, "人脸检测初始化失败 (%s)", esp_err_to_name(hd_err));
     }

@@ -7,6 +7,9 @@
 
 #include "imu_parser.h"
 #include <string.h>
+#include "esp_log.h"
+
+#define TAG_IMU "IMU-Parser"
 
 /* ── 常量 ────────────────────────────────────────────────── */
 
@@ -44,6 +47,10 @@ static struct {
     imu_data_t raw;        /* 最新原始解析数据 */
     imu_data_t filtered;   /* EMA 滤波后输出 */
     imu_data_ready_cb_t callback;
+    uint32_t frame_count;  /* 总帧计数 */
+    uint32_t type_count[8]; /* 各类型帧计数 */
+    bool     logged_press; /* 气压首帧日志 */
+    bool     logged_quat;  /* 四元数首帧日志 */
 } s_ctx;
 
 /* ── 辅助函数 ────────────────────────────────────────────── */
@@ -127,6 +134,11 @@ static void process_frame(void)
         s_ctx.raw.pressure = (float)(((uint32_t)d1 << 16) | (uint16_t)d0);
         s_ctx.raw.altitude = (float)(((uint32_t)d3 << 16) | (uint16_t)d2);
         upd = IMU_UPD_PRESS;
+        if (!s_ctx.logged_press) {
+            s_ctx.logged_press = true;
+            ESP_LOGI(TAG_IMU, "气压计首帧: p=%.0fPa alt=%.1fcm",
+                     (double)s_ctx.raw.pressure, (double)s_ctx.raw.altitude);
+        }
         break;
 
     case TYPE_QUAT:
@@ -135,6 +147,12 @@ static void process_frame(void)
         s_ctx.raw.quat_q2 = scale_i16(d2, 1.0f);
         s_ctx.raw.quat_q3 = scale_i16(d3, 1.0f);
         upd = IMU_UPD_QUAT;
+        if (!s_ctx.logged_quat) {
+            s_ctx.logged_quat = true;
+            ESP_LOGI(TAG_IMU, "四元数首帧: q0=%.4f q1=%.4f q2=%.4f q3=%.4f",
+                     (double)s_ctx.raw.quat_q0, (double)s_ctx.raw.quat_q1,
+                     (double)s_ctx.raw.quat_q2, (double)s_ctx.raw.quat_q3);
+        }
         break;
 
     default:
@@ -142,7 +160,10 @@ static void process_frame(void)
     }
 
     if (upd) {
-        s_ctx.raw.updated |= upd;
+        /* 类型计数 (用于诊断) */
+        s_ctx.frame_count++;
+        uint8_t ti = (type - 0x50 < 8) ? (type - 0x50) : 7;
+        s_ctx.type_count[ti]++;
 
         /* 仅对当前帧类型对应的字段进行 EMA 滤波 */
         switch (type) {
@@ -195,6 +216,12 @@ void imu_parser_init(imu_data_ready_cb_t cb)
 {
     memset(&s_ctx, 0, sizeof(s_ctx));
     s_ctx.callback = cb;
+    /* 该 IMU 型号无气压计/四元数传感器, 气压写死为标准大气压,
+     * 高度和四元数保持 0 (memset 默认值) */
+    s_ctx.raw.pressure       = 101325.0f;
+    s_ctx.filtered.pressure  = 101325.0f;
+    s_ctx.logged_press       = true;  /* 跳过首帧日志 */
+    s_ctx.logged_quat        = true;
 }
 
 void imu_parser_reset(void)
