@@ -25,7 +25,6 @@ ESP32-P4 WiFi AP "ESP32-Car" (192.168.4.1)
 | GPIO21 (U0RXD) | In | 电机驱动板 TX | UART 115200-8N1 | 接收四路编码器实时脉冲数据 |
 | GPIO7 (SDA) | Bi-dir | SC2336 摄像头 | I2C (SCCB) | 摄像头传感器寄存器配置 |
 | GPIO8 (SCL) | Out | SC2336 摄像头 | I2C (SCCB) | SCCB 串行同步时钟 |
-| GPIO10 | Out | 状态指示 LED | GPIO | ⚠️ 配置已就绪 (CONFIG_BLINK_GPIO=10)，代码待实现 |
 | GPIO14-19, 54 | Bi-dir | ESP32-C6 | SDIO 4-bit | 核心高带宽网络卸载数据总线 (40MHz) |
 | MIPI D0±/D1±/CLK± | In | SC2336 传感器 | MIPI-CSI 2-Lane | RAW10 差分信号接收 |
 | USB_OTG_DP,DM | Bi-dir | Wit-Motion IMU (CP2102) | USB 2.0 FS CDC | 虚拟串口 CDC 驱动 (0x10C4:0xEA60) |
@@ -360,7 +359,6 @@ build_esp.bat    # Windows CMD
 | `ESP_HOSTED_MEMPOOL_PREFER_SPIRAM` | y | mempool 优先 PSRAM |
 | `CAMERA_SC2336_MIPI_RAW10_640X480_50FPS` | y | 640×480 RAW10 50fps |
 | `ESP_VIDEO_ENABLE_ISP` | y | ISP 管线 |
-| `BLINK_GPIO` | 10 | LED 引脚 (⚠️ 代码待实现) |
 
 ## SDIO 引脚 (P4 ↔ C6)
 
@@ -430,8 +428,8 @@ UART/
 
 | 日期 | 变更 |
 |------|------|
-| 2026-07-08 | 📝 README 完整重写：性能实测数据、ESP-DL 人脸检测、APK、FreeRTOS 架构、AE 参数 |
-| 2026-07-05 | 🔧 IMU 气压/四元数修复 (发送配置命令启用输出) + 编码器减速比校准 3.5 |
+| 2026-07-08 | ✅ README 完整重写：性能实测数据、ESP-DL 人脸检测、APK、FreeRTOS 架构、AE 参数 |
+| 2026-07-05 | ✅ IMU 气压/四元数修复 (发送配置命令启用输出) + 编码器减速比校准 3.5 |
 | 2026-07-03 | ✅ ESP-DL MSRMNP 人脸检测 (替代帧差法) + 5 关键点 + 异步 3Hz + 分区表扩至 2.25MB |
 | 2026-06-27 | ✅ Web 全中文化 + mode 映射修复 + IMU 数据补全 (加速度/角速度/磁场/气压/四元数/温度) |
 | 2026-06-25 | ✅ Wit-Motion 10轴 IMU (USB CDC Host + EMA 滤波 + Web 倾角面板) + IDF v5.4→v5.5.4 |
