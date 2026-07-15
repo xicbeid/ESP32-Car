@@ -4,12 +4,13 @@ set(srcs "src/esp_video_buffer.c"
          "src/esp_video_mman.c"
          "src/esp_video_vfs.c"
          "src/esp_video.c"
-         "src/esp_video_cam.c")
+         "src/esp_video_cam.c"
+         "src/device/esp_video_device_common.c")
 
 set(include_dirs "include")
 set(priv_include_dirs "private_include")
 set(priv_requires "vfs")
-set(requires "esp_driver_cam" "esp_cam_sensor")
+set(requires "esp_driver_cam" "esp_cam_sensor" "lwip")
 
 if(CONFIG_IDF_TARGET_ESP32P4)
     if(CONFIG_ESP_VIDEO_ENABLE_SWAP_SHORT)
@@ -24,7 +25,7 @@ if(CONFIG_IDF_TARGET_ESP32P4)
 endif()
 
 if(CONFIG_ESP_VIDEO_ENABLE_MIPI_CSI_VIDEO_DEVICE)
-    list(APPEND srcs "src/device/esp_video_csi_device.c")
+    list(APPEND srcs "src/device/esp_video_csi_device.c" "src/device/esp_video_csi_format.c")
 endif()
 
 if(CONFIG_ESP_VIDEO_ENABLE_DVP_VIDEO_DEVICE)
@@ -43,8 +44,12 @@ if(CONFIG_ESP_VIDEO_ENABLE_H264_VIDEO_DEVICE)
     list(APPEND srcs "src/device/esp_video_h264_device.c")
 endif()
 
-if(CONFIG_ESP_VIDEO_ENABLE_JPEG_VIDEO_DEVICE)
-    list(APPEND srcs "src/device/esp_video_jpeg_device.c")
+if(CONFIG_ESP_VIDEO_ENABLE_JPEG_ENC_VIDEO_DEVICE)
+    list(APPEND srcs "src/device/esp_video_jpeg_enc_device.c")
+endif()
+
+if(CONFIG_ESP_VIDEO_ENABLE_JPEG_DEC_VIDEO_DEVICE)
+    list(APPEND srcs "src/device/esp_video_jpeg_dec_device.c")
 endif()
 
 if(CONFIG_ESP_VIDEO_ENABLE_ISP)
@@ -95,7 +100,7 @@ if(CONFIG_IDF_TARGET_ESP32P4)
     endif()
 endif()
 
-if(CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_VIDEO_DEVICE)
+if(CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_ENC_VIDEO_DEVICE OR CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_DEC_VIDEO_DEVICE)
     # Supply the header files to applications
     idf_component_optional_requires(PUBLIC "esp_driver_jpeg")
 endif()

@@ -437,3 +437,31 @@ UART/
 | 2026-06-16 | ✅ 双模式操控 (D-Pad 速度 + GO 位置) + MJPEG Port 81 独立 task |
 | 2026-06-14 | ✅ ISP RGB565 管线 + 软件 AE |
 | 2026-06-09 | ✅ 项目创建，基础 UART + WiFi + 摄像头架构 |
+
+## 2026-07-15: 人体检测 + 人脸识别升级
+
+### ✅ PicoDet 人体检测 (~14FPS)
+- **组件**: `components/body_detect/`
+- **模型**: `espressif/pedestrian_detect` v0.2.0 (224x224, ~550KB PSRAM, ~71ms 推理)
+- **特点**: 正面/侧面/背面都能检出，橙色框标记
+- **API**: `/ctrl?cmd=pedestrian&dist=1` 开启, `dist=0` 关闭
+- **状态**: `/status` JSON 新增 `pedestrian: {en, n}` 字段
+
+### ✅ 人脸识别 (NCC 模板匹配)
+- **组件**: `components/face_recog/`
+- **算法**: MSRMNP 检测 → 关键点对齐 → 112x112 灰度裁剪 → NCC 模板匹配
+- **数据库**: SPIFFS 存储, 每张人脸 12578 字节 (100人 < 1.2MB)
+- **优势**: 零额外模型, 零 Flash 开销, ~5ms/匹配
+- **API**:
+  - `/enroll?name=xxx` — 录入当前帧人脸
+  - `/faces` — 列出已注册人脸 `{faces: [{id, name}], count}`
+  - `/faces?del=N` — 删除
+  - `/recognize?en=1|0` — 识别开关
+- **状态**: `/status` JSON 新增 `recognize: {en, db, n}` 字段
+
+### 构建
+```bash
+cd F:/project_ESP32_p4/UART
+python build.py build    # 编译 (固件 ~2.6MB, 4MB factory分区)
+python build.py flash    # 烧录
+```

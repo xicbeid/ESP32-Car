@@ -92,6 +92,19 @@ void human_detect_feed_frame(const uint8_t *rgb565, int w, int h, int stride);
  */
 void human_detect_draw_boxes(uint8_t *rgb565, int w, int h, int stride);
 
+/**
+ * @brief 获取内部 C++ 检测器指针 (供 face_recognition 使用)
+ */
+void *human_detect_get_detector(void);
+
+/**
+ * @brief 获取最新快照缓冲 (供 face_recognition 录入使用)
+ * @param w  出参: 快照宽度
+ * @param h  出参: 快照高度
+ * @return 快照 RGB565 缓冲指针 (可能为 NULL)
+ */
+const uint8_t *human_detect_get_snapshot(int *w, int *h);
+
 #ifdef __cplusplus
 }
 #endif

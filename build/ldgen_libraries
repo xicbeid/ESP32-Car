@@ -196,6 +196,12 @@ F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_jpeg/libespressif__esp_jpe
 F:/project_ESP32_p4/UART/build/esp-idf/esp_driver_ppa/libesp_driver_ppa.a
 F:/project_ESP32_p4/UART/build/esp-idf/human_detect/libhuman_detect.a
 F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp-dl/libespressif__esp-dl.a
+F:/project_ESP32_p4/UART/build/esp-idf/espressif__pedestrian_detect/libespressif__pedestrian_detect.a
+F:/project_ESP32_p4/UART/build/esp-idf/body_detect/libbody_detect.a
+F:/project_ESP32_p4/UART/build/esp-idf/espressif__pedestrian_detect/libespressif__pedestrian_detect.a
+F:/project_ESP32_p4/UART/build/esp-idf/face_recog/libface_recog.a
+F:/project_ESP32_p4/UART/build/esp-idf/spiffs/libspiffs.a
+F:/project_ESP32_p4/UART/build/esp-idf/human_detect/libhuman_detect.a
 F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_hosted/libespressif__esp_hosted.a
 F:/project_ESP32_p4/UART/build/esp-idf/espressif__esp_serial_slave_link/libespressif__esp_serial_slave_link.a
 F:/project_ESP32_p4/UART/build/esp-idf/espressif__eppp_link/libespressif__eppp_link.a
@@ -204,4 +210,5 @@ F:/project_ESP32_p4/UART/build/esp-idf/main/libmain.a
 F:/project_ESP32_p4/UART/build/esp-idf/wifi_module/libwifi_module.a
 F:/project_ESP32_p4/UART/build/esp-idf/camera_module/libcamera_module.a
 F:/project_ESP32_p4/UART/build/esp-idf/imu_usb/libimu_usb.a
-F:/project_ESP32_p4/UART/build/esp-idf/human_detect/libhuman_detect.a
+F:/project_ESP32_p4/UART/build/esp-idf/body_detect/libbody_detect.a
+F:/project_ESP32_p4/UART/build/esp-idf/face_recog/libface_recog.a

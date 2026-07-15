@@ -37,6 +37,8 @@
 #endif
 
 #if ESP_VIDEO_ENABLE_SCCB_DEVICE
+#include "esp_video_device_common.h"
+
 typedef esp_err_t (*esp_video_create_device_fn_t)(esp_cam_sensor_device_t *cam, void *priv);
 typedef esp_err_t (*esp_video_init_clk_fn_t)(void *priv);
 typedef esp_err_t (*esp_video_deinit_clk_fn_t)(void *priv);
@@ -118,7 +120,8 @@ static SemaphoreHandle_t s_usb_uvc_sem;
 
 #if CONFIG_ESP_VIDEO_ENABLE_DVP_VIDEO_DEVICE || \
     CONFIG_ESP_VIDEO_ENABLE_HW_H264_VIDEO_DEVICE || \
-    CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_VIDEO_DEVICE || \
+    CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_ENC_VIDEO_DEVICE || \
+    CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_DEC_VIDEO_DEVICE || \
     CONFIG_ESP_VIDEO_ENABLE_ISP_VIDEO_DEVICE || \
     CONFIG_ESP_VIDEO_ENABLE_MIPI_CSI_VIDEO_DEVICE || \
     CONFIG_ESP_VIDEO_ENABLE_SPI_VIDEO_DEVICE || \
@@ -271,6 +274,11 @@ static esp_err_t esp_video_init_sensor_and_video_device(const video_device_init_
             ESP_LOGE(TAG, "Failed to detect camera sensor with address=%x", config->sensor_cfg.detect->sccb_addr);
             goto fail_2;
         }
+
+        /**
+         * Set default format to the camera sensor to avoid multiple setting in the video device.
+         */
+        ESP_GOTO_ON_ERROR(esp_cam_sensor_set_format(cam_dev, NULL), fail_3, TAG, "Failed to set camera sensor format");
     }
 
     ESP_GOTO_ON_ERROR(config->create_func(cam_dev, config->create_priv), fail_3, TAG, "Failed to initialize video device %p", config->create_func);
@@ -414,12 +422,20 @@ static esp_err_t destroy_spi_video_device(void)
     esp_err_t ret = ESP_OK;
 
     for (int i = 0; i < ESP_VIDEO_SPI_DEVICE_NUM; i++) {
-        esp_cam_sensor_device_t *cam_dev = esp_video_get_spi_video_device_sensor(i);
-        if (!cam_dev) {
+        esp_video_cam_t cam;
+        const char *name = i == 0 ? ESP_VIDEO_SPI_DEVICE_0_NAME : ESP_VIDEO_SPI_DEVICE_1_NAME;
+
+        ret = esp_video_device_common_get_video_cam(name, &cam);
+        if (ret != ESP_OK) {
             continue;
         }
-        ESP_RETURN_ON_ERROR(esp_sccb_del_i2c_io(cam_dev->sccb_handle), TAG, "Failed to delete SCCB device");
-        ESP_RETURN_ON_ERROR(destroy_cam_device(cam_dev), TAG, "Failed to delete SPI sensor");
+
+        if (cam.sensor == NULL) {
+            continue;
+        }
+
+        ESP_RETURN_ON_ERROR(esp_sccb_del_i2c_io(cam.sensor->sccb_handle), TAG, "Failed to delete SCCB device");
+        ESP_RETURN_ON_ERROR(destroy_cam_device(cam.sensor), TAG, "Failed to delete SPI sensor");
         ESP_RETURN_ON_ERROR(esp_video_destroy_spi_video_device(i), TAG, "Failed to destroy SPI video device");
     }
 
@@ -449,7 +465,10 @@ static esp_err_t create_csi_video_device(esp_cam_sensor_device_t *cam, void *pri
     if (config->cam_motor) {
         const esp_video_init_cam_motor_config_t *cm = config->cam_motor;
 
-        for (esp_cam_motor_detect_fn_t *p = &__esp_cam_motor_detect_fn_array_start; p < &__esp_cam_motor_detect_fn_array_end; p++) {
+        esp_cam_motor_detect_fn_t *array_start = NULL;
+        esp_cam_motor_detect_fn_t *array_end = NULL;
+        esp_cam_motor_detect_get_array(&array_start, &array_end);
+        for (esp_cam_motor_detect_fn_t *p = array_start; p < array_end; p++) {
             video_device_init_config_t motor_init_config = {
                 .is_motor = true,
                 .sccb_config = &cm->sccb_config,
@@ -490,7 +509,11 @@ static esp_err_t create_csi_video_device(esp_cam_sensor_device_t *cam, void *pri
             if (ret != ESP_OK) {
 #if CONFIG_ESP_VIDEO_ENABLE_CAMERA_MOTOR_CONTROLLER
                 if (motor_inited) {
-                    esp_cam_motor_device_t *motor_dev = esp_video_get_csi_video_device_motor();
+                    esp_video_cam_t video_cam;
+                    ESP_RETURN_ON_ERROR(esp_video_device_common_get_video_cam(CSI_NAME, &video_cam), TAG, "Failed to get CSI video device camera");
+
+                    esp_cam_motor_device_t *motor_dev = video_cam.motor;
+                    ESP_RETURN_ON_FALSE(motor_dev, ESP_ERR_INVALID_STATE, TAG, "CSI motor is not initialized");
                     esp_sccb_io_handle_t sccb_handle = motor_dev->sccb_handle;
                     esp_err_t motor_ret = esp_cam_motor_del_dev(motor_dev);
                     if (motor_ret != ESP_OK) {
@@ -529,14 +552,20 @@ static esp_err_t destroy_csi_video_device(void)
     }
 #endif
 
-    esp_cam_sensor_device_t *cam_dev = esp_video_get_csi_video_device_sensor();
-    ESP_RETURN_ON_FALSE(cam_dev, ESP_ERR_INVALID_STATE, TAG, "CSI video device has no camera sensor");
-    ESP_RETURN_ON_ERROR(esp_sccb_del_i2c_io(cam_dev->sccb_handle), TAG, "Failed to delete SCCB device");
-    ESP_RETURN_ON_ERROR(destroy_cam_device(cam_dev), TAG, "Failed to delete CSI sensor");
+    esp_video_cam_t cam;
+    ESP_RETURN_ON_ERROR(esp_video_device_common_get_video_cam(CSI_NAME, &cam), TAG, "Failed to get CSI video device camera");
+    ESP_RETURN_ON_FALSE(cam.sensor, ESP_ERR_INVALID_STATE, TAG, "CSI sensor is NULL");
+    ESP_RETURN_ON_ERROR(esp_sccb_del_i2c_io(cam.sensor->sccb_handle), TAG, "Failed to delete SCCB device");
+    ESP_RETURN_ON_ERROR(destroy_cam_device(cam.sensor), TAG, "Failed to delete CSI sensor");
 
 #if CONFIG_ESP_VIDEO_ENABLE_CAMERA_MOTOR_CONTROLLER
     if (s_video_device_inited_flags & ESP_VIDEO_INIT_FLAGS_MOTOR) {
-        ESP_RETURN_ON_ERROR(esp_cam_motor_del_dev(esp_video_get_csi_video_device_motor()), TAG, "Failed to delete CSI motor");
+        /**
+         * Motor uses the same I2C bus as the CSI sensor.
+         */
+        ESP_RETURN_ON_FALSE(cam.motor, ESP_ERR_INVALID_STATE, TAG, "CSI motor is not initialized");
+        ESP_RETURN_ON_ERROR(esp_sccb_del_i2c_io(cam.motor->sccb_handle), TAG, "Failed to delete SCCB device");
+        ESP_RETURN_ON_ERROR(esp_cam_motor_del_dev(cam.motor), TAG, "Failed to delete CSI motor");
         s_video_device_inited_flags &= ~ESP_VIDEO_INIT_FLAGS_MOTOR;
     }
 #endif /* CONFIG_ESP_VIDEO_ENABLE_CAMERA_MOTOR_CONTROLLER */
@@ -581,11 +610,13 @@ static esp_err_t create_dvp_video_device(esp_cam_sensor_device_t *cam, void *pri
 
 static esp_err_t destroy_dvp_video_device(void)
 {
+    esp_video_cam_t cam;
     int dvp_ctlr_id = 0;
-    esp_cam_sensor_device_t *cam_dev = esp_video_get_dvp_video_device_sensor();
-    ESP_RETURN_ON_FALSE(cam_dev, ESP_ERR_INVALID_STATE, TAG, "DVP video device has no camera sensor");
-    ESP_RETURN_ON_ERROR(esp_sccb_del_i2c_io(cam_dev->sccb_handle), TAG, "Failed to delete SCCB device");
-    ESP_RETURN_ON_ERROR(destroy_cam_device(cam_dev), TAG, "Failed to delete DVP sensor");
+
+    ESP_RETURN_ON_ERROR(esp_video_device_common_get_video_cam(DVP_NAME, &cam), TAG, "Failed to get DVP video device camera");
+    ESP_RETURN_ON_FALSE(cam.sensor, ESP_ERR_INVALID_STATE, TAG, "DVP sensor is NULL");
+    ESP_RETURN_ON_ERROR(esp_sccb_del_i2c_io(cam.sensor->sccb_handle), TAG, "Failed to delete SCCB device");
+    ESP_RETURN_ON_ERROR(destroy_cam_device(cam.sensor), TAG, "Failed to delete DVP sensor");
     ESP_RETURN_ON_ERROR(esp_video_destroy_dvp_video_device(), TAG, "Failed to destroy DVP video device");
     ESP_RETURN_ON_ERROR(esp_cam_ctlr_dvp_deinit(dvp_ctlr_id), TAG, "Failed to deinit DVP port");
 
@@ -708,13 +739,24 @@ esp_err_t esp_video_deinit_with_flags(uint32_t flags)
 
     _lock_acquire_recursive(&s_init_lock);
 
-#if CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_VIDEO_DEVICE
-    if (flags & ESP_VIDEO_INIT_FLAGS_JPEG) {
-        if (s_video_device_inited_flags & ESP_VIDEO_INIT_FLAGS_JPEG) {
-            ESP_GOTO_ON_ERROR(esp_video_destroy_jpeg_video_device(), fail0, TAG, "Failed to deinitialize hardware JPEG video device");
-            s_video_device_inited_flags &= ~ESP_VIDEO_INIT_FLAGS_JPEG;
+#if CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_ENC_VIDEO_DEVICE
+    if (flags & ESP_VIDEO_INIT_FLAGS_JPEG_ENC) {
+        if (s_video_device_inited_flags & ESP_VIDEO_INIT_FLAGS_JPEG_ENC) {
+            ESP_GOTO_ON_ERROR(esp_video_destroy_jpeg_enc_video_device(), fail0, TAG, "Failed to deinitialize hardware JPEG video device");
+            s_video_device_inited_flags &= ~ESP_VIDEO_INIT_FLAGS_JPEG_ENC;
         } else {
             ESP_LOGD(TAG, "hardware JPEG video device is not initialized");
+        }
+    }
+#endif
+
+#if CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_DEC_VIDEO_DEVICE
+    if (flags & ESP_VIDEO_INIT_FLAGS_JPEG_DEC) {
+        if (s_video_device_inited_flags & ESP_VIDEO_INIT_FLAGS_JPEG_DEC) {
+            ESP_GOTO_ON_ERROR(esp_video_destroy_jpeg_dec_video_device(), fail0, TAG, "Failed to deinitialize hardware JPEG decode video device");
+            s_video_device_inited_flags &= ~ESP_VIDEO_INIT_FLAGS_JPEG_DEC;
+        } else {
+            ESP_LOGD(TAG, "hardware JPEG decode video device is not initialized");
         }
     }
 #endif
@@ -790,7 +832,8 @@ esp_err_t esp_video_deinit_with_flags(uint32_t flags)
     }
 #endif
 
-#if CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_VIDEO_DEVICE || \
+#if CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_ENC_VIDEO_DEVICE || \
+    CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_DEC_VIDEO_DEVICE || \
     CONFIG_ESP_VIDEO_ENABLE_HW_H264_VIDEO_DEVICE || \
     CONFIG_ESP_VIDEO_ENABLE_MIPI_CSI_VIDEO_DEVICE || \
     CONFIG_ESP_VIDEO_ENABLE_DVP_VIDEO_DEVICE || \
@@ -862,15 +905,21 @@ esp_err_t esp_video_init_with_flags(const esp_video_init_config_t *config, uint3
 #if CONFIG_ESP_VIDEO_ENABLE_USB_UVC_VIDEO_DEVICE
     if (flags & ESP_VIDEO_INIT_FLAGS_USB_UVC) {
         if (!(s_video_device_inited_flags & ESP_VIDEO_INIT_FLAGS_USB_UVC)) {
-            ESP_GOTO_ON_ERROR(create_usb_uvc_video_device(config->usb_uvc), fail1, TAG, "Failed to create USB UVC video device");
-            s_video_device_inited_flags |= ESP_VIDEO_INIT_FLAGS_USB_UVC;
+            if (config->usb_uvc) {
+                ESP_GOTO_ON_ERROR(create_usb_uvc_video_device(config->usb_uvc), fail1, TAG, "Failed to create USB UVC video device");
+                s_video_device_inited_flags |= ESP_VIDEO_INIT_FLAGS_USB_UVC;
+            }
         } else {
             ESP_LOGW(TAG, "USB UVC video device is already initialized");
         }
     }
 #endif
 
-    for (esp_cam_sensor_detect_fn_t *p = &__esp_cam_sensor_detect_fn_array_start; p < &__esp_cam_sensor_detect_fn_array_end; ++p) {
+    esp_cam_sensor_detect_fn_t *array_start = NULL;
+    esp_cam_sensor_detect_fn_t *array_end = NULL;
+    esp_cam_sensor_detect_get_array(&array_start, &array_end);
+
+    for (esp_cam_sensor_detect_fn_t *p = array_start; p < array_end; ++p) {
 #if CONFIG_ESP_VIDEO_ENABLE_MIPI_CSI_VIDEO_DEVICE
         if (flags & ESP_VIDEO_INIT_FLAGS_MIPI_CSI) {
             if (!(s_video_device_inited_flags & ESP_VIDEO_INIT_FLAGS_MIPI_CSI) && p->port == ESP_CAM_SENSOR_MIPI_CSI && config->csi != NULL) {
@@ -993,15 +1042,28 @@ esp_err_t esp_video_init_with_flags(const esp_video_init_config_t *config, uint3
     }
 #endif
 
-#if CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_VIDEO_DEVICE
-    if (flags & ESP_VIDEO_INIT_FLAGS_JPEG) {
-        if (!(s_video_device_inited_flags & ESP_VIDEO_INIT_FLAGS_JPEG)) {
-            jpeg_encoder_handle_t handle = config->jpeg ? config->jpeg->enc_handle : NULL;
+#if CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_ENC_VIDEO_DEVICE
+    if (flags & ESP_VIDEO_INIT_FLAGS_JPEG_ENC) {
+        if (!(s_video_device_inited_flags & ESP_VIDEO_INIT_FLAGS_JPEG_ENC)) {
+            jpeg_encoder_handle_t handle = config->jpeg_enc ? config->jpeg_enc->enc_handle : NULL;
 
-            ESP_GOTO_ON_ERROR(esp_video_create_jpeg_video_device(handle), fail1, TAG, "Failed to create hardware JPEG video device");
-            s_video_device_inited_flags |= ESP_VIDEO_INIT_FLAGS_JPEG;
+            ESP_GOTO_ON_ERROR(esp_video_create_jpeg_enc_video_device(handle), fail1, TAG, "Failed to create hardware JPEG video device");
+            s_video_device_inited_flags |= ESP_VIDEO_INIT_FLAGS_JPEG_ENC;
         } else {
             ESP_LOGW(TAG, "JPEG video device is already initialized");
+        }
+    }
+#endif
+
+#if CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_DEC_VIDEO_DEVICE
+    if (flags & ESP_VIDEO_INIT_FLAGS_JPEG_DEC) {
+        if (!(s_video_device_inited_flags & ESP_VIDEO_INIT_FLAGS_JPEG_DEC)) {
+            jpeg_decoder_handle_t handle = config->jpeg_dec ? config->jpeg_dec->dec_handle : NULL;
+
+            ESP_GOTO_ON_ERROR(esp_video_create_jpeg_dec_video_device(handle), fail1, TAG, "Failed to create hardware JPEG decode video device");
+            s_video_device_inited_flags |= ESP_VIDEO_INIT_FLAGS_JPEG_DEC;
+        } else {
+            ESP_LOGW(TAG, "JPEG decode video device is already initialized");
         }
     }
 #endif
@@ -1014,7 +1076,8 @@ esp_err_t esp_video_init_with_flags(const esp_video_init_config_t *config, uint3
     CONFIG_ESP_VIDEO_ENABLE_DVP_VIDEO_DEVICE || \
     CONFIG_ESP_VIDEO_ENABLE_SPI_VIDEO_DEVICE || \
     CONFIG_ESP_VIDEO_ENABLE_HW_H264_VIDEO_DEVICE || \
-    CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_VIDEO_DEVICE
+    CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_ENC_VIDEO_DEVICE || \
+    CONFIG_ESP_VIDEO_ENABLE_HW_JPEG_DEC_VIDEO_DEVICE
 fail1:
     esp_video_deinit_with_flags(s_video_device_inited_flags);
 #endif

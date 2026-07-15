@@ -247,12 +247,12 @@ static const esp_ipa_awb_zone_t s_ipa_awb_SC2336_zones[] = {
     { .type = ESP_IPA_AWB_ZONE_HCT, .rg_min = 0.480000f, .rg_max = 0.580000f, .bg_min = 0.590000f, .bg_max = 0.630000f, .enabled = true },
     { .type = ESP_IPA_AWB_ZONE_MCT, .rg_min = 0.550000f, .rg_max = 0.680000f, .bg_min = 0.520000f, .bg_max = 0.590000f, .enabled = true },
     { .type = ESP_IPA_AWB_ZONE_LCT, .rg_min = 0.650000f, .rg_max = 0.820000f, .bg_min = 0.400000f, .bg_max = 0.520000f, .enabled = true },
-    { .type = ESP_IPA_AWB_ZONE_ULCT, .rg_min = 0.820000f, .rg_max = 1.050000f, .bg_min = 0.220000f, .bg_max = 0.400000f, .enabled = true },
+    { .type = ESP_IPA_AWB_ZONE_ULCT, .rg_min = 0.820000f, .rg_max = 1.050000f, .bg_min = 0.220000f, .bg_max = 0.400000f, .enabled = false },
 };
 static const esp_ipa_awb_ct_point_t s_ipa_awb_SC2336_ref_points[] = {
     { .ct = 2567, .rg = 0.977800f, .bg = 0.283400f, .radius = 0.020000f },
-    { .ct = 3673, .rg = 0.759800f, .bg = 0.449600f, .radius = 0.010000f },
-    { .ct = 3946, .rg = 0.723000f, .bg = 0.472900f, .radius = 0.010000f },
+    { .ct = 3673, .rg = 0.759800f, .bg = 0.449600f, .radius = 0.020000f },
+    { .ct = 3946, .rg = 0.723000f, .bg = 0.472900f, .radius = 0.020000f },
     { .ct = 4377, .rg = 0.675300f, .bg = 0.508100f, .radius = 0.030000f },
     { .ct = 4862, .rg = 0.630800f, .bg = 0.541600f, .radius = 0.040000f },
     { .ct = 5625, .rg = 0.573600f, .bg = 0.581400f, .radius = 0.040000f },
@@ -263,14 +263,14 @@ static const esp_ipa_awb_ct_point_t s_ipa_awb_SC2336_ref_points[] = {
 };
 static const esp_ipa_awb_config_t s_ipa_awb_SC2336_config = {
     .model = ESP_IPA_AWB_MODEL_2,
-    .min_counted = 1200,
+    .min_counted = 10,
     .min_red_gain_step = 0.05,
     .min_blue_gain_step = 0.05,
-    .red_gain_scale = 1.000000f,
-    .blue_gain_scale = 1.000000f,
+    .red_gain_scale = 1.100000f,
+    .blue_gain_scale = 1.100000f,
     .range = {
         .green_max = 208,
-        .green_min = 98,
+        .green_min = 18,
         .rg_max = 0.97,
         .rg_min = 0.32,
         .bg_max = 0.8,

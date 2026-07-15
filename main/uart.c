@@ -26,6 +26,8 @@
 #include "camera_module.h"
 #include "imu_usb.h"
 #include "human_detect.h"
+#include "body_detect.h"
+#include "face_recog.h"
 
 #define delay_ms(ms) vTaskDelay(pdMS_TO_TICKS(ms))
 
@@ -229,6 +231,8 @@ static void motor_task(void *arg)
 }
 
 /* ── 电机控制回调 (来自 HTTP) ── */
+volatile bool g_recogn_enabled = false;
+
 static void motor_control_callback(motor_cmd_t cmd, int distance_cm, int speed)
 {
     if (cmd == MOTOR_CMD_STOP) {
@@ -293,6 +297,29 @@ static void motor_control_callback(motor_cmd_t cmd, int distance_cm, int speed)
             g_position_active = false;
             ESP_LOGW(TAG, "电机队列满，强制停车");
         }
+        return;
+    }
+
+    /* ── 人体检测 / 人脸识别 开关 ── */
+    if (cmd == MOTOR_CMD_PEDESTRIAN) {
+        pedestrian_detect_set_enabled(distance_cm ? true : false);
+        ESP_LOGI(TAG, "人体检测: %s", distance_cm ? "开" : "关");
+        return;
+    }
+    if (cmd == MOTOR_CMD_RECOGNIZE) {
+        g_recogn_enabled = (distance_cm ? true : false);
+        face_recognition_set_enabled(g_recogn_enabled);
+        ESP_LOGI(TAG, "人脸识别: %s", g_recogn_enabled ? "开" : "关");
+        return;
+    }
+    if (cmd == MOTOR_CMD_ENROLL) {
+        /* 异步录入: 设置 flag, 下一次识别人脸时自动录入 */
+        ESP_LOGI(TAG, "录入人脸请求 (通过 /enroll API 处理)");
+        return;
+    }
+    if (cmd == MOTOR_CMD_DELETE_FACE) {
+        face_recognition_delete((uint16_t)speed);
+        ESP_LOGI(TAG, "删除人脸 id=%d", speed);
         return;
     }
 
@@ -374,12 +401,50 @@ static void encoder_monitor_task(void *arg)
     }
 }
 
-/* ── 人脸检测 pre-JPEG 回调 (在摄像头任务上下文中调用) ── */
+/* ── 人脸检测 + 人体检测 pre-JPEG 回调 ── */
 static void pre_jpeg_draw_cb(uint8_t *rgb565, int w, int h, int stride, void *ctx)
 {
     human_detect_feed_frame(rgb565, w, h, stride);
     human_detect_draw_boxes(rgb565, w, h, stride);
+    pedestrian_detect_feed_frame(rgb565, w, h, stride);
+    pedestrian_detect_draw_boxes(rgb565, w, h, stride);
     (void)ctx;
+}
+
+/* ── 人脸识别异步任务 (低优先级) ── */
+
+static void recogn_task(void *arg)
+{
+    while (1) {
+        delay_ms(500);  /* 2Hz 识别频率 */
+
+        if (!g_recogn_enabled) continue;
+        if (!human_detect_is_enabled()) continue;
+
+        hd_result_t det = human_detect_get_results();
+        if (det.count == 0) continue;
+
+        /* 获取快照进行识别 */
+        int snap_w, snap_h;
+        const uint8_t *snap = human_detect_get_snapshot(&snap_w, &snap_h);
+        if (!snap) continue;
+
+        /* 构建 boxes 数组 */
+        int boxes[HD_MAX_BOXES][4];
+        float scores[HD_MAX_BOXES];
+        int n = 0;
+        for (int i = 0; i < det.count && i < HD_MAX_BOXES; i++) {
+            boxes[i][0] = det.boxes[i].x;
+            boxes[i][1] = det.boxes[i].y;
+            boxes[i][2] = det.boxes[i].w;
+            boxes[i][3] = det.boxes[i].h;
+            scores[i]   = det.boxes[i].score;
+            n++;
+        }
+
+        face_recognition_recognize_async(snap, snap_w, snap_h, snap_w * 2,
+                                          boxes, scores, n);
+    }
 }
 
 /* ── 主函数 ── */
@@ -422,6 +487,25 @@ void app_main(void)
         ESP_LOGI(TAG, "人脸检测就绪 (ESP-DL MSRMNP @ 640x480, 默认关闭)");
     } else {
         ESP_LOGW(TAG, "人脸检测初始化失败 (%s)", esp_err_to_name(hd_err));
+    }
+
+    /* 2.6 人体检测 — PicoDet 行人检测 (默认关闭) */
+    ESP_LOGI(TAG, "正在初始化人体检测 (PicoDet)...");
+    esp_err_t pd_err = pedestrian_detect_init(cam_w, cam_h);
+    if (pd_err == ESP_OK) {
+        ESP_LOGI(TAG, "人体检测就绪 (PicoDet @ 640x480)");
+    } else {
+        ESP_LOGW(TAG, "人体检测初始化失败 (%s)", esp_err_to_name(pd_err));
+    }
+
+    /* 2.7 人脸识别 — MobileFaceNet + SPIFFS (默认关闭) */
+    ESP_LOGI(TAG, "正在初始化人脸识别 (MobileFaceNet)...");
+    esp_err_t fr_err = face_recognition_init("storage", "/spiffs", "/spiffs/face.db");
+    if (fr_err == ESP_OK) {
+        xTaskCreate(recogn_task, "RecognTask", 16384, NULL, tskIDLE_PRIORITY + 2, NULL);
+        ESP_LOGI(TAG, "人脸识别就绪 (DB: %d faces)", face_recognition_count());
+    } else {
+        ESP_LOGW(TAG, "人脸识别初始化失败 (%s)", esp_err_to_name(fr_err));
     }
 
     /* 3. 电机初始化 — UART0 重新初始化 (拆除控制台 UART，安装带接收队列的驱动) */

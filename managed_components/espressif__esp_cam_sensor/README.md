@@ -1,5 +1,9 @@
 # Espressif Camera Sensors Component
 
+[![alt text][doc-latest]](https://docs.espressif.com/projects/esp-video-components/en/latest/esp32p4/index.html)
+
+[doc-latest]: https://img.shields.io/badge/docs-latest-blue
+
 This component provides drivers for camera sensors that can be used on the ESP32 series chips.  
 
 It is highly recommended that users use it in the [esp-video](https://github.com/espressif/esp-video-components/tree/master/esp_video) component.
@@ -43,11 +47,13 @@ It is highly recommended that users use it in the [esp-video](https://github.com
 | OV5645  | 2592 x 1944    | MIPI      | 8/10-bit Raw RGB data<br/>RGB565<br/>YUV/YCbCr422<br/>YUV420 | 1/4"     |
 | OV5647  | 2592 x 1944    | MIPI & DVP      | 8/10-bit Raw RGB data | 1/4"     |
 | OV9281  | 1280 x 720    | MIPI      | 8-bit Raw MONO data | 1/4"     |
-| SC030IOT  | 640 x 480    | DVP | YCbCr422<br/>8bit Raw RGB data | 1/6.5"     |
+| SC030IOT  | 640 x 480    | MIPI & DVP | YCbCr422<br/>8bit Raw RGB data | 1/6.5"     |
 | SC035HGS  | 640 x 480    | MIPI & DVP | Raw MONO<br/>Raw RGB data | 1/6"     |
 | SC101IOT  | 1280 x 720    | DVP | YCbCr422<br/>8/10-bit Raw RGB data | 1/4.2"     |
 | SC202CS(SC2356) | 1600 x 1200    | MIPI      | 8/10-bit Raw RGB data | 1/5.1"     |
+| SC1346  | 1280 x 720    | MIPI      | 8/10-bit Raw RGB data | 1/4.5"     |
 | SC2336  | 1920 x 1080    | MIPI & DVP      | 8/10-bit Raw RGB data | 1/3"     |
+| SC121AT | 1304 x 984    | MIPI | YCbCr422 | 1/3.75"     |
 | SP0A39  | 640 x 480    | SPI & DVP      | YCbCr422<br/>Grayscale | 1/10"     |
 | STI2250 | 800 x 600    | MIPI | 8/10-bit Raw Mono data | 1/5"     |
 | Arducam IMX500 | 1920 x 1080 | MIPI | Special module, parameters must be read from Arducam IMX500 Camera | custom |
@@ -201,6 +207,37 @@ ESP_CAM_SENSOR_DETECT_FN(sc2336_detect, ESP_CAM_SENSOR_DVP, SC2336_SCCB_ADDR)
     ((esp_cam_sensor_config_t *)config)->sensor_port = ESP_CAM_SENSOR_DVP;
     return sc2336_detect(config);
 }
+```
+
+Register in `src/esp_cam_sensor_detect.c`:
+
+1. `#include` sensor header.
+2. `ESP_CAM_SENSOR_DETECT_DECLARE` per enabled interface.
+3. `ESP_CAM_SENSOR_DETECT_ENTRY` in `__esp_cam_sensor_detect_fn_array_start[]`.
+
+Example (SC2336):
+
+```c
+#if CONFIG_CAMERA_SC2336
+#include "sc2336.h"
+#endif
+
+#if CONFIG_CAMERA_SC2336_AUTO_DETECT_MIPI_INTERFACE_SENSOR
+ESP_CAM_SENSOR_DETECT_DECLARE(sc2336_detect, ESP_CAM_SENSOR_MIPI_CSI);
+#endif
+#if CONFIG_CAMERA_SC2336_AUTO_DETECT_DVP_INTERFACE_SENSOR
+ESP_CAM_SENSOR_DETECT_DECLARE(sc2336_detect, ESP_CAM_SENSOR_DVP);
+#endif
+
+static const esp_cam_sensor_detect_fn_t __esp_cam_sensor_detect_fn_array_start[] = {
+    /* ... other sensors ... */
+#if CONFIG_CAMERA_SC2336_AUTO_DETECT_MIPI_INTERFACE_SENSOR
+    ESP_CAM_SENSOR_DETECT_ENTRY(sc2336_detect, ESP_CAM_SENSOR_MIPI_CSI, SC2336_SCCB_ADDR),
+#endif
+#if CONFIG_CAMERA_SC2336_AUTO_DETECT_DVP_INTERFACE_SENSOR
+    ESP_CAM_SENSOR_DETECT_ENTRY(sc2336_detect, ESP_CAM_SENSOR_DVP, SC2336_SCCB_ADDR),
+#endif
+};
 ```
 
 #### Update compilation files and documentation

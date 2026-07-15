@@ -1,3 +1,17 @@
+## 2.2.0~1
+
+- Fix `Failed to resolve component 'esp_ipa'` at configure time for component-registry consumers (namespaced `espressif__esp_ipa`): route the prebuilt's component-lib dependency through the `${COMPONENT_LIB}` target instead of the component name.
+
+## 2.2.0
+
+- Added information about the document system to README.md.
+- Fixed linking issue on the Arduino platform.
+    - Added `libesp_ipa_newlib.a` to support builds using the Newlib C library.
+- Added a static linking method that prevents unused functions from being included in the final firmware, reducing its size.
+- ACC CCM: optional `gain_lut` blends the CT-selected CCM toward identity by sensor gain: `output = (1-s)*I + s*ccm`, where `s` is linearly interpolated from the LUT (`enable` + `table` with `gain` / `strength`)
+- AGC: fix exposure and gain not being updated when average luma is zero
+- IAN: fix `env.luma.avg` stuck at zero in very dark scenes
+
 ## 2.1.0
 
 - AGC: optional JSON `agc.gain.max` maps to `esp_ipa_agc_config_t::max_gain`; when greater than zero, clamps the gain chosen by AGC after applying the sensor `min_gain` / `max_gain` limits; zero keeps previous behaviour (no extra cap)

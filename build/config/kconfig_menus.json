@@ -40875,11 +40875,11 @@
                                                     {
                                                         "children": [],
                                                         "depends_on": "CAMERA_OV3660",
-                                                        "help": "JPEG format at 1280x720 resolution (HD) with 12fps framerate.\nRequires 8-bit DVP interface and 10MHz input clock.",
-                                                        "id": "CAMERA_OV3660_DVP_JPEG_1280X720_12FPS",
-                                                        "name": "CAMERA_OV3660_DVP_JPEG_1280X720_12FPS",
+                                                        "help": "YUV422(YUYV) color format at 240x240 resolution with 24fps framerate.\nRequires 8-bit DVP interface and 20MHz input clock.",
+                                                        "id": "CAMERA_OV3660_DVP_YUV422_YUYV_240X240_24FPS",
+                                                        "name": "CAMERA_OV3660_DVP_YUV422_YUYV_240X240_24FPS",
                                                         "range": null,
-                                                        "title": "DVP 8-bit, 10M input, 1280x720  12fps, JPEG",
+                                                        "title": "DVP 8-bit, 20M input,  240x240  24fps, YUV422(YUYV)",
                                                         "type": "bool"
                                                     },
                                                     {
@@ -40895,6 +40895,36 @@
                                                     {
                                                         "children": [],
                                                         "depends_on": "CAMERA_OV3660",
+                                                        "help": "JPEG format at 240x240 resolution with 30fps framerate.\nRequires 8-bit DVP interface and 20MHz input clock.",
+                                                        "id": "CAMERA_OV3660_DVP_JPEG_240X240_30FPS",
+                                                        "name": "CAMERA_OV3660_DVP_JPEG_240X240_30FPS",
+                                                        "range": null,
+                                                        "title": "DVP 8-bit, 20M input,  240x240  30fps, JPEG",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_OV3660",
+                                                        "help": "JPEG format at 320x240 resolution (QVGA) with 25fps framerate.\nRequires 8-bit DVP interface and 20MHz input clock.",
+                                                        "id": "CAMERA_OV3660_DVP_JPEG_320X240_25FPS",
+                                                        "name": "CAMERA_OV3660_DVP_JPEG_320X240_25FPS",
+                                                        "range": null,
+                                                        "title": "DVP 8-bit, 20M input,  320x240  25fps, JPEG",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_OV3660",
+                                                        "help": "JPEG format at 640x480 resolution (VGA) with 25fps framerate.\nRequires 8-bit DVP interface and 20MHz input clock.",
+                                                        "id": "CAMERA_OV3660_DVP_JPEG_640X480_25FPS",
+                                                        "name": "CAMERA_OV3660_DVP_JPEG_640X480_25FPS",
+                                                        "range": null,
+                                                        "title": "DVP 8-bit, 20M input,  640x480  25fps, JPEG",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_OV3660",
                                                         "help": "RGB565(BE) color format at 640x480 resolution (VGA) with 10fps framerate.\nRequires 8-bit DVP interface and 20MHz input clock.",
                                                         "id": "CAMERA_OV3660_DVP_RGB565_BE_640X480_10FPS",
                                                         "name": "CAMERA_OV3660_DVP_RGB565_BE_640X480_10FPS",
@@ -40905,21 +40935,21 @@
                                                     {
                                                         "children": [],
                                                         "depends_on": "CAMERA_OV3660",
-                                                        "help": "YUV422(YUYV) color format at 240x240 resolution with 24fps framerate.\nRequires 8-bit DVP interface and 20MHz input clock.",
-                                                        "id": "CAMERA_OV3660_DVP_YUV422_YUYV_240X240_24FPS",
-                                                        "name": "CAMERA_OV3660_DVP_YUV422_YUYV_240X240_24FPS",
-                                                        "range": null,
-                                                        "title": "DVP 8-bit, 20M input,  240x240  24fps, YUV422(YUYV)",
-                                                        "type": "bool"
-                                                    },
-                                                    {
-                                                        "children": [],
-                                                        "depends_on": "CAMERA_OV3660",
                                                         "help": "YUV422(YUYV) color format at 640x480 resolution (VGA) with 10fps framerate.\nRequires 8-bit DVP interface and 20MHz input clock.",
                                                         "id": "CAMERA_OV3660_DVP_YUV422_YUYV_640X480_10FPS",
                                                         "name": "CAMERA_OV3660_DVP_YUV422_YUYV_640X480_10FPS",
                                                         "range": null,
                                                         "title": "DVP 8-bit, 20M input,  640x480  10fps, YUV422(YUYV)",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_OV3660",
+                                                        "help": "JPEG format at 1280x720 resolution (HD) with 12fps framerate.\nRequires 8-bit DVP interface and 10MHz input clock.",
+                                                        "id": "CAMERA_OV3660_DVP_JPEG_1280X720_12FPS",
+                                                        "name": "CAMERA_OV3660_DVP_JPEG_1280X720_12FPS",
+                                                        "range": null,
+                                                        "title": "DVP 8-bit, 10M input, 1280x720  12fps, JPEG",
                                                         "type": "bool"
                                                     }
                                                 ],
@@ -40938,6 +40968,36 @@
                                                         "name": "CAMERA_OV3660_DVP_DEFAULT_FMT_JPEG_1280X720_12FPS",
                                                         "range": null,
                                                         "title": "DVP 8-bit, 10M input, 1280x720  12fps, JPEG",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_OV3660_DVP_JPEG_240X240_30FPS && <choice CAMERA_OV3660_DVP_DEFAULT_FMT>",
+                                                        "help": null,
+                                                        "id": "CAMERA_OV3660_DVP_DEFAULT_FMT_JPEG_240X240_30FPS",
+                                                        "name": "CAMERA_OV3660_DVP_DEFAULT_FMT_JPEG_240X240_30FPS",
+                                                        "range": null,
+                                                        "title": "DVP 8-bit, 20M input,  240x240  30fps, JPEG",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_OV3660_DVP_JPEG_320X240_25FPS && <choice CAMERA_OV3660_DVP_DEFAULT_FMT>",
+                                                        "help": null,
+                                                        "id": "CAMERA_OV3660_DVP_DEFAULT_FMT_JPEG_320X240_25FPS",
+                                                        "name": "CAMERA_OV3660_DVP_DEFAULT_FMT_JPEG_320X240_25FPS",
+                                                        "range": null,
+                                                        "title": "DVP 8-bit, 20M input,  320x240  25fps, JPEG",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_OV3660_DVP_JPEG_640X480_25FPS && <choice CAMERA_OV3660_DVP_DEFAULT_FMT>",
+                                                        "help": null,
+                                                        "id": "CAMERA_OV3660_DVP_DEFAULT_FMT_JPEG_640X480_25FPS",
+                                                        "name": "CAMERA_OV3660_DVP_DEFAULT_FMT_JPEG_640X480_25FPS",
+                                                        "range": null,
+                                                        "title": "DVP 8-bit, 20M input,  640x480  25fps, JPEG",
                                                         "type": "bool"
                                                     },
                                                     {
@@ -42308,6 +42368,262 @@
                                         "name": "CAMERA_SC101IOT",
                                         "range": null,
                                         "title": "SC101IOT",
+                                        "type": "menu"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "SOC_LCDCAM_CAM_SUPPORTED && CAMERA_SC121AT",
+                                                        "help": "When enabled, the SC121AT sensor will be automatically detected\nand initialized on the DVP interface at startup without requiring\nmanual detection call(sc121at_detect) in your application.",
+                                                        "id": "CAMERA_SC121AT_AUTO_DETECT_DVP_INTERFACE_SENSOR",
+                                                        "name": "CAMERA_SC121AT_AUTO_DETECT_DVP_INTERFACE_SENSOR",
+                                                        "range": null,
+                                                        "title": "Detect for DVP interface sensor",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "SOC_MIPI_CSI_SUPPORTED && CAMERA_SC121AT",
+                                                        "help": "When enabled, the SC121AT sensor will be automatically detected\nand initialized on the MIPI CSI interface at startup without requiring\nmanual detection call(sc121at_detect) in your application.",
+                                                        "id": "CAMERA_SC121AT_AUTO_DETECT_MIPI_INTERFACE_SENSOR",
+                                                        "name": "CAMERA_SC121AT_AUTO_DETECT_MIPI_INTERFACE_SENSOR",
+                                                        "range": null,
+                                                        "title": "Detect for MIPI CSI interface sensor",
+                                                        "type": "bool"
+                                                    }
+                                                ],
+                                                "depends_on": "CAMERA_SC121AT",
+                                                "id": "component-config-espressif-camera-sensors-configurations-camera-sensor-configuration-select-and-set-camera-sensor-sc121at-auto-detect-sc121at",
+                                                "title": "Auto detect SC121AT",
+                                                "type": "menu"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "SOC_MIPI_CSI_SUPPORTED && CAMERA_SC121AT",
+                                                        "help": "YUV422(UYVY) color format at 1280x800 resolution with 25fps framerate.",
+                                                        "id": "CAMERA_SC121AT_MIPI_YUV422_1280X800_25FPS",
+                                                        "name": "CAMERA_SC121AT_MIPI_YUV422_1280X800_25FPS",
+                                                        "range": null,
+                                                        "title": "MIPI 2-lane, 24M input, 1280x800  25fps, YUV422(UYVY)",
+                                                        "type": "bool"
+                                                    }
+                                                ],
+                                                "depends_on": "SOC_MIPI_CSI_SUPPORTED && CAMERA_SC121AT",
+                                                "id": "component-config-espressif-camera-sensors-configurations-camera-sensor-configuration-select-and-set-camera-sensor-sc121at-choose-supported-formats-for-mipi-csi-interface",
+                                                "title": "Choose supported formats for MIPI CSI interface",
+                                                "type": "menu"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_SC121AT_MIPI_YUV422_1280X800_25FPS && <choice CAMERA_SC121AT_MIPI_DEFAULT_FMT>",
+                                                        "help": null,
+                                                        "id": "CAMERA_SC121AT_MIPI_DEFAULT_FMT_YUV422_1280X800_25FPS",
+                                                        "name": "CAMERA_SC121AT_MIPI_DEFAULT_FMT_YUV422_1280X800_25FPS",
+                                                        "range": null,
+                                                        "title": "MIPI 2-lane, 24M input, 1280x800  25fps, YUV422(UYVY)",
+                                                        "type": "bool"
+                                                    }
+                                                ],
+                                                "depends_on": "SOC_MIPI_CSI_SUPPORTED && CAMERA_SC121AT",
+                                                "help": "This option allows you to select the default video format for the SC121AT sensor\nwhen it is initialized on the MIPI CSI interface. The selected format will be used\nwhen the sensor is detected and initialized, and can be changed later when the\nsensor is in stream off state.",
+                                                "id": "component-config-espressif-camera-sensors-configurations-camera-sensor-configuration-select-and-set-camera-sensor-sc121at-select-default-output-format-for-mipi-csi-interface",
+                                                "name": "CAMERA_SC121AT_MIPI_DEFAULT_FMT",
+                                                "title": "Select default output format for MIPI CSI interface",
+                                                "type": "choice"
+                                            },
+                                            {
+                                                "children": [],
+                                                "depends_on": "SOC_MIPI_CSI_SUPPORTED && CAMERA_SC121AT",
+                                                "help": "Sets the default configuration for the MIPI CSI interface.\nUse query_support_formats() API to get more format options.",
+                                                "id": "CAMERA_SC121AT_MIPI_IF_FORMAT_INDEX_DEFAULT",
+                                                "name": "CAMERA_SC121AT_MIPI_IF_FORMAT_INDEX_DEFAULT",
+                                                "range": null,
+                                                "title": null,
+                                                "type": "int"
+                                            }
+                                        ],
+                                        "depends_on": "SOC_MIPI_CSI_SUPPORTED || SOC_LCDCAM_CAM_SUPPORTED",
+                                        "help": "Enable support for the SC121AT CMOS image sensor.",
+                                        "id": "CAMERA_SC121AT",
+                                        "is_menuconfig": true,
+                                        "name": "CAMERA_SC121AT",
+                                        "range": null,
+                                        "title": "SC121AT",
+                                        "type": "menu"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_SC1346",
+                                                        "help": "When enabled, the SC1346 sensor will be automatically detected\nand initialized on the MIPI CSI interface at startup without requiring\nmanual detection call(sc1346_detect) in your application.",
+                                                        "id": "CAMERA_SC1346_AUTO_DETECT_MIPI_INTERFACE_SENSOR",
+                                                        "name": "CAMERA_SC1346_AUTO_DETECT_MIPI_INTERFACE_SENSOR",
+                                                        "range": null,
+                                                        "title": "Detect for MIPI CSI interface sensor",
+                                                        "type": "bool"
+                                                    }
+                                                ],
+                                                "depends_on": "CAMERA_SC1346",
+                                                "id": "component-config-espressif-camera-sensors-configurations-camera-sensor-configuration-select-and-set-camera-sensor-sc1346-auto-detect-sc1346",
+                                                "title": "Auto detect SC1346",
+                                                "type": "menu"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_SC1346",
+                                                        "help": "RAW10 color format at 1280x720 resolution (HD) with 25fps framerate.\nRequires MIPI CSI-2 1-lane interface with 24MHz input clock.",
+                                                        "id": "CAMERA_SC1346_MIPI_RAW10_1280X720_25FPS",
+                                                        "name": "CAMERA_SC1346_MIPI_RAW10_1280X720_25FPS",
+                                                        "range": null,
+                                                        "title": "MIPI 1-lane, 24M input, 1280x720 25fps, RAW10",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_SC1346",
+                                                        "help": "RAW10 color format at 1280x720 resolution (HD) with 30fps framerate.\nRequires MIPI CSI-2 1-lane interface with 24MHz input clock.",
+                                                        "id": "CAMERA_SC1346_MIPI_RAW10_1280X720_30FPS",
+                                                        "name": "CAMERA_SC1346_MIPI_RAW10_1280X720_30FPS",
+                                                        "range": null,
+                                                        "title": "MIPI 1-lane, 24M input, 1280x720 30fps, RAW10",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_SC1346",
+                                                        "help": "RAW8 color format at 1280x720 resolution (HD) with 30fps framerate.\nRequires MIPI CSI-2 1-lane interface with 24MHz input clock.",
+                                                        "id": "CAMERA_SC1346_MIPI_RAW8_1280X720_30FPS",
+                                                        "name": "CAMERA_SC1346_MIPI_RAW8_1280X720_30FPS",
+                                                        "range": null,
+                                                        "title": "MIPI 1-lane, 24M input, 1280x720 30fps, RAW8",
+                                                        "type": "bool"
+                                                    }
+                                                ],
+                                                "depends_on": "CAMERA_SC1346",
+                                                "id": "component-config-espressif-camera-sensors-configurations-camera-sensor-configuration-select-and-set-camera-sensor-sc1346-choose-supported-formats-for-mipi-csi-interface",
+                                                "title": "Choose supported formats for MIPI CSI interface",
+                                                "type": "menu"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_SC1346_MIPI_RAW10_1280X720_25FPS && <choice CAMERA_SC1346_MIPI_DEFAULT_FMT>",
+                                                        "help": null,
+                                                        "id": "CAMERA_SC1346_MIPI_DEFAULT_FMT_RAW10_1280X720_25FPS",
+                                                        "name": "CAMERA_SC1346_MIPI_DEFAULT_FMT_RAW10_1280X720_25FPS",
+                                                        "range": null,
+                                                        "title": "MIPI 1-lane, 24M input, 1280x720 25fps, RAW10",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_SC1346_MIPI_RAW10_1280X720_30FPS && <choice CAMERA_SC1346_MIPI_DEFAULT_FMT>",
+                                                        "help": null,
+                                                        "id": "CAMERA_SC1346_MIPI_DEFAULT_FMT_RAW10_1280X720_30FPS",
+                                                        "name": "CAMERA_SC1346_MIPI_DEFAULT_FMT_RAW10_1280X720_30FPS",
+                                                        "range": null,
+                                                        "title": "MIPI 1-lane, 24M input, 1280x720 30fps, RAW10",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "CAMERA_SC1346_MIPI_RAW8_1280X720_30FPS && <choice CAMERA_SC1346_MIPI_DEFAULT_FMT>",
+                                                        "help": null,
+                                                        "id": "CAMERA_SC1346_MIPI_DEFAULT_FMT_RAW8_1280X720_30FPS",
+                                                        "name": "CAMERA_SC1346_MIPI_DEFAULT_FMT_RAW8_1280X720_30FPS",
+                                                        "range": null,
+                                                        "title": "MIPI 1-lane, 24M input, 1280x720 30fps, RAW8",
+                                                        "type": "bool"
+                                                    }
+                                                ],
+                                                "depends_on": "CAMERA_SC1346",
+                                                "help": "This option allows you to select the default video format for the SC1346 sensor\nwhen it is initialized on the MIPI CSI interface. The selected format will be used\nwhen the sensor is detected and initialized, and can be changed later when the\nsensor is in stream off state.",
+                                                "id": "component-config-espressif-camera-sensors-configurations-camera-sensor-configuration-select-and-set-camera-sensor-sc1346-select-default-output-format-for-mipi-csi-interface",
+                                                "name": "CAMERA_SC1346_MIPI_DEFAULT_FMT",
+                                                "title": "Select default output format for MIPI CSI interface",
+                                                "type": "choice"
+                                            },
+                                            {
+                                                "children": [],
+                                                "depends_on": "CAMERA_SC1346",
+                                                "help": "Sets the default configuration for the MIPI CSI interface.\nUse query_support_formats() API to get more format options.",
+                                                "id": "CAMERA_SC1346_MIPI_IF_FORMAT_INDEX_DEFAULT",
+                                                "name": "CAMERA_SC1346_MIPI_IF_FORMAT_INDEX_DEFAULT",
+                                                "range": null,
+                                                "title": null,
+                                                "type": "int"
+                                            },
+                                            {
+                                                "children": [],
+                                                "depends_on": "CAMERA_SC1346",
+                                                "help": "Set the maximum gain limit that can be applied by upper-level applications.\n\nValue is gain multiplied by 1000 to avoid floating-point arithmetic:\n- 4000 = 4x gain (minimum)\n- 64000 = 64x gain (maximum)\n\nLower values reduce noise but may limit low-light performance.\nHigher values improve low-light sensitivity but increase noise and\nmay cause sensor overheating.\n\nRecommended values:\n- 16000 (16x): Good balance for most applications\n- 32000 (32x): Enhanced low-light performance",
+                                                "id": "CAMERA_SC1346_ABSOLUTE_GAIN_LIMIT",
+                                                "name": "CAMERA_SC1346_ABSOLUTE_GAIN_LIMIT",
+                                                "range": null,
+                                                "title": "Maximum absolute gain limit (x1000)",
+                                                "type": "int"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "<choice CAMERA_SC1346_IPA_JSON_CONFIGURATION_FILE>",
+                                                        "help": "Use the built-in default IPA configuration file:\n\"esp_cam_sensor/sensors/sc1346/cfg/sc1346_default.json\"\n\nThis configuration provides optimized settings for general use cases\nand is recommended for most applications.",
+                                                        "id": "CAMERA_SC1346_DEFAULT_IPA_JSON_CONFIGURATION_FILE",
+                                                        "name": "CAMERA_SC1346_DEFAULT_IPA_JSON_CONFIGURATION_FILE",
+                                                        "range": null,
+                                                        "title": "Use default configuration",
+                                                        "type": "bool"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "depends_on": "<choice CAMERA_SC1346_IPA_JSON_CONFIGURATION_FILE>",
+                                                        "help": "Use a custom IPA configuration file with your own optimized settings.\n\nThis option allows you to fine-tune sensor parameters for specific\nlighting conditions, color requirements, or application needs.\n\nYou must specify the custom file path in the configuration below.",
+                                                        "id": "CAMERA_SC1346_CUSTOMIZED_IPA_JSON_CONFIGURATION_FILE",
+                                                        "name": "CAMERA_SC1346_CUSTOMIZED_IPA_JSON_CONFIGURATION_FILE",
+                                                        "range": null,
+                                                        "title": "Use custom configuration",
+                                                        "type": "bool"
+                                                    }
+                                                ],
+                                                "depends_on": "CAMERA_SC1346",
+                                                "help": "Select the Image Processing Algorithm (IPA) JSON configuration file\nfor the SC1346 sensor.",
+                                                "id": "component-config-espressif-camera-sensors-configurations-camera-sensor-configuration-select-and-set-camera-sensor-sc1346-ipa-configuration-file",
+                                                "name": "CAMERA_SC1346_IPA_JSON_CONFIGURATION_FILE",
+                                                "title": "IPA Configuration File",
+                                                "type": "choice"
+                                            },
+                                            {
+                                                "children": [],
+                                                "depends_on": "CAMERA_SC1346_CUSTOMIZED_IPA_JSON_CONFIGURATION_FILE && CAMERA_SC1346",
+                                                "help": "Specify the path to your custom SC1346 IPA JSON configuration file.\n\nThe path is relative to your project root directory.\n\nExample: \"components/my_camera_config/sc1346_custom.json\"\n\nEnsure the file exists and contains valid JSON configuration\nparameters compatible with the SC1346 sensor.",
+                                                "id": "CAMERA_SC1346_CUSTOMIZED_IPA_JSON_CONFIGURATION_FILE_PATH",
+                                                "name": "CAMERA_SC1346_CUSTOMIZED_IPA_JSON_CONFIGURATION_FILE_PATH",
+                                                "range": null,
+                                                "title": "Custom IPA configuration file path",
+                                                "type": "string"
+                                            }
+                                        ],
+                                        "depends_on": "SOC_MIPI_CSI_SUPPORTED",
+                                        "help": "Enable support for the SC1346 CMOS image sensor.",
+                                        "id": "CAMERA_SC1346",
+                                        "is_menuconfig": true,
+                                        "name": "CAMERA_SC1346",
+                                        "range": null,
+                                        "title": "SC1346",
                                         "type": "menu"
                                     },
                                     {
@@ -43938,6 +44254,36 @@
                         "range": null,
                         "title": "Enable Camera SPI Controller Driver",
                         "type": "menu"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "<choice CAMERA_SENSOR_MOTOR_DETECT_METHOD>",
+                                "help": "Automatically include all available camera sensor and motor detection functions and related configuration data\nin firmware via the esp_cam_sensor_detect_fn and esp_cam_motor_detect_fn sections in flash memory.\n\nIn this mode, the linker retains all detection functions and configuration data, even if they are not\nexplicitly referenced by the application code. This ensures that auto-detection works for all supported\nsensors and motors but will increase the overall firmware size.",
+                                "id": "CAMERA_SENSOR_MOTOR_DETECT_METHOD_DYNAMIC_LINK",
+                                "name": "CAMERA_SENSOR_MOTOR_DETECT_METHOD_DYNAMIC_LINK",
+                                "range": null,
+                                "title": "Dynamic linking of camera sensor and motor detection functions",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice CAMERA_SENSOR_MOTOR_DETECT_METHOD>",
+                                "help": "Only include the detection functions and configuration data for sensors and motors that are actually referenced by\nthe application, with data stored in a flash-based C-language array.\n\nWith this mode, if detection functions or data are unused in your application, the linker will exclude\nthem from the final firmware, resulting in a smaller binary size.",
+                                "id": "CAMERA_SENSOR_MOTOR_DETECT_METHOD_STATIC_STORE",
+                                "name": "CAMERA_SENSOR_MOTOR_DETECT_METHOD_STATIC_STORE",
+                                "range": null,
+                                "title": "Static inclusion of camera sensor and motor detection objects",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "help": "Specify how the camera sensor and motor detection functions and configuration data are included in the firmware.",
+                        "id": "component-config-espressif-camera-sensors-configurations-choose-camera-sensor-and-motor-detection-method",
+                        "name": "CAMERA_SENSOR_MOTOR_DETECT_METHOD",
+                        "title": "Choose camera sensor and motor detection method",
+                        "type": "choice"
                     }
                 ],
                 "depends_on": null,
@@ -47433,6 +47779,36 @@
                         "range": null,
                         "title": "Extended Configuration",
                         "type": "bool"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "<choice ESP_IPA_DETECT_METHOD>",
+                                "help": "Automatically include all available IPA detection functions in firmware via\nthe esp_ipa_detect section in flash memory.\n\nIn this mode, the linker retains all detection functions, even if they are not\nexplicitly referenced by the application code. This ensures that auto-detection\nworks for all supported IPAs but will increase the overall firmware size.",
+                                "id": "ESP_IPA_DETECT_METHOD_DYNAMIC_LINK",
+                                "name": "ESP_IPA_DETECT_METHOD_DYNAMIC_LINK",
+                                "range": null,
+                                "title": "Dynamic linking of IPA detection functions",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice ESP_IPA_DETECT_METHOD>",
+                                "help": "Only include the detection functions for IPAs that are actually referenced by\nthe application, with data stored in a flash-based C-language array.\n\nWith this mode, if detection functions are unused in your application, the linker\nwill exclude them from the final firmware, resulting in a smaller binary size.",
+                                "id": "ESP_IPA_DETECT_METHOD_STATIC_STORE",
+                                "name": "ESP_IPA_DETECT_METHOD_STATIC_STORE",
+                                "range": null,
+                                "title": "Static inclusion of IPA detection objects",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "help": "Specify how the IPA detection functions are included in the firmware.",
+                        "id": "component-config-espressif-image-process-algorithm-configuration-choose-ipa-detection-method",
+                        "name": "ESP_IPA_DETECT_METHOD",
+                        "title": "Choose IPA detection method",
+                        "type": "choice"
                     }
                 ],
                 "depends_on": null,
@@ -47625,8 +48001,18 @@
                         "children": [],
                         "depends_on": null,
                         "help": null,
-                        "id": "ESP_VIDEO_ENABLE_JPEG_VIDEO_DEVICE",
-                        "name": "ESP_VIDEO_ENABLE_JPEG_VIDEO_DEVICE",
+                        "id": "ESP_VIDEO_ENABLE_JPEG_ENC_VIDEO_DEVICE",
+                        "name": "ESP_VIDEO_ENABLE_JPEG_ENC_VIDEO_DEVICE",
+                        "range": null,
+                        "title": null,
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "ESP_VIDEO_ENABLE_JPEG_DEC_VIDEO_DEVICE",
+                        "name": "ESP_VIDEO_ENABLE_JPEG_DEC_VIDEO_DEVICE",
                         "range": null,
                         "title": null,
                         "type": "bool"
@@ -47770,11 +48156,21 @@
                     {
                         "children": [],
                         "depends_on": "SOC_JPEG_CODEC_SUPPORTED",
-                        "help": "Enable hardware-accelerated JPEG image compression video device support.\n\nUses dedicated JPEG encoding hardware for efficient image compression\nwith minimal CPU overhead.\n\nFeatures:\n- Hardware-accelerated compression\n- Low CPU usage\n- Fast encoding speed\n- Standard JPEG format output\n\nAvailable on ESP32-P4 and other chips with JPEG codec support.\n\nBest for: Image capture, surveillance systems, and applications\nrequiring fast JPEG compression.",
-                        "id": "ESP_VIDEO_ENABLE_HW_JPEG_VIDEO_DEVICE",
-                        "name": "ESP_VIDEO_ENABLE_HW_JPEG_VIDEO_DEVICE",
+                        "help": "Enable hardware-accelerated JPEG image compression video device support.\n\nUses dedicated JPEG encoding hardware for efficient image compression\nwith minimal CPU overhead.\n\nFeatures:\n- Hardware-accelerated compression\n- Low CPU usage\n- Fast encoding speed\n- Standard JPEG format output\n\nAvailable on ESP32-P4/S31 and other chips with JPEG codec support.\n\nBest for: Image capture, surveillance systems, and applications\nrequiring fast JPEG compression.",
+                        "id": "ESP_VIDEO_ENABLE_HW_JPEG_ENC_VIDEO_DEVICE",
+                        "name": "ESP_VIDEO_ENABLE_HW_JPEG_ENC_VIDEO_DEVICE",
                         "range": null,
-                        "title": "Enable Hardware JPEG based Video Device",
+                        "title": "Enable Hardware JPEG Encoder based Video Device",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "SOC_JPEG_CODEC_SUPPORTED",
+                        "help": "Enable hardware-accelerated JPEG image decompression video device support.\n\nUses dedicated JPEG decoding hardware for efficient image decompression\nwith minimal CPU overhead.\n\nFeatures:\n- Hardware-accelerated decompression\n- Low CPU usage\n- Fast decoding speed\n- Standard JPEG format input\n\nAvailable on ESP32-P4/S31 and other chips with JPEG codec support.\n\nBest for: Applications that receive JPEG streams and need raw pixel\nformats for display or further processing.",
+                        "id": "ESP_VIDEO_ENABLE_HW_JPEG_DEC_VIDEO_DEVICE",
+                        "name": "ESP_VIDEO_ENABLE_HW_JPEG_DEC_VIDEO_DEVICE",
+                        "range": null,
+                        "title": "Enable Hardware JPEG Decode based Video Device",
                         "type": "bool"
                     },
                     {
@@ -51116,6 +51512,84 @@
                 "depends_on": null,
                 "id": "component-config-wi-fi-remote",
                 "title": "Wi-Fi Remote",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "PEDESTRIAN_DETECT_PICO_S8_V1",
+                        "name": "PEDESTRIAN_DETECT_PICO_S8_V1",
+                        "range": null,
+                        "title": "pedestrian_detect_pico_s8_v1",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "PEDESTRIAN_DETECT_MODEL_TYPE",
+                        "name": "PEDESTRIAN_DETECT_MODEL_TYPE",
+                        "range": null,
+                        "title": null,
+                        "type": "int"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "PEDESTRIAN_DETECT_MODEL_IN_FLASH_RODATA",
+                                "name": "PEDESTRIAN_DETECT_MODEL_IN_FLASH_RODATA",
+                                "range": null,
+                                "title": "flash_rodata",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "PEDESTRIAN_DETECT_MODEL_IN_FLASH_PARTITION",
+                                "name": "PEDESTRIAN_DETECT_MODEL_IN_FLASH_PARTITION",
+                                "range": null,
+                                "title": "flash_partition",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice>",
+                                "help": null,
+                                "id": "PEDESTRIAN_DETECT_MODEL_IN_SDCARD",
+                                "name": "PEDESTRIAN_DETECT_MODEL_IN_SDCARD",
+                                "range": null,
+                                "title": "sdcard",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "help": "pedestrian_detect model location",
+                        "id": "component-config-models-pedestrian_detect-model-location",
+                        "name": null,
+                        "title": "model location",
+                        "type": "choice"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "PEDESTRIAN_DETECT_MODEL_LOCATION",
+                        "name": "PEDESTRIAN_DETECT_MODEL_LOCATION",
+                        "range": null,
+                        "title": null,
+                        "type": "int"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-models-pedestrian_detect",
+                "title": "models: pedestrian_detect",
                 "type": "menu"
             },
             {

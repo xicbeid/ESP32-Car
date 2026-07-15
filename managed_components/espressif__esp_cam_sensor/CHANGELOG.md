@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.3.0
+
+- Added information about the document system to README.md.
+- Added more output size formats to the OV3660 driver and fixed the configuration method for JPEG compression factor.
+- Added SC121AT MIPI YUV sensor driver.
+- Added SC1346 MIPI camera sensor driver.
+- Added static store mode for camera sensor and motor detection.
+
+- Adjust AWB configuration in sc2336_default_p4_eco5.json for better white balance stability
+
+- Fixed the macro definition representing automatic detection in the OV9281 driver.
+- Fixed the description of the interface in the readme document for SC030IOT.
+
 ## 2.2.0
 
 - Improve camera sensor json configuration files.

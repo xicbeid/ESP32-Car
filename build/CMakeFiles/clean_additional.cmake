@@ -19,6 +19,7 @@ if("${CONFIG}" STREQUAL "" OR "${CONFIG}" STREQUAL "")
   "human_face_detect.espdl.S"
   "ldgen_libraries"
   "ldgen_libraries.in"
+  "pedestrian_detect.espdl.S"
   "project_elf_src_esp32p4.c"
   "x509_crt_bundle.S"
   )

@@ -15,11 +15,13 @@ extern "C" {
 
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/semphr.h"
 #include "esp_heap_caps.h"
+#include "esp_cache.h"
 #include "human_detect.h"
 
 } /* extern "C" */
@@ -30,9 +32,9 @@ extern "C" {
 #define TAG "HuDet"
 
 /* ── 检测参数 ── */
-#define DETECT_FPS         3      /* 目标检测帧率 (Hz) */
-#define DETECT_CAMERA_FPS  30     /* 摄像头帧率 */
-#define DETECT_SKIP_FRAMES (DETECT_CAMERA_FPS / DETECT_FPS)  /* 10 */
+#define DETECT_FPS         7      /* 目标检测帧率 (Hz), 20fps÷3≈6.7Hz */
+#define DETECT_CAMERA_FPS  20     /* 实际 ISP JPEG 输出帧率 */
+#define DETECT_SKIP_FRAMES (DETECT_CAMERA_FPS / DETECT_FPS)  /* 每3帧检测1次 */
 
 /* 下采样快照分辨率 (用于减少 PSRAM 拷贝量, ESP-DL 会进一步缩放) */
 #define SNAP_W  640
@@ -41,7 +43,7 @@ extern "C" {
 
 /* GUI 颜色 */
 #define BOX_COLOR         0xF800  /* RGB565 纯红 */
-#define BOX_THICKNESS     3       /* 线宽 */
+#define BOX_THICKNESS     2       /* 线宽 (降低以减少画框时间) */
 #define KP_EYE_COLOR      0x07FF  /* 青色 */
 #define KP_NOSE_COLOR     0xFFE0  /* 黄色 */
 #define KP_MOUTH_COLOR    0xF81F  /* 粉色 */
@@ -85,6 +87,45 @@ static void snapshot_rgb565(const uint8_t *src, int sw, int sh, int sstride,
     }
 }
 
+/* ── 暗光增强：当画面偏暗时做伽马提亮 ── */
+static void snapshot_enhance_rgb565(uint8_t *buf, int w, int h, int stride)
+{
+    uint8_t max_g = 0;
+    for (int y = 0; y < h; y++) {
+        const uint16_t *line = (const uint16_t *)(buf + y * stride);
+        for (int x = 0; x < w; x++) {
+            uint8_t g6 = (line[x] >> 5) & 0x3F;
+            uint8_t g8 = (g6 << 2) | (g6 >> 4);
+            if (g8 > max_g) max_g = g8;
+        }
+    }
+    if (max_g >= 100) return;
+
+    float scale = 1.0f + (100.0f - max_g) / 80.0f;
+    uint8_t g_lut[64];
+    for (int i = 0; i < 64; i++) {
+        float v = sqrtf((float)i / 63.0f) * 63.0f * scale;
+        if (v > 63.0f) v = 63.0f;
+        g_lut[i] = (uint8_t)(v + 0.5f);
+    }
+
+    for (int y = 0; y < h; y++) {
+        uint16_t *line = (uint16_t *)(buf + y * stride);
+        for (int x = 0; x < w; x++) {
+            uint16_t p = line[x];
+            uint8_t r5 = (p >> 11) & 0x1F;
+            uint8_t g6 = (p >> 5) & 0x3F;
+            uint8_t b5 = p & 0x1F;
+            uint8_t new_g6 = g_lut[g6];
+            float ratio = (g6 > 0) ? (float)new_g6 / (float)g6 : scale;
+            int new_r5 = (int)(r5 * ratio + 0.5f);
+            int new_b5 = (int)(b5 * ratio + 0.5f);
+            if (new_r5 > 31) new_r5 = 31;
+            if (new_b5 > 31) new_b5 = 31;
+            line[x] = ((uint16_t)new_r5 << 11) | ((uint16_t)new_g6 << 5) | (uint16_t)new_b5;
+        }
+    }
+}
 /* ── 画矩形 (原地修改 RGB565) ── */
 static void draw_rect_rgb565(uint8_t *buf, int w, int h, int stride,
                               int rx, int ry, int rw, int rh,
@@ -189,7 +230,7 @@ static void detect_task(void *arg)
         for (const auto &r : results) {
             if (count >= HD_MAX_BOXES) break;
             if (r.box.size() < 4) continue;
-            if (r.score < 0.35f) continue;  /* 置信度过滤 (宽松, 暗光补偿) */
+            if (r.score < 0.30f) continue;  /* 置信度过滤 (暗光场景放宽) */
 
             hd_box_t *b = &boxes[count];
             /* 快照坐标 → 原始坐标 */
@@ -327,7 +368,6 @@ void human_detect_feed_frame(const uint8_t *rgb565, int w, int h, int stride)
     if (!rgb565) return;
     if (g_hd.busy) return;  /* 上一帧检测未完成, 跳过 */
 
-    /* 帧率控制: 每 ~10 帧运行一次 (30fps → 3Hz) */
     g_hd.skip_counter++;
     if (g_hd.skip_counter < DETECT_SKIP_FRAMES) return;
     g_hd.skip_counter = 0;
@@ -339,6 +379,11 @@ void human_detect_feed_frame(const uint8_t *rgb565, int w, int h, int stride)
     snapshot_rgb565(rgb565, w, h, stride,
                     g_hd.snapshot, SNAP_W, SNAP_H, SNAP_W * 2);
 
+    /* 暗光增强: 拉伸对比度帮助 ESP-DL 在昏暗环境中检测人脸。
+     * 写入缓存后必须 C2M — detect task 可能在不同核心上读取 */
+    snapshot_enhance_rgb565(g_hd.snapshot, SNAP_W, SNAP_H, SNAP_W * 2);
+    esp_cache_msync(g_hd.snapshot, SNAP_BUF_SIZE, ESP_CACHE_MSYNC_FLAG_DIR_C2M);
+
     /* 通知检测任务 */
     xSemaphoreGive(g_hd.feed_sem);
 }
@@ -348,12 +393,32 @@ void human_detect_draw_boxes(uint8_t *rgb565, int w, int h, int stride)
     if (!g_hd.enabled || !g_hd.initialized) return;
     if (!rgb565) return;
 
-    hd_result_t r = human_detect_get_results();
-    /* 只画最近 30 帧内的结果 (~1s) */
-    if (g_hd.frame_id - r.frame_id > 30) return;
+    /* 缓存上一次绘制的检测结果 — 只要结果未过期就持续画同一组框，
+     * 避免因检测任务异步更新造成的闪烁/跳变 */
+    static hd_result_t cached;
+    static uint32_t    cached_frame_id = 0;
 
-    for (int i = 0; i < r.count; i++) {
-        hd_box_t *b = &r.boxes[i];
+    hd_result_t r = human_detect_get_results();
+
+    /* 结果有效且是新数据 → 更新缓存 */
+    if (r.count > 0 && r.frame_id > 0 &&
+        g_hd.frame_id - r.frame_id <= 30 &&
+        r.frame_id != cached_frame_id) {
+        cached = r;
+        cached_frame_id = r.frame_id;
+    }
+
+    /* 无有效结果 → 清空缓存，不画 */
+    if (cached_frame_id == 0) return;
+
+    /* 检查缓存是否过期 */
+    if (g_hd.frame_id - cached_frame_id > 30) {
+        cached_frame_id = 0;
+        return;
+    }
+
+    for (int i = 0; i < cached.count; i++) {
+        hd_box_t *b = &cached.boxes[i];
 
         /* 红框 */
         draw_rect_rgb565(rgb565, w, h, stride,
@@ -382,6 +447,23 @@ void human_detect_draw_boxes(uint8_t *rgb565, int w, int h, int stride)
                             b->right_mouth_x, b->right_mouth_y,
                             KP_DOT_SIZE, KP_MOUTH_COLOR);
     }
+}
+
+} /* extern "C" */
+
+/* ── 公开辅助 API (供 face_recognition 使用) ── */
+extern "C" {
+
+void *human_detect_get_detector(void)
+{
+    return (void *)g_hd.detector;
+}
+
+const uint8_t *human_detect_get_snapshot(int *w, int *h)
+{
+    if (w) *w = g_hd.snap_w;
+    if (h) *h = g_hd.snap_h;
+    return g_hd.snapshot;
 }
 
 } /* extern "C" */

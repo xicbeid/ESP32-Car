@@ -1,5 +1,9 @@
 # Espressif Image Process Algorithm for ISP
 
+[![alt text][doc-latest]](https://docs.espressif.com/projects/esp-video-components/en/latest/esp32p4/index.html)
+
+[doc-latest]: https://img.shields.io/badge/docs-latest-blue
+
 Espressif image process algorithm component provides a suit of image process algorithms.[![Component Registry](https://components.espressif.com/components/espressif/esp_ipa/badge.svg)](https://components.espressif.com/components/espressif/esp_ipa)
 
 ## 1. Supported Algorithms
@@ -294,6 +298,33 @@ Developers can refer to the configuration files in [esp_cam_sensor](https://gith
 | table | Array | / | The CCM and color temperature mapping table adopted the principle of nearest neighbor indexing |
 | color_temp | Integer | >0 | Color temperature value |
 | matrix | Array | <div style="white-space: nowrap;">ESP32-P4: (-4,4)</div> | CCM value |
+
+---
+
+```json
+"ccm":
+{
+    "gain_lut":
+    {
+        "enable": true,
+        "table":
+        [
+            { "gain": 1.0,  "strength": 1.0 },
+            { "gain": 8.0,  "strength": 0.85 },
+            { "gain": 16.0, "strength": 0.7 },
+            { "gain": 32.0, "strength": 0.5 }
+        ]
+    }
+}
+```
+
+| Parameter | Type | Range | Description |
+|:-:|:-:|:-:|:-|
+| gain_lut | Object | / | Optional gain-based CCM strength LUT |
+| enable | Bool | true or false | If true, blend the CT-selected CCM with identity using `strength` from the LUT |
+| table | Array | / | Gain and strength mapping table; `strength` is linearly interpolated between entries |
+| gain | Float | >0 | Camera sensor gain (same unit as `sensor->cur_gain`) |
+| strength | Float | [0,1] | Blend weight `s` in `(1-s)*I + s*ccm`; 0 means identity, 1 means full CCM |
 
 ---
 

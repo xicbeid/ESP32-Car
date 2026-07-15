@@ -196,6 +196,12 @@ $<TARGET_FILE:__idf_espressif__esp_jpeg>
 $<TARGET_FILE:__idf_esp_driver_ppa>
 $<TARGET_FILE:idf::human_detect>
 $<TARGET_FILE:__idf_espressif__esp-dl>
+$<TARGET_FILE:idf::espressif__pedestrian_detect>
+$<TARGET_FILE:idf::body_detect>
+$<TARGET_FILE:__idf_espressif__pedestrian_detect>
+$<TARGET_FILE:idf::face_recog>
+$<TARGET_FILE:__idf_spiffs>
+$<TARGET_FILE:__idf_human_detect>
 $<TARGET_FILE:idf::espressif__esp_hosted>
 $<TARGET_FILE:idf::espressif__esp_serial_slave_link>
 $<TARGET_FILE:idf::espressif__eppp_link>
@@ -204,4 +210,5 @@ $<TARGET_FILE:idf::main>
 $<TARGET_FILE:__idf_wifi_module>
 $<TARGET_FILE:__idf_camera_module>
 $<TARGET_FILE:__idf_imu_usb>
-$<TARGET_FILE:__idf_human_detect>
+$<TARGET_FILE:__idf_body_detect>
+$<TARGET_FILE:__idf_face_recog>
