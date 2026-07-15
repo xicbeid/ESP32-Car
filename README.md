@@ -1,6 +1,6 @@
 # ESP32-P4 搜救小车 — 异构双芯边缘AI视觉智控平台
 
-基于 ESP32-P4 Function EV Board v1.6 与 ESP32-C6 协处理器的搜救移动平台，具备 UART 编码器闭环运动控制、CSI 摄像头灰度 MJPEG 实时推流、10轴 IMU 惯导姿态感知、片上 ESP-DL 人脸检测，以及 Web + Android APK 双终端遥控。
+基于 ESP32-P4/C6 的搜救移动平台，具备 UART 编码器闭环运动控制、CSI 摄像头灰度 MJPEG 实时推流、10轴 IMU 惯导姿态感知、片上 ESP-DL 人脸检测，以及 Web + Android APK 双终端遥控。
 
 ```
 ESP32-P4 WiFi AP "ESP32-Car" (192.168.4.1)
