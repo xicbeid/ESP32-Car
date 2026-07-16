@@ -297,8 +297,8 @@ esp_err_t human_detect_init(int frame_w, int frame_h)
     g_hd.iscale_y = (float)SNAP_H / (float)frame_h;
     g_hd.enabled = false;
 
-    /* 分配快照缓冲区 (PSRAM, ~460KB) */
-    g_hd.snapshot = (uint8_t *)heap_caps_malloc(SNAP_BUF_SIZE,
+    /* 分配快照缓冲区 (PSRAM, ~460KB, cache-line 对齐 — esp_cache_msync 要求) */
+    g_hd.snapshot = (uint8_t *)heap_caps_aligned_alloc(64, SNAP_BUF_SIZE,
                             MALLOC_CAP_8BIT | MALLOC_CAP_SPIRAM);
     if (!g_hd.snapshot) {
         ESP_LOGE(TAG, "快照 PSRAM 分配失败 (%d 字节)", SNAP_BUF_SIZE);
@@ -393,26 +393,29 @@ void human_detect_draw_boxes(uint8_t *rgb565, int w, int h, int stride)
     if (!g_hd.enabled || !g_hd.initialized) return;
     if (!rgb565) return;
 
-    /* 缓存上一次绘制的检测结果 — 只要结果未过期就持续画同一组框，
-     * 避免因检测任务异步更新造成的闪烁/跳变 */
+    /* 缓存上一次有效结果，避免检测异步更新导致画面闪烁。
+     * 当新结果到来时更新缓存，人脸消失后立即清空（不等过期）*/
     static hd_result_t cached;
     static uint32_t    cached_frame_id = 0;
 
     hd_result_t r = human_detect_get_results();
 
-    /* 结果有效且是新数据 → 更新缓存 */
-    if (r.count > 0 && r.frame_id > 0 &&
-        g_hd.frame_id - r.frame_id <= 30 &&
+    /* 新数据到来 → 更新缓存 */
+    if (r.frame_id > 0 && g_hd.frame_id - r.frame_id <= 6 &&
         r.frame_id != cached_frame_id) {
-        cached = r;
-        cached_frame_id = r.frame_id;
+        if (r.count > 0) {
+            cached = r;
+            cached_frame_id = r.frame_id;
+        } else {
+            /* 人脸已消失 → 立即清空，不过期等待 */
+            cached_frame_id = 0;
+        }
     }
 
-    /* 无有效结果 → 清空缓存，不画 */
     if (cached_frame_id == 0) return;
 
-    /* 检查缓存是否过期 */
-    if (g_hd.frame_id - cached_frame_id > 30) {
+    /* 缓存过期 (6帧 ≈ 900ms) */
+    if (g_hd.frame_id - cached_frame_id > 6) {
         cached_frame_id = 0;
         return;
     }

@@ -26,7 +26,7 @@
 #include "camera_module.h"
 #include "imu_usb.h"
 #include "human_detect.h"
-#include "body_detect.h"
+// #include "body_detect.h"  /* 人体检测暂时禁用 */
 #include "face_recog.h"
 
 #define delay_ms(ms) vTaskDelay(pdMS_TO_TICKS(ms))
@@ -301,11 +301,13 @@ static void motor_control_callback(motor_cmd_t cmd, int distance_cm, int speed)
     }
 
     /* ── 人体检测 / 人脸识别 开关 ── */
+#if 0  /* 人体检测暂时禁用 */
     if (cmd == MOTOR_CMD_PEDESTRIAN) {
         pedestrian_detect_set_enabled(distance_cm ? true : false);
         ESP_LOGI(TAG, "人体检测: %s", distance_cm ? "开" : "关");
         return;
     }
+#endif  /* 人体检测暂时禁用 */
     if (cmd == MOTOR_CMD_RECOGNIZE) {
         g_recogn_enabled = (distance_cm ? true : false);
         face_recognition_set_enabled(g_recogn_enabled);
@@ -406,8 +408,8 @@ static void pre_jpeg_draw_cb(uint8_t *rgb565, int w, int h, int stride, void *ct
 {
     human_detect_feed_frame(rgb565, w, h, stride);
     human_detect_draw_boxes(rgb565, w, h, stride);
-    pedestrian_detect_feed_frame(rgb565, w, h, stride);
-    pedestrian_detect_draw_boxes(rgb565, w, h, stride);
+    // pedestrian_detect_feed_frame(rgb565, w, h, stride);   /* 人体检测暂时禁用 */
+    // pedestrian_detect_draw_boxes(rgb565, w, h, stride);
     (void)ctx;
 }
 
@@ -416,7 +418,7 @@ static void pre_jpeg_draw_cb(uint8_t *rgb565, int w, int h, int stride, void *ct
 static void recogn_task(void *arg)
 {
     while (1) {
-        delay_ms(500);  /* 2Hz 识别频率 */
+        delay_ms(200);  /* 5Hz 识别频率 — 匹配人脸检测 ~7Hz 节奏 */
 
         if (!g_recogn_enabled) continue;
         if (!human_detect_is_enabled()) continue;
@@ -489,6 +491,7 @@ void app_main(void)
         ESP_LOGW(TAG, "人脸检测初始化失败 (%s)", esp_err_to_name(hd_err));
     }
 
+#if 0  /* 人体检测暂时禁用 */
     /* 2.6 人体检测 — PicoDet 行人检测 (默认关闭) */
     ESP_LOGI(TAG, "正在初始化人体检测 (PicoDet)...");
     esp_err_t pd_err = pedestrian_detect_init(cam_w, cam_h);
@@ -497,6 +500,7 @@ void app_main(void)
     } else {
         ESP_LOGW(TAG, "人体检测初始化失败 (%s)", esp_err_to_name(pd_err));
     }
+#endif
 
     /* 2.7 人脸识别 — MobileFaceNet + SPIFFS (默认关闭) */
     ESP_LOGI(TAG, "正在初始化人脸识别 (MobileFaceNet)...");

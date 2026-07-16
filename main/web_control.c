@@ -24,7 +24,7 @@
 #include "camera_module.h"
 #include "imu_usb.h"
 #include "human_detect.h"
-#include "body_detect.h"
+// #include "body_detect.h"  /* 人体检测暂时禁用 */
 #include "face_recog.h"
 
 #define TAG "WebCtrl"
@@ -473,9 +473,9 @@ static esp_err_t ctrl_handler(httpd_req_t *req)
     } else if (strcmp(cmd_str, "stop") == 0) {
         g_motor_callback(MOTOR_CMD_STOP, 0, 0);
         httpd_resp_sendstr(req, "已停止");
-    } else if (strcmp(cmd_str, "pedestrian") == 0) {
-        g_motor_callback(MOTOR_CMD_PEDESTRIAN, atoi(dist_str), 0);
-        httpd_resp_sendstr(req, "ok");
+    // } else if (strcmp(cmd_str, "pedestrian") == 0) {  /* 人体检测暂时禁用 */
+    //     g_motor_callback(MOTOR_CMD_PEDESTRIAN, atoi(dist_str), 0);
+    //     httpd_resp_sendstr(req, "ok");
     } else if (strcmp(cmd_str, "go") == 0) {
         g_motor_callback(MOTOR_CMD_GO, dist, speed);
         httpd_resp_sendstr(req, "执行");
@@ -561,6 +561,7 @@ static void mjpeg_server_task(void *arg)
     }
 }
 
+#if 0  /* 人体检测暂时禁用 */
 /* ── 人体检测开关 ── */
 static esp_err_t pedestrian_handler(httpd_req_t *req)
 {
@@ -579,6 +580,7 @@ static esp_err_t pedestrian_handler(httpd_req_t *req)
     httpd_resp_send(req, rsp, -1);
     return ESP_OK;
 }
+#endif
 
 /* ── 人脸识别开关 ── */
 static esp_err_t recognize_handler(httpd_req_t *req)
@@ -706,8 +708,8 @@ static esp_err_t status_handler(httpd_req_t *req)
     camera_module_get_ae_status(&brightness, &exp_100us, &gain_idx);
     hd_result_t det = human_detect_get_results();
     bool det_en = human_detect_is_enabled();
-    pd_result_t ped = pedestrian_detect_get_results();
-    bool ped_en = pedestrian_detect_is_enabled();
+    // pd_result_t ped = pedestrian_detect_get_results();     /* 人体检测暂时禁用 */
+    // bool ped_en = pedestrian_detect_is_enabled();
     fr_recog_result_t recog = face_recognition_get_latest();
     bool recog_en = face_recognition_is_enabled();
     int db_count = face_recognition_count();
@@ -741,10 +743,10 @@ static esp_err_t status_handler(httpd_req_t *req)
           "\"en\":%d,"
           "\"n\":%u"
         "},"
-        "\"pedestrian\":{"
-          "\"en\":%d,"
-          "\"n\":%u"
-        "},"
+        // "\"pedestrian\":{"          /* 人体检测暂时禁用 */
+        //   "\"en\":%d,"
+        //   "\"n\":%u"
+        // "},"
         "\"recognize\":{"
           "\"en\":%d,"
           "\"db\":%d,"
@@ -769,8 +771,8 @@ static esp_err_t status_handler(httpd_req_t *req)
         imu_usb_is_connected() ? 1 : 0,
         det_en ? 1 : 0,
         (unsigned)det.count,
-        ped_en ? 1 : 0,
-        (unsigned)ped.count,
+        // ped_en ? 1 : 0,        /* 人体检测暂时禁用 */
+        // (unsigned)ped.count,
         recog_en ? 1 : 0,
         db_count,
         (unsigned)recog.count
@@ -804,7 +806,7 @@ esp_err_t web_control_start(motor_control_cb_t callback)
     u.handler = snapshot_handler; u.uri = "/snapshot";    httpd_register_uri_handler(srv80, &u);
     u.handler = status_handler;   u.uri = "/status";      httpd_register_uri_handler(srv80, &u);
     u.handler = detect_handler;   u.uri = "/detect";      httpd_register_uri_handler(srv80, &u);
-    u.handler = pedestrian_handler; u.uri = "/pedestrian"; httpd_register_uri_handler(srv80, &u);
+    // u.handler = pedestrian_handler; u.uri = "/pedestrian"; httpd_register_uri_handler(srv80, &u); /* 禁用 */
     u.handler = recognize_handler;  u.uri = "/recognize";  httpd_register_uri_handler(srv80, &u);
     u.handler = enroll_handler;     u.uri = "/enroll";     httpd_register_uri_handler(srv80, &u);
     u.handler = faces_handler;      u.uri = "/faces";      httpd_register_uri_handler(srv80, &u);

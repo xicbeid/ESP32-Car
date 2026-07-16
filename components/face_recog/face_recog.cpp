@@ -80,7 +80,7 @@ static void db_match(const uint8_t *q, fr_recog_result_t *out) {
         if(fread(buf,1,REC_PER_FACE,f)<REC_PER_FACE)break;
         uint16_t id=*(uint16_t*)buf; if(id==0)continue;
         float s=ncc_match(q,buf+2+32,TMPL_BYTES);
-        if(s>0.50f){out->matches[out->count].id=id;out->matches[out->count].similarity=s;out->count++;}
+        if(s>0.42f){out->matches[out->count].id=id;out->matches[out->count].similarity=s;out->count++;}
     }
     free(buf); fclose(f); out->recognized=(out->count>0);
 }
@@ -130,12 +130,36 @@ esp_err_t face_recognition_enroll(const uint8_t *rgb, int w, int h, int stride,
 void face_recognition_recognize_async(const uint8_t *rgb, int w, int h, int stride,
                                        const int boxes[][4], const float *scores, int n) {
     if(!g_fr.enabled||!g_fr.initialized||n<=0||!rgb)return;
-    hd_result_t det=human_detect_get_results(); if(det.count==0)return;
-    hd_box_t *face=&det.boxes[0];
-    uint8_t tmpl[TMPL_BYTES];
-    extract_aligned_face(rgb,w,h,stride,face,tmpl);
-    fr_recog_result_t out; db_match(tmpl,&out);
-    if(xSemaphoreTake(g_fr.mutex,pdMS_TO_TICKS(50))==pdTRUE){g_fr.latest=out;xSemaphoreGive(g_fr.mutex);}
+
+    /* 用调用者传入的 boxes，不重新读 human_detect_get_results() —
+     * 避免与检测任务异步更新的竞争条件导致裁剪错位。 */
+    fr_recog_result_t out;
+    memset(&out, 0, sizeof(out));
+
+    for (int i = 0; i < n && i < FR_MAX_FACES; i++) {
+        /* 跳过小人脸 (<50px): 放大到 112x112 全是插值噪声 */
+        if (boxes[i][2] < 50 || boxes[i][3] < 50) continue;
+
+        hd_box_t fb;
+        fb.x = boxes[i][0]; fb.y = boxes[i][1];
+        fb.w = boxes[i][2]; fb.h = boxes[i][3];
+
+        uint8_t tmpl[TMPL_BYTES];
+        extract_aligned_face(rgb, w, h, stride, &fb, tmpl);
+
+        fr_recog_result_t match;
+        db_match(tmpl, &match);
+
+        /* 合并本脸的匹配结果 */
+        for (int j = 0; j < match.count && out.count < FR_MAX_FACES; j++) {
+            out.matches[out.count++] = match.matches[j];
+        }
+    }
+    out.recognized = (out.count > 0);
+
+    if(xSemaphoreTake(g_fr.mutex,pdMS_TO_TICKS(50))==pdTRUE){
+        g_fr.latest=out; xSemaphoreGive(g_fr.mutex);
+    }
 }
 
 fr_recog_result_t face_recognition_get_latest(void){
