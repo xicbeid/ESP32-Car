@@ -482,7 +482,7 @@ void app_main(void)
 
     /* 2.5 人脸检测 — ESP-DL MSRMNP 模型 (默认关闭) */
     ESP_LOGI(TAG, "正在初始化人脸检测 (ESP-DL)...");
-    int cam_w = 640, cam_h = 480;
+    int cam_w = 800, cam_h = 800;
     esp_err_t hd_err = human_detect_init(cam_w, cam_h);
     if (hd_err == ESP_OK) {
         camera_module_set_pre_jpeg_cb(pre_jpeg_draw_cb, NULL);
