@@ -39,8 +39,8 @@
         "awb":
         {
             "model": 2,
-            "min_red_gain_step": 0.05,
-            "min_blue_gain_step": 0.05,
+            "min_red_gain_step": 0.15,
+            "min_blue_gain_step": 0.15,
             "min_counted": 10,
             "range":
             {
@@ -51,8 +51,8 @@
             "green_luma_env": "dummy_awb_luma",
             "green_luma_init": 180,
             "green_luma_step_ratio": 0.3,
-            "new_w": 0.3,
-            "prev_w": 0.7,
+            "new_w": 0.10,
+            "prev_w": 0.90,
             "red_gain_scale": 1.1,
             "blue_gain_scale": 1.1,
             "export_ct": true,
@@ -85,14 +85,14 @@
         {
             "exposure":
             {
-                "frame_delay": 3,
+                "frame_delay": 5,
                 "adjust_delay": 0,
                 "max": 1.5
             },
             "gain":
             {
-                "min_step": 0.03,
-                "frame_delay": 3
+                "min_step": 0.08,
+                "frame_delay": 5
             },
             "anti_flicker":
             {

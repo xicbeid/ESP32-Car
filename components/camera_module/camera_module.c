@@ -29,6 +29,7 @@
 #include "esp_video_init.h"
 #include "driver/jpeg_encode.h"
 #include "camera_module.h"
+// #include "frame_diag.h"  /* frame diagnostics disabled */
 
 #define TAG "Camera"
 
@@ -104,6 +105,20 @@ static void camera_task(void *arg)
          * CPU reads from MMAP buf (V4L2 driver handles cache → fresh data).
          * CPU writes to DMA buf → goes directly to PSRAM (no cache). */
         memcpy(s_dma_buf, src, buf_sz);
+
+#if 0  /* frame diagnostics disabled */
+        frame_diag_sample(s_dma_buf, (int)s_fb_width, (int)s_fb_height, (int)s_fb_stride);
+        if (fc % 30 == 0) {
+            const frame_diag_ctx_t *ctx = frame_diag_get_ctx();
+            const frame_diag_t *f = &ctx->frames[(ctx->head > 0 ? ctx->head - 1 : FRAME_DIAG_MAX - 1) % FRAME_DIAG_MAX];
+            ESP_LOGI("Diag", "#%u R=%.0f G=%.0f B=%.0f std=%.0f,%.0f,%.0f g:[%.0f-%.0f] black=%d grn=%d red=%d jump=%u/%u",
+                     (unsigned)f->seq, (double)f->r_mean, (double)f->g_mean, (double)f->b_mean,
+                     (double)f->r_std, (double)f->g_std, (double)f->b_std,
+                     (double)f->g_min, (double)f->g_max,
+                     f->is_black, f->is_green_shift, f->is_red_shift,
+                     (unsigned)ctx->jump_count, (unsigned)ctx->count);
+        }
+#endif
 
         /* Draw detection boxes on DMA buffer — writes go straight to PSRAM.
          * No cache sync needed — JPEG DMA will see the pixels immediately. */

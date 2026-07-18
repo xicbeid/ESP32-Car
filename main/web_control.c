@@ -22,6 +22,7 @@
 #include "esp_timer.h"
 #include "web_control.h"
 #include "camera_module.h"
+// #include "frame_diag.h"  /* frame diagnostics disabled */
 #include "imu_usb.h"
 #include "human_detect.h"
 // #include "body_detect.h"  /* 人体检测暂时禁用 */
@@ -211,6 +212,7 @@ static const char INDEX_HTML[] =
 "<button class='pb pd' id='bd'>&#9660;</button>"
 "</div>"
 "<button class='det-tgl' id='detTgl'>&#128065; 人脸检测</button>"
+"<button class='det-tgl' id='lightTgl'>&#128161; 照明</button>"
 
 /* Sliders */
 "<div class='ctls'>"
@@ -313,6 +315,21 @@ static const char INDEX_HTML[] =
 "  .then(function(d){"
 "    if(d.en){detEl.classList.add('on');detEl.innerHTML='&#128065; 人脸检测中';}"
 "    else{detEl.classList.remove('on');detEl.innerHTML='&#128065; 人脸检测';}"
+"  })"
+"  .catch(function(){});"
+"});"
+
+/* === Light toggle === */
+"var lightEl=document.getElementById('lightTgl');"
+"lightEl.addEventListener('click',function(e){"
+"  e.preventDefault();"
+"  var on=lightEl.classList.contains('on');"
+"  fetch('/ctrl?cmd=light&dist='+(on?0:1)+'&speed=0')"
+"  .then(function(r){return r.text()})"
+"  .then(function(t){"
+"    if(on){lightEl.classList.remove('on');lightEl.innerHTML='&#128161; 照明';}"
+"    else{lightEl.classList.add('on');lightEl.innerHTML='&#128161; 照明中';}"
+"    document.getElementById('st').textContent=t;"
 "  })"
 "  .catch(function(){});"
 "});"
@@ -473,6 +490,9 @@ static esp_err_t ctrl_handler(httpd_req_t *req)
     } else if (strcmp(cmd_str, "stop") == 0) {
         g_motor_callback(MOTOR_CMD_STOP, 0, 0);
         httpd_resp_sendstr(req, "已停止");
+    } else if (strcmp(cmd_str, "light") == 0) {
+        g_motor_callback(MOTOR_CMD_LIGHT, atoi(dist_str), 0);
+        httpd_resp_sendstr(req, atoi(dist_str) ? "灯已开" : "灯已关");
     // } else if (strcmp(cmd_str, "pedestrian") == 0) {  /* 人体检测暂时禁用 */
     //     g_motor_callback(MOTOR_CMD_PEDESTRIAN, atoi(dist_str), 0);
     //     httpd_resp_sendstr(req, "ok");

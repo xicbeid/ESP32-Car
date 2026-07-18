@@ -23,6 +23,7 @@ extern "C" {
 #include "esp_heap_caps.h"
 #include "esp_cache.h"
 #include "human_detect.h"
+#include "led_buzzer.h"
 
 } /* extern "C" */
 
@@ -271,6 +272,9 @@ static void detect_task(void *arg)
         if (count > 0) {
             ESP_LOGI(TAG, "检测到 %d 个人脸", count);
         }
+
+        /* Buzzer: beep when face detection enabled and face found */
+        buzzer_set(g_hd.enabled && count > 0);
 
         g_hd.busy = false;
     }

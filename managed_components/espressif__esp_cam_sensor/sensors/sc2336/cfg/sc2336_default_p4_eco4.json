@@ -34,13 +34,13 @@
         {
             "exposure":
             {
-                "frame_delay": 3,
+                "frame_delay": 5,
                 "adjust_delay": 0
             },
             "gain":
             {
-                "min_step": 0.03,
-                "frame_delay": 3
+                "min_step": 0.08,
+                "frame_delay": 5
             },
             "anti_flicker":
             {

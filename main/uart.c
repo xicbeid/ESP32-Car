@@ -28,6 +28,7 @@
 #include "human_detect.h"
 // #include "body_detect.h"  /* 人体检测暂时禁用 */
 #include "face_recog.h"
+#include "led_buzzer.h"
 
 #define delay_ms(ms) vTaskDelay(pdMS_TO_TICKS(ms))
 
@@ -324,6 +325,11 @@ static void motor_control_callback(motor_cmd_t cmd, int distance_cm, int speed)
         ESP_LOGI(TAG, "删除人脸 id=%d", speed);
         return;
     }
+    if (cmd == MOTOR_CMD_LIGHT) {
+        light_set(distance_cm ? true : false);
+        ESP_LOGI(TAG, "照明: %s", distance_cm ? "开" : "关");
+        return;
+    }
 
     /* 旧命令 (MOTOR_CMD_FORWARD 等) — 当作 GO 处理 */
     g_velocity_active = false;
@@ -463,6 +469,11 @@ void app_main(void)
     esp_log_level_set("i2c.master", ESP_LOG_ERROR);
     /* SDIO 空闲状态事件是无害的 ESP-Hosted 传输噪音 */
     esp_log_level_set("sdmmc_req", ESP_LOG_NONE);
+
+    /* 0. LED + Buzzer + Light GPIO init */
+    led_buzzer_init();
+    led_buzzer_start_tasks();
+    light_init();
 
     /* 1. NVS */
     ret = nvs_flash_init();

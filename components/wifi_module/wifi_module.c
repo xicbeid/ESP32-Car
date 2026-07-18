@@ -13,6 +13,7 @@
 #include "esp_log.h"
 #include "esp_err.h"
 #include "esp_wifi.h"
+#include "led_buzzer.h"
 #include "esp_check.h"
 #include "esp_event.h"
 #include "esp_netif.h"
@@ -342,6 +343,7 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
 
         case WIFI_EVENT_AP_START:
             ESP_LOGI(TAG, "WiFi AP 已启动");
+            led_wifi_ready();                    /* LED ON */
             break;
 
         case WIFI_EVENT_AP_STACONNECTED: {
@@ -349,6 +351,7 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
                 (wifi_event_ap_staconnected_t *)event_data;
             ESP_LOGI(TAG, "终端 " MACSTR " 已加入, AID=%d",
                      MAC2STR(event->mac), event->aid);
+            led_wifi_client_joined();           /* LED OFF */
             break;
         }
 
@@ -357,6 +360,7 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
                 (wifi_event_ap_stadisconnected_t *)event_data;
             ESP_LOGI(TAG, "终端 " MACSTR " 已离开, AID=%d",
                      MAC2STR(event->mac), event->aid);
+            led_wifi_all_left();                /* LED ON */
             break;
         }
 

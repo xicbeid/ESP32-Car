@@ -31,6 +31,7 @@ typedef enum {
     MOTOR_CMD_RECOGNIZE,     /* 人脸识别开关: distance_cm=0关/1开 */
     MOTOR_CMD_ENROLL,        /* 录入人脸: speed=0触发录入 */
     MOTOR_CMD_DELETE_FACE,   /* 删除人脸: speed=face_id */
+    MOTOR_CMD_LIGHT,         /* 照明开关: distance_cm=0关/1开 */
 } motor_cmd_t;
 
 typedef void (*motor_control_cb_t)(motor_cmd_t cmd, int distance_cm, int speed);

@@ -862,6 +862,13 @@ F:/project_ESP32_p4/UART/build/esp-idf/wifi_provisioning/CMakeFiles/list_install
 F:/project_ESP32_p4/UART/build/esp-idf/wifi_provisioning/CMakeFiles/install.dir
 F:/project_ESP32_p4/UART/build/esp-idf/wifi_provisioning/CMakeFiles/install/local.dir
 F:/project_ESP32_p4/UART/build/esp-idf/wifi_provisioning/CMakeFiles/install/strip.dir
+F:/project_ESP32_p4/UART/build/esp-idf/led_buzzer/CMakeFiles/__idf_led_buzzer.dir
+F:/project_ESP32_p4/UART/build/esp-idf/led_buzzer/CMakeFiles/edit_cache.dir
+F:/project_ESP32_p4/UART/build/esp-idf/led_buzzer/CMakeFiles/rebuild_cache.dir
+F:/project_ESP32_p4/UART/build/esp-idf/led_buzzer/CMakeFiles/list_install_components.dir
+F:/project_ESP32_p4/UART/build/esp-idf/led_buzzer/CMakeFiles/install.dir
+F:/project_ESP32_p4/UART/build/esp-idf/led_buzzer/CMakeFiles/install/local.dir
+F:/project_ESP32_p4/UART/build/esp-idf/led_buzzer/CMakeFiles/install/strip.dir
 F:/project_ESP32_p4/UART/build/esp-idf/wifi_module/CMakeFiles/__idf_wifi_module.dir
 F:/project_ESP32_p4/UART/build/esp-idf/wifi_module/CMakeFiles/edit_cache.dir
 F:/project_ESP32_p4/UART/build/esp-idf/wifi_module/CMakeFiles/rebuild_cache.dir

@@ -2,7 +2,7 @@ include(${COMPONENT_DIR}/cmake/utilities.cmake)
 
 set(src_dirs     .)
 set(include_dirs .)
-set(requires     esp-dl)
+set(requires     esp-dl led_buzzer)
 
 set(packed_model ${CMAKE_BINARY_DIR}/espdl_models/human_face_detect.espdl)
 
